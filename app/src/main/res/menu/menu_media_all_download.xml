@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:smaccloud="http://schemas.android.com/tools">
+    <item
+        android:id="@+id/menuSwitchViews"
+        android:icon="@drawable/ic_list"
+        android:orderInCategory="100"
+        android:title="@string/switch_views"
+        smaccloud:showAsAction="always"/>
+    <item
+        android:id="@+id/download_All"
+        android:icon="@drawable/ic_download_all"
+        android:orderInCategory="200"
+        android:title="@string/all_download"
+        android:visible="false"
+        smaccloud:showAsAction="always"/>
+</menu>

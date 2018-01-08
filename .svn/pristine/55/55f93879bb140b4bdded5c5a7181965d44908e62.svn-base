@@ -1,0 +1,303 @@
+package in.ssoft.salescloud.fragment;
+
+import android.content.res.Configuration;
+import android.graphics.Rect;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+
+import in.ssoft.salescloud.R;
+import in.ssoft.salescloud.activity.DashboardActivity;
+import in.ssoft.salescloud.adapter.MostVisitedItemRecyclerAdapter;
+import in.ssoft.salescloud.adapter.RecentItemRecyclerAdapter;
+import in.ssoft.salescloud.base.Fragment;
+import in.ssoft.salescloud.base.Helper;
+import in.ssoft.salescloud.data.DataHelper;
+import in.ssoft.salescloud.model.RecentItem;
+import info.hoang8f.android.segmented.SegmentedGroup;
+
+public class RecentActivitiesFragment extends Fragment
+{
+
+    SegmentedGroup segmentTab;
+    RadioButton rdoRecent;
+    RadioButton rdoMostVisited;
+    RecyclerView recyclerRecent;
+    RecyclerView recyclerMostVisited;
+    RecyclerView.LayoutManager recentListManager;
+    RecyclerView.LayoutManager mostVisitedlistManager;
+    ArrayList<RecentItem> recentItems;
+    RecentItemRecyclerAdapter recentItemRecyclerAdapter;
+    ArrayList<RecentItem> mostVisitedItems;
+    MostVisitedItemRecyclerAdapter mostVisitedItemRecyclerAdapter;
+    private LinearLayout parentLayout;
+
+    @Nullable
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
+    {
+
+        return inflater.inflate(R.layout.fragment_recent_activities, container, false);
+    }
+
+    @Override
+    protected void initializeComponents()
+    {
+
+
+        parentLayout = (LinearLayout) getActivity().findViewById(R.id.parentLayout);
+        segmentTab = (SegmentedGroup) getActivity().findViewById(R.id.segmentTab);
+        rdoRecent = (RadioButton) getActivity().findViewById(R.id.rdoRecent);
+        rdoMostVisited = (RadioButton) getActivity().findViewById(R.id.rdoMostVisited);
+        recentListManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        recyclerRecent = (RecyclerView) getActivity().findViewById(R.id.recyclerRecent);
+        recyclerRecent.setHasFixedSize(true);
+        recyclerRecent.setLayoutManager(recentListManager);
+        /*recyclerRecent.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerRecent.setItemAnimator(new DefaultItemAnimator());*/
+
+        mostVisitedlistManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
+        recyclerMostVisited = (RecyclerView) getActivity().findViewById(R.id.recyclerMostVisited);
+        recyclerMostVisited.setHasFixedSize(true);
+        recyclerMostVisited.setLayoutManager(mostVisitedlistManager);
+      /*  recyclerMostVisited.addItemDecoration(new DividerItemDecoration(getActivity(), LinearLayoutManager.VERTICAL));
+        recyclerMostVisited.setItemAnimator(new DefaultItemAnimator());*/
+
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            if (Helper.isTablet(activity))
+            {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) segmentTab.getLayoutParams();
+                params.setMargins((int) getResources().getDimension(R.dimen.seventy_five_dp),
+                        0, (int) getResources().getDimension(R.dimen.seventy_five_dp), 0); //substitute parameters for left, top, right, bottom
+                segmentTab.setLayoutParams(params);
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+                recyclerRecent.setLayoutManager(layoutManager);
+                GridLayoutManager layoutManager1 = new GridLayoutManager(context, 2);
+                recyclerMostVisited.setLayoutManager(layoutManager1);
+
+            }
+        }
+        else
+        {
+            // Landscape Mode
+            if (Helper.isTablet(activity))
+            {
+
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) segmentTab.getLayoutParams();
+                params.setMargins((int) getResources().getDimension(R.dimen.two_hundred_eightee),
+                        0, (int) getResources().getDimension(R.dimen.two_hundred_eightee), 0); //substitute parameters for left, top, right, bottom
+                segmentTab.setLayoutParams(params);
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
+                recyclerRecent.setLayoutManager(layoutManager);
+                GridLayoutManager layoutManager1 = new GridLayoutManager(context, 3);
+                recyclerMostVisited.setLayoutManager(layoutManager1);
+
+            }
+        }
+        /*if (Helper.getScreenOrientation(activity) == 1) {
+            // Portrait Mode
+            if (Helper.isTablet(activity)) {
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+                recyclerRecent.setLayoutManager(layoutManager);
+            } else {
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 1);
+                recyclerRecent.setLayoutManager(layoutManager);
+            }
+
+
+        } else {
+            // Landscape Mode
+            if (Helper.isTablet(activity)) {
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
+                recyclerRecent.setLayoutManager(layoutManager);
+            } else {
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 1);
+                recyclerRecent.setLayoutManager(layoutManager);
+            }
+
+        }*/
+
+
+        recentItems = new ArrayList<>();
+        mostVisitedItems = new ArrayList<>();
+        try
+        {
+            DataHelper.getRecentVisitedItems(context, recentItems);
+            if (recyclerRecent != null && recentItems != null)
+            {
+                recentItemRecyclerAdapter = new RecentItemRecyclerAdapter(getActivity(), recentItems);
+                recyclerRecent.setAdapter(recentItemRecyclerAdapter);
+            }
+
+            DataHelper.getMostVisitedItems(context, mostVisitedItems);
+            if (recyclerMostVisited != null && mostVisitedItems != null)
+            {
+                mostVisitedItemRecyclerAdapter = new MostVisitedItemRecyclerAdapter(getActivity(), mostVisitedItems);
+                recyclerMostVisited.setAdapter(mostVisitedItemRecyclerAdapter);
+            }
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void bindEvents()
+    {
+
+        CompoundButton.OnCheckedChangeListener checkedChangeListener = new CompoundButton.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b)
+            {
+                if (compoundButton.isChecked())
+                {
+                    switch (compoundButton.getId())
+                    {
+                        case R.id.rdoRecent:
+                            if (activity.getSupportActionBar() != null)
+                            {
+                                activity.getSupportActionBar().setTitle(R.string.label_recent);
+                                //(activity).getSupportActionBar().setTitle(R.string.label_recent);
+                            }
+                            recyclerRecent.setVisibility(View.VISIBLE);
+                            recyclerMostVisited.setVisibility(View.GONE);
+                            break;
+                        case R.id.rdoMostVisited:
+                            if (activity.getSupportActionBar() != null)
+                            {
+                                activity.getSupportActionBar().setTitle(R.string.label_most_visited);
+                                //(activity).getSupportActionBar().setTitle(R.string.label_most_visited);
+                            }
+                            recyclerMostVisited.setVisibility(View.VISIBLE);
+                            recyclerRecent.setVisibility(View.GONE);
+                            break;
+                    }
+                }
+            }
+        };
+        rdoRecent.setOnCheckedChangeListener(checkedChangeListener);
+        rdoMostVisited.setOnCheckedChangeListener(checkedChangeListener);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                // app icon in action bar clicked; goto parent activity.
+                //  onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        try
+        {
+            if (activity.getSupportActionBar() != null)
+            {
+                activity.getSupportActionBar().setTitle(R.string.label_recent);
+            }
+            if (activity instanceof DashboardActivity)
+            {
+                ((DashboardActivity) (activity)).navigationDashboard.getMenu().findItem(R.id.menuActivities).setCheckable(true).setChecked(true);
+            }
+            recentItems.clear();
+            DataHelper.getRecentVisitedItems(context, recentItems);
+            if (recentItemRecyclerAdapter != null && recentItems != null)
+            {
+                recentItemRecyclerAdapter.addMoreData(recentItems);
+            }
+            mostVisitedItems.clear();
+            DataHelper.getMostVisitedItems(context, mostVisitedItems);
+            if (mostVisitedItemRecyclerAdapter != null && mostVisitedItems != null)
+            {
+                mostVisitedItemRecyclerAdapter.addMoreData(mostVisitedItems);
+            }
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            // Portrait Mode
+            if (Helper.isTablet(activity))
+            {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) segmentTab.getLayoutParams();
+                params.setMargins((int) getResources().getDimension(R.dimen.seventy_five_dp),
+                        0, (int) getResources().getDimension(R.dimen.seventy_five_dp), 0); //substitute parameters for left, top, right, bottom
+                segmentTab.setLayoutParams(params);
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 2);
+                recyclerRecent.setLayoutManager(layoutManager);
+                GridLayoutManager layoutManager1 = new GridLayoutManager(context, 2);
+                recyclerMostVisited.setLayoutManager(layoutManager1);
+            }
+        }
+        else
+        {
+            // Landscape Mode
+            if (Helper.isTablet(activity))
+            {
+                LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) segmentTab.getLayoutParams();
+                params.setMargins((int) getResources().getDimension(R.dimen.two_hundred_eightee),
+                        0, (int) getResources().getDimension(R.dimen.two_hundred_eightee), 0); //substitute parameters for left, top, right, bottom
+                segmentTab.setLayoutParams(params);
+                GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
+                recyclerRecent.setLayoutManager(layoutManager);
+                GridLayoutManager layoutManager1 = new GridLayoutManager(context, 3);
+                recyclerMostVisited.setLayoutManager(layoutManager1);
+            }
+        }
+    }
+
+    public class SpacesItemDecoration extends RecyclerView.ItemDecoration
+    {
+        private int space;
+
+        public SpacesItemDecoration(int space)
+        {
+            this.space = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state)
+        {
+            outRect.left = space;
+            outRect.right = space;
+            outRect.bottom = space;
+
+            // Add top margin only for the first item to avoid double space between items
+            if (parent.getChildPosition(view) == 0)
+                outRect.top = space;
+        }
+    }
+
+}

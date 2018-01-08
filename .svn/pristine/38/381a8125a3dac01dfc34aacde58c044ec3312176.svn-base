@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/search_option_types_background"
+              android:orientation="vertical">
+
+    <include layout="@layout/partial_toolbar"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/padding_very_small"
+                android:paddingStart="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_very_small"
+                android:text="@string/label_file_types"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_medium"
+                android:textStyle="bold"/>
+
+            <in.ssoft.salescloud.widgets.NonScrollListView
+                android:id="@+id/list_file_types"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:paddingBottom="@dimen/padding_very_small"
+                android:paddingLeft="@dimen/padding_small"
+                android:paddingTop="@dimen/padding_very_small"
+                android:text="@string/label_channels"
+                android:textColor="@color/black"
+                android:textSize="@dimen/title_medium"
+                android:textStyle="bold"/>
+
+            <in.ssoft.salescloud.widgets.NonScrollListView
+                android:id="@+id/list_channel_names"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

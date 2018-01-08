@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/parentLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@drawable/intro_background"
+              android:orientation="vertical">
+
+    <include layout="@layout/partial_toolbar"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/ivorya3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/four_hundred"
+            android:layout_marginRight="@dimen/four_hundred"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
+
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/textInputEmail"
+                style="@style/EditTextBlackHint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:hintTextAppearance="@style/EditTextBlackHint">
+
+                <EditText
+                    android:id="@+id/edit_organization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edittext_white_border_line"
+                    android:hint="@string/organization_name"
+                    android:inputType="textWebEmailAddress"
+                    android:singleLine="true"
+                    android:textColor="@color/sky"
+                    android:textColorHint="@color/sky"
+                    android:textCursorDrawable="@color/blue_press_effect"
+                    android:textSize="@dimen/title_ultra_small"/>
+                <!--android:text="http://truckerservices.ssoft.in:8092/SmacCloudService/"-->
+                <!--android:text="http://138.201.245.106:8082/"-->
+
+            </android.support.design.widget.TextInputLayout>
+
+            <Button
+                android:id="@+id/btn_continue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/forty_five_dp"
+                android:background="@drawable/orange_border_background"
+                android:text="@string/Continue"
+                android:textAllCaps="false"
+                android:textColor="@color/white"
+                android:textSize="@dimen/title_ultra_small"/>
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <group
+        android:id="@+id/menuDashboard"
+        android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/menuChannels"
+            android:checked="true"
+            android:icon="@drawable/ic_channel"
+            android:title="@string/channels"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menuActivities"
+            android:icon="@drawable/ic_recent"
+            android:title="@string/activities"
+            android:visible="true"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menuAnnouncements"
+            android:icon="@drawable/ic_announ"
+            android:title="@string/announcements"
+            android:visible="false"
+            app:showAsAction="never" />
+
+        <item
+            android:id="@+id/menuSettings"
+            android:icon="@drawable/ic_setting"
+            android:title="@string/settings"
+            app:showAsAction="never" />
+        <item
+            android:id="@+id/menuLogout"
+            android:icon="@drawable/ic_signout"
+            android:title="@string/lable_sign_out"
+            android:visible="false"
+            app:showAsAction="never" />
+
+    </group>
+
+</menu>

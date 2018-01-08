@@ -1,0 +1,6 @@
+package in.ssoft.salescloud.helper;
+
+public interface InterfaceStopDownload
+{
+    public void stopDownload();
+}

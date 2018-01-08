@@ -1,0 +1,354 @@
+<resources>
+    <string name="app_name">SMAC Cloud</string>
+
+    <!--Introduction Screen String-->
+    <string name="intro_slide1">This is a very long and detailed description about absolutely nothing in particular.</string>
+    <string name="first_slide">First Slide</string>
+    <string name="second_slide">Second Slide</string>
+
+    <!--Demo Screen String-->
+    <string name="login">Login</string>
+    <string name="tra_demo">Try a Demo</string>
+    <string name="configure_url">Configure URL</string>
+
+    <!-- Organization Screen String-->
+    <string name="organization_name">Organization URL</string>
+    <string name="invalid_organization">Invalid Organization</string>
+    <string name="Continue">Continue</string>
+    <string name="enter_Organization_name">Enter Organization Name</string>
+
+    <!-- Try_Demo Screen String-->
+    <string name="u_name">Name</string>
+    <string name="designation">Designation</string>
+    <string name="Professional_field">Professional field</string>
+    <string name="company_size">Company Size</string>
+    <string name="work_email_address">Work email address</string>
+    <string name="enter_email">Enter Email</string>
+    <string name="newsLetters">Newsletters?</string>
+    <string name="select_country">select country</string>
+    <string name="start_demo">Start Demo</string>
+    <string name="enter_name">Enter Name</string>
+    <string name="enter_occupation">Enter Occupation</string>
+    <string name="enter_company_type">Enter Company Type</string>
+    <string name="enter_employee_strength">Enter Employee Strength</string>
+    <string name="enter_email_address">Enter Email Address</string>
+    <string name="invalid_email">Please Enter Valid Email</string>
+
+    <!--Login Screen-->
+    <string name="hint_email">Email Id</string>
+    <string name="hint_password">Password</string>
+    <string name="forget_password">Forget password?</string>
+    <string name="pls_select_first">Please Select First</string>
+    <string name="enter_password">Enter Password</string>
+    <string name="help_login">Need help logging in?</string>
+    <string name="email_sent_successfully">Email Sent Successfully</string>
+
+    <!--syncActivity Screen-->
+    <string name="sync">Synchronize your data </string>
+    <string name="sync_sub_title_select_download">Select your download criteria</string>
+    <string name="switch_views">Switch Views</string>
+    <string name="download_option">Download Options</string>
+    <string name="sync_data">Synchronizing your data</string>
+    <string name="text_full_download">Full Download</string>
+    <string name="auto_download_hint">You files are downloading automatically in your device!</string>
+    <string name="download_on_demand_hint">Your files are not downloading automatically! You have to download it manually!</string>
+    <string name="download_everything_now">Download everything now</string>
+    <string name="download_on_demand">Download on Demand</string>
+    <string name="label_auto_download">Auto Download</string>
+    <string name="download_on_tap">Download on tap</string>
+    <string name="download_file_contains">Download  file contains</string>
+    <string name="download">Download</string>
+    <string name="text_quick_download">Quick Download</string>
+    <string name="text_info_full_download">YMay take a long time if there a lot of content</string>
+    <string name="text_info_quick_download">You can sync your data and download files manually</string>
+    <string name="all_download">All Download</string>
+    <string name="battery_low_message">Battery low, first charge it</string>
+    <string name="no_available_space_message">No available space to download the content.</string>
+    <string name="app_title">SMAC</string>
+    <string name="download_message">Do you want to download</string>
+    <string name="download_message1">of data your Device?</string>
+    <string name="download_message2">Available memory</string>
+    <string name="msg_please_wait_while_sync">Please wait while synchronise</string>
+
+    <!--ChangePassword Screen-->
+    <!--<string name="gcm_sender_id">100505523307</string> GCM sender id -->
+    <string name="gcm_sender_id">645815223505</string> <!-- FCM sender id -->
+    <string name="current_password">Current Password</string>
+    <string name="label_change_password">Change Password</string>
+    <string name="label_change">Change</string>
+    <string name="current_password_validation_message"> Enter current Password</string>
+    <string name="new_password_validation_message">Enter New Password</string>
+    <string name="confirm_password_validation_message">Enter Confirm Password</string>
+    <string name="password_mismatch_validation_message">Mismatch password</string>
+    <string name="enter_old_password">Old Password</string>
+    <string name="enter_New_password">New Password</string>
+    <string name="enter_confirm_password">Confirm Password</string>
+    <string name="change_password">your password has been changed successfully</string>
+    <string name="change_password_database_message">Email address is not available in database</string>
+
+    <!--AboutUs Screen-->
+    <string name="version">Version:</string>
+    <string name="version_no">Version</string>
+    <string name="na">N/A</string>
+    <string name="copyright">CopyRight @2017 SMAC Cloud.All Rights Reserved.</string>
+    <string name="plan">Plan:</string>
+    <string name="licence">Licence:</string>
+    <string name="smac_title">SMAC Cloud-2017</string>
+
+    <!--menu dialog string-->
+    <integer-array name="arr_menu_img_res_ids">
+        <item>@drawable/ic_info_dialog</item>
+        <item>@drawable/ic_star</item>
+        <item>@drawable/ic_comment</item>
+        <item>@drawable/ic_attach</item>
+        <item>@drawable/ic_file_delete</item>
+    </integer-array>
+
+    <string-array name="arr_menu_names">
+        <item>Info</item>
+        <item>Like</item>
+        <item>Comment</item>
+        <item>Share</item>
+        <item>Delete From Device</item>
+    </string-array>
+
+    <!--multi language string-->
+    <integer-array name="arr_flag_res_ids">
+        <item>@drawable/ic_flag_english_small</item>
+        <item>@drawable/ic_flag_german_small</item>
+    </integer-array>
+
+    <string-array name="arr_lang_names">
+        <item>English</item>
+        <item>German</item>
+    </string-array>
+
+    <!--Search Dialog string-->
+    <string name="image">Images</string>
+    <string name="pdf">Documents</string>
+    <string name="audio">Audio</string>
+    <string name="video">Videos</string>
+    <string name="label_sort">Sort</string>
+    <string name="label_filter">Filter</string>
+
+    <!--Dashboard Drawer string-->
+    <string name="channels">Channels</string>
+    <string name="announcements">Announcements</string>
+    <string name="activities">Recent</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="lable_sign_out">Sign Out</string>
+    <string name="sign_out_message">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">NO</string>
+    <string name="label_medias">Media(s)</string>
+
+    <!--Media screen string-->
+    <string name="channel_name">Channel</string>
+    <string name="created_by">Created by</string>
+    <string name="shared_by">Shared by:</string>
+    <string name="date">Date:</string>
+    <string name="users">user(s)</string>
+    <string name="label_delete_dialog">Warning</string>
+    <string name="label_download_first_dialog">Plz download first...</string>
+    <string name="label_done">Done</string>
+
+    <!-- Share screen strings-->
+    <string name="msg_re_login">Please re-login</string>
+    <string name="msg_enter_to_address">Please enter TO address</string>
+    <string name="msg_enter_subject">Please enter subject</string>
+    <string name="msg_select_media_for_share">Please select atleast one media for share</string>
+    <string name="msg_invalid_email">Invalid email address(s)</string>
+    <string name="msg_email_send">Email send successfully</string>
+    <string name="title_send_via">How do you want to send this mail</string>
+    <string name="text_send_as_url">Send as URL</string>
+    <string name="text_send_as_attachment">Send as attachment</string>
+
+    <string name="msg_please_check_your_connection">Please check your connection</string>
+    <string name="msg_network_connection_not_available">Network connection not available</string>
+    <string name="msg_cannot_get_response_from_server">Cannot get response from server</string>
+    <string name="msg_please_check_your_email">Please Check Your E-mail</string>
+    <string name="msg_sure_want_to_leave">Sure want to leave?</string>
+    <string name="msg_invalid_response_from_server">Invalid response from server</string>
+    <string name="msg_please_try_again_later">Please try again later</string>
+    <string name="msg_cannot_complete_request">Cannot complete request.Please try again later</string>
+    <string name="msg_downloading_already_in_progress">Downloading Already In Progress</string>
+    <string name="msg_downloading_in_progress">Downloading In Progress</string>
+    <string name="msg_it_already_like_by_you">It\'s already like by you</string>
+    <string name="msg_like_done_please_sync">Like done Please Sync for the latest Update</string>
+    <string name="msg_please_enter_comment">Please enter Comment</string>
+    <string name="msg_click_to_delete">click on Delete</string>
+    <string name="msg_data_sync">Data sync</string>
+    <string name="download_file_first">Please download file first!!!</string>
+    <string name="text_transition_animation_app_logo">appLogo</string>
+    <string name="text_transition_animation_app_title">appTitle</string>
+    <string name="text_transition_animation_channel_title">channelTitle</string>
+    <string name="text_transition_animation_media_title">mediaTitle</string>
+    <string name="text_transition_animation_media_image">mediaImage</string>
+    <string name="label_yes">Yes</string>
+    <string name="label_no">No</string>
+    <string name="message">Message</string>
+
+    <!--other string-->
+    <string name="label_change_language">Language</string>
+    <string name="likes">Likes</string>
+    <string name="retry">retry</string>
+    <string name="skip">Skip</string>
+    <string name="like">Like</string>
+    <string name="comment">Comment</string>
+    <string name="comments">Comments</string>
+    <string name="leave_a_comment">Leave a Comment</string>
+    <string name="label_today">Today</string> <!-- Need to translate-->
+    <string name="label_yesterday">Yesterday</string> <!-- Need to translate-->
+    <string name="share">Share</string>
+    <string name="submit">Submit</string>
+    <string name="name">Name</string>
+    <string name="type">Type</string>
+    <string name="open">Open</string>
+    <string name="size">Size</string>
+    <string name="available_on_device">Available on device</string>
+    <string name="owner">Owner</string>
+    <string name="location">Location</string>
+    <string name="created">Created</string>
+    <string name="modified">Modified</string>
+    <string name="label_by">by</string>
+    <string name="created_at">Created at</string>
+    <string name="insert_at">Insert at</string>
+    <string name="update_at">Update at</string>
+    <string name="post">Post</string>
+    <string name="username">Username</string>
+    <string name="delete">Delete</string>
+    <string name="send">Send</string>
+    <string name="label_add">Add</string>
+    <string name="email">Email</string>
+    <string name="autoSync">Auto Sync</string>
+    <string name="sync_interval">Sync Interval</string>
+    <string name="sync_time">Sync Time</string>
+    <string name="delete_offline">Delete Offline Data</string>
+    <string name="label_Setting_SyncNow">Sync. Now</string>
+    <string name="menu_download_option_View">View</string>
+    <string name="menu_download_option_download">Download</string>
+    <string name="menu_download_option_detail">Detail</string>
+    <string name="menu_download_option_info">Info</string>
+    <string name="menu_download_option_like">Like</string>
+    <string name="menu_download_option_comment">Comment</string>
+    <string name="menu_download_option_share">Share</string>
+    <string name="menu_download_option_Delete_From_device">Delete From Device</string>
+    <string name="menu_download_option_cancel">Cancel</string>
+    <string name="label_save">Save</string>
+    <string name="label_cancel">Cancel</string>
+    <string name="label_popularity">Popularity :</string>
+    <string name="back">Back</string>
+
+    <!--Recent string-->
+    <string name="label_recent">Recent</string>
+    <string name="label_most_visited">Most Visited</string>
+    <string name="label_visit">Visit</string>
+
+    <!--Setting string-->
+    <string name="label_password">Password</string>
+    <string name="label_search">Search</string>
+    <string name="label_reset">Reset</string>
+    <string name="label_file_types">File types</string>
+    <string name="label_all">All</string>
+    <string name="label_channels">Channels</string>
+    <string name="txt_configure_filter">Configure Filter</string>
+    <string name="label_select_filter">Select Filter</string>
+    <string name="label_select_file_type">Select File Type</string>
+    <string name="label_select_channel">Select Channel</string>
+    <string name="label_sharing">Sharing</string>
+    <string name="label_sharing1">SHARING</string>
+    <string name="label_account">ACCOUNT</string>
+    <string name="label_login_setting">LOGIN</string>
+    <string name="label_email_body">Email Body</string>
+    <string name="label_cc_address">CC </string>
+    <string name="label_bcc_address">BCC </string>
+    <string name="label_signature">Signature</string>
+    <string name="label_signature_msg">Your Filed Is Empty</string>
+    <string name="label_pick_image">Pick Image</string>
+    <string name="label_updates">Updates</string>
+    <string name="label_synchronization">SYNCHRONISATION</string>
+    <string name="title_synchronization">Synchronization</string>
+    <string name="label_synchronize_now">Synchronize Now</string>
+    <string name="sync_update_dialog">Are you sure you want to sync latest data?</string>
+    <string name="sync_data_update_sucessfully">Your data has been update!!!</string>
+    <string name="label_download_contains">Download Contents</string>
+    <string name="label_set_schedule">Set Schedule</string>
+    <string name="label_information">INFORMATION</string>
+    <string name="label_storage">Storage</string>
+    <string name="label_terms">Terms</string>
+    <string name="label_open_source_libraries">Open-source-Libraries</string>
+    <string name="label_help">Help</string>
+    <string name="label_about_us">About</string>
+    <string name="label_sign_out">Sign Out</string>
+    <string name="label_from">From</string>
+    <string name="label_to">To</string>
+    <string name="label_cc">CC</string>
+    <string name="label_bcc">BCC</string>
+    <string name="label_subject">Subject</string>
+    <string name="label_compose_email">Compose email</string>
+    <string name="label_attachment">Attachment</string>
+    <string name="keep_downloaded_files">Keep downloaded files</string>
+    <string name="delete_downloaded_files">Delete downloaded files</string>
+
+    <!--Storage string-->
+    <string name="label_total_disk_space">Total Disk Space</string>
+    <string name="label_used_disk_space">Used</string>
+    <string name="label_free_disk_space">Available </string>
+    <string name="label_media">MEDIA</string>
+    <string name="label_used">Used</string>
+    <string name="label_images">Images</string>
+    <string name="label_videos">Videos</string>
+    <string name="label_documents">Documents</string>
+    <string name="label_space_used">Space Used</string>
+    <string name="label_space_free">Space Free</string>
+    <string name="label_byte">00 Byte</string>
+
+    <!--Demo user alert Dialog String-->
+    <string name="alert">Alert</string>
+    <string name="you_have_no_right">You do not have the proper rights</string>
+    <string name="ok">OK</string>
+
+    <!--Introduction slides screen String-->
+    <string name="next">NEXT</string>
+    <string name="skip1">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="finish">FINISH</string>
+
+    <string name="slide_1_desc"> It is your private online storage drive, where you can upload, store, share, and access all your data.  Easily and securely share your files, photos and other data with anyone.</string>
+
+    <string name="slide_2_title">Global Access - Anytime, Anywhere</string>
+    <string name="slide_2_desc">Access your files from anywhere, on any device 24/7.</string>
+
+    <string name="slide_3_title"> File versioning</string>
+    <string name="slide_3_desc">Keep track of changes to files in your account and access older versions of files as needed.</string>
+
+    <string name="slide_4_title">Safe  &#38; Sound</string>
+    <string name="slide_4_desc"> Files are transferred securely using TLS (Transport Layer Security) and are stored in the cloud in an encrypted format using 256-bit AES.</string>
+
+    <string name="slide_5_title">Share - Anything with Anybody</string>
+    <string name="slide_5_desc">With SmacCloud you will be able to share any file of any size with anybody.</string>
+
+    <string name="slide_6_title">Share via Email</string>
+    <string name="slide_6_desc"> Share any files via email to anybody.</string>
+
+    <array name="array_dot_active">
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+    </array>
+
+    <array name="array_dot_inactive">
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+    </array>
+
+
+</resources>

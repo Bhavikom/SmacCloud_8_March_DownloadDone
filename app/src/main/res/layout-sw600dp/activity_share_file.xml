@@ -1,0 +1,411 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/parentLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:custom="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@color/lightGray"
+              android:focusable="true"
+              android:focusableInTouchMode="true"
+              android:minHeight="800dp"
+              android:minWidth="480dp"
+              android:orientation="vertical">
+
+
+    <include layout="@layout/partial_toolbar"/>
+
+
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_large"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_margin="@dimen/padding_5dp"
+                android:layout_marginLeft="@dimen/padding_5dp"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/labelFrom"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/label_from"
+                    android:textAppearance="?android:attr/textAppearanceMedium"
+                    android:textSize="@dimen/title_small"/>
+
+                <EditText
+                    android:id="@+id/textEmailFrom"
+                    android:layout_width="0dip"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="7"
+                    android:background="@null"
+                    android:ems="10"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/title_very_small"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#A2A2A2"
+                android:visibility="gone"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/labelto"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_to"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/title_small"
+                        android:visibility="gone"/>
+
+                    <!--<com.libaml.android.view.chip.ChipLayout
+                        android:id="@+id/textEmailTo"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_weight="7"
+                        android:background="@null"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        android:scrollbars="vertical"
+                        android:textSize="@dimen/title_ultra_small"
+                        custom:chipDrawable_="@drawable/rounded_chip_drawable"
+                        custom:deleteIcon_="@android:drawable/presence_offline"
+                        custom:hint_="@string/label_to"
+                        custom:labelPosition_="left"
+                        custom:textColor_="@android:color/black"/>-->
+                    <com.pchmn.materialchips.ChipsInput
+                        android:id="@+id/chips_input_email_to"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/padding_5dp"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:layout_weight="7"
+                        android:inputType="textEmailAddress"
+                        custom:chip_backgroundColor="@color/Dashboard_Color"
+                        custom:chip_deletable="true"
+                        custom:chip_hasAvatarIcon="false"
+                        custom:hint="@string/label_to"
+                        custom:maxRows="3"
+                        custom:showChipDetailed="false"
+                        custom:textColor="@android:color/black"/>
+
+
+                    <ImageView
+                        android:id="@+id/imgAddCCBCCField"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/ic_expand_more_black_24dp"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:background="#A2A2A2"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/labelcc"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_cc"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/title_small"/>
+
+                    <com.libaml.android.view.chip.ChipLayout
+                        android:id="@+id/textEmailCc"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:background="@null"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        android:textSize="@dimen/title_very_small"
+                        custom:chipDrawable_="@drawable/rounded_chip_drawable"
+                        custom:deleteIcon_="@android:drawable/presence_offline"
+                        custom:labelPosition_="left"
+                        custom:textColor_="@android:color/black"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#A2A2A2"
+                    android:visibility="gone"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dip"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/labelbcc"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/label_bcc"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textSize="@dimen/title_small"/>
+
+                    <com.libaml.android.view.chip.ChipLayout
+                        android:id="@+id/textEmailBcc"
+                        android:layout_width="0dip"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="7"
+                        android:background="@null"
+                        android:ems="10"
+                        android:inputType="textEmailAddress"
+                        android:textSize="@dimen/title_very_small"
+                        custom:chipDrawable_="@drawable/rounded_chip_drawable"
+                        custom:deleteIcon_="@android:drawable/presence_offline"
+                        custom:labelPosition_="left"
+                        custom:textColor_="@android:color/black"/>
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#A2A2A2"
+                    android:visibility="gone"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/padding_extra_large"
+                android:background="@color/white"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/textSubject"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_5dp"
+                    android:layout_marginStart="@dimen/padding_medium"
+                    android:layout_marginTop="@dimen/padding_5dp"
+                    android:background="@null"
+                    android:ems="10"
+                    android:hint="@string/label_subject"
+                    android:inputType="textCapSentences"
+                    android:textSize="@dimen/title_ultra_small"/>
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="#A2A2A2"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="invisible">
+
+                <TextView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/label_attachment"
+                    android:textSize="@dimen/title_very_small"/>
+
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_margin="@dimen/padding_5dp"
+                    android:src="@drawable/ic_attach"/>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dip"
+                android:layout_weight="6"
+                android:orientation="vertical"
+                android:weightSum="100">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:scrollbars="vertical">
+
+                    <EditText
+                        android:id="@+id/textEmailbody"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@null"
+                        android:ems="5"
+                        android:gravity="top"
+                        android:hint="@string/message"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:minLines="4"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:paddingTop="@dimen/padding_small"
+                        android:singleLine="false"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/title_ultra_small"/>
+
+
+                    <EditText
+                        android:id="@+id/txt_signature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:background="@null"
+                        android:ems="5"
+                        android:gravity="top"
+                        android:inputType="textMultiLine|textCapSentences"
+                        android:minLines="4"
+                        android:paddingLeft="@dimen/padding_medium"
+                        android:paddingTop="@dimen/padding_small"
+                        android:singleLine="false"
+                        android:text="@string/label_signature"
+                        android:textColor="@color/gray1"
+                        android:textSize="@dimen/title_ultra_small"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:layout_marginRight="@dimen/padding_5dp"
+                    android:layout_marginTop="@dimen/padding_very_small"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <EditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:enabled="false"
+                        android:hint="@string/label_signature"
+                        android:inputType="textCapSentences|textMultiLine"
+                        android:maxLines="5"
+                        android:textColor="@android:color/darker_gray"
+                        android:textSize="@dimen/title_small"/>
+
+                    <ImageView
+                        android:id="@+id/img_edit_signature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_medium"
+                        android:layout_weight="1.5"
+                        android:src="@android:drawable/ic_menu_edit"/>
+
+                    <ImageView
+                        android:id="@+id/img_signature"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/padding_medium"
+                        android:layout_weight="1.8"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#A2A2A2"
+                    android:visibility="gone"/>
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/txtAttachment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/padding_medium"
+                        android:text="@string/label_attachment"
+                        android:textSize="@dimen/title_very_small"/>
+
+                    <ImageView
+                        android:id="@+id/img_attach"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:src="@drawable/ic_attach"/>
+                </RelativeLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/padding_medium"
+                    android:background="@color/white"
+                    android:scrollbars="none">
+
+                    <LinearLayout
+                        android:id="@+id/child_attachment_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/padding_very_small"/>
+                </HorizontalScrollView>
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

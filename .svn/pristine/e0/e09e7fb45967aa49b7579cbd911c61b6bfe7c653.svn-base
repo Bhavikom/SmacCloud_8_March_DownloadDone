@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--<color name="accent_color">@android:color/white</color>
+    <color name="primary_color">#3F51B5</color>
+    <color name="primary_dark_color">#303F9F</color>-->
+
+    <color name="accent_color">@android:color/white</color>
+    <color name="primary_color">#1995AD</color>
+    <color name="primary_dark_color">@color/black</color>
+    <color name="dialog_color">#ECF0F1</color>
+
+
+    <color name="gray">#212121</color>
+    <color name="gray1">#9F9EA6</color>
+    <color name="light_gray">#E6E5ED</color>
+    <color name="yellow">#827717</color>
+    <color name="black">#000000</color>
+    <color name="black_transparent">#90000000</color>
+    <color name="green">#00C853</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="download_button_color">#6F3623</color>
+    <color name="old_icon_theme_color">#3e54b3</color>
+    <color name="orange_logo_color">#ed6618</color>
+    <color name="orange_logo_trans_color">#B3ed6618</color>
+    <color name="theme_black_background">#171616</color>
+    <color name="theme_overcast_background">#F1F1F2</color>
+    <color name="theme_black_transparent_background">#40161616</color>
+    <color name="theme_light_black_background">#434343</color>
+    <color name="theme_warm_gray_background">#BCBABE</color>
+    <color name="theme_ice_background">#A1D6E2</color>
+    <color name="theme_raspberry">#FF4447</color>
+    <color name="dark_red">#7D0714</color>
+    <color name="red1">#F30000</color>
+    <color name="light_grey1">#D4D3D1</color>
+
+
+    <color name="white">#FFFFFF</color>
+    <color name="grey3">#F2F2F2</color>
+
+    <color name="white_transparent">#DEFFFFFF</color>
+
+    <color name="black_divider">#A2A2A2</color>
+    <color name="white1">#E0E0E0</color>
+
+    <color name="Gray2">#222222</color>
+    <color name="Gray57">#575757</color>
+    <color name="GrayLight1">#66000000</color>
+    <color name="GrayLight2">#DCC4C4C4</color>
+
+    <color name="TransGrayLight">#94BEBEBE</color>
+    <color name="TransWhite">#94FFFFFF</color>
+    <color name="TransWhiteColor">#1AFFFFFF</color>
+    <color name="TransWhiteLineColor">#59FFFFFF</color>
+    <color name="TransBlueColor">#59B9D1F0</color>
+    <color name="dialogColor">#ECEFF1</color>
+
+    <color name="radio_button_selected_color">#686868</color>
+
+    <color name="cyan_button_color">#81A2A7</color>
+    <color name="cyan_button_select_color">#81a288</color>
+    <color name="bg_storage">#EFEEF4</color>
+    <color name="header_color">#F4F4F4</color>
+    <color name="header_color2">#A0B2C2</color>
+    <color name="calendar_background">#202529</color>
+    <color name="light_grey_custom">#838688</color>
+    <color name="button_color_blue">#24CDF4</color>
+    <color name="textview_color_blue">#1986FE</color>
+    <color name="white_color">#ffffff</color>
+    <color name="select_filter">#F0F5F5</color>
+    <color name="select_filter_selected">#AAAFAF</color>
+    <color name="grey_dashboard">#9b9f9f</color>
+    <color name="searchview_bgcolor">#B3B9C0</color>
+
+    <color name="textview_color_grey">#A1A1A1</color>
+    <color name="black_color">#000000</color>
+    <color name="blue_color">#189CEC</color>
+    <color name="custom_dialog_title">#142850</color>
+    <color name="popup_view_background">#D9111111</color>
+    <color name="sky_color">#B3EFF9</color>
+    <color name="sky_blue_color">#76B3C4</color>
+    <color name="blue_press_effect">#143A51</color>
+
+    <color name="Dashboard_Color">#CCD1D1</color>
+    <color name="searchView_color">#98999E</color>
+    <color name="search_option_types_background">#C9C9C9</color>
+    <color name="symptom_color_selected">#003366</color>
+    <color name="reaction_color_selected">#003366</color>
+    <color name="static_text_color">#003366</color>
+    <color name="note_text_disabled">#333333</color>
+    <color name="blue">#0000FF</color>
+    <color name="navy">#6699FF</color>
+    <color name="sky">#0099CC</color>
+    <color name="lightGray">#e7e7e7</color>
+    <color name="lightGray02">#bfbfbf</color>
+    <color name="dark">#000015</color>
+    <color name="lightGreen">#336666</color>
+    <color name="orange">#e33d1b</color>
+    <color name="darkOrange">#cc2303</color>
+    <color name="red">#A51317</color>
+    <color name="indigo_color">#2202FD</color>
+
+    <color name="grey_light">#EFEFF4</color>
+    <color name="grey">#707070</color>
+    <color name="ivorya3">#8CCCCCCC</color>
+    <color name="ivorya4">#EAE8EB</color>
+    <color name="table_textColor">#48BFBF</color>
+    <color name="transparent_black_color">#99000000</color>
+    <color name="orange_color">#F29001</color>
+    <color name="background_color">#F0F0F4</color>
+    <color name="button_orange_color">#DE6D40</color>
+    <color name="orange_color_light">#F4D07F</color>
+    <color name="recent_tab_color">#F4D07F</color>
+
+
+    <color name="calendar_active_month_bg">#fff5f7f9</color>
+    <color name="calendar_bg">#ffffffff</color>
+    <color name="calendar_divider">#ffbababa</color>
+    <color name="calendar_inactive_month_bg">#ffd7d9db</color>
+    <color name="calendar_selected_day_bg">#ff379bff</color>
+    <color name="calendar_highlighted_day_bg">#ccffcc</color>
+    <color name="calendar_selected_range_bg">#ff96caff</color>
+    <color name="calendar_text_inactive">#40778088</color>
+    <color name="grey_material">#9e9e9e</color>
+    <color name="calendar_text_active">#ff778088</color>
+    <color name="calendar_text_selected">#ffffffff</color>
+    <color name="calendar_text_unselectable">#7f778088</color>
+    <color name="calendar_text_highlighted">#ff778088</color>
+
+    <color name="selected_filter_color">#73CCED</color>
+
+
+    <!-- for caldroid libs-->
+    <color name="caldroid_white">#FFFFFF</color>
+    <color name="caldroid_black">#000000</color>
+    <color name="caldroid_transparent">#00000000</color>
+    <!-- For settings framework -->
+    <color name="caldroid_lighter_gray">#ddd</color>
+    <color name="caldroid_gray">#CCC</color>
+    <color name="caldroid_darker_gray">#aaa</color>
+    <color name="caldroid_middle_gray">#888</color>
+    <!-- A light Holo shade of blue -->
+    <color name="caldroid_holo_blue_light">#ff33b5e5</color>
+    <!-- A dark Holo shade of blue -->
+    <color name="caldroid_holo_blue_dark">#ff0099cc</color>
+    <!-- A really bright Holo shade of blue -->
+    <color name="caldroid_sky_blue">#FFA3E8F7</color>
+
+    <color name="caldroid_333">#333</color>
+    <color name="caldroid_555">#555</color>
+    <color name="caldroid_light_red">#ff7f7f</color>
+
+    <color name="blue_link">#007AFF</color>
+
+    <color name="dot_dark_screen1">#d1395c</color>
+    <color name="dot_dark_screen2">#14a895</color>
+    <color name="dot_dark_screen3">#2278d4</color>
+    <color name="dot_dark_screen4">#a854d4</color>
+
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#f98da5</color>
+    <color name="dot_light_screen2">#8cf9eb</color>
+    <color name="dot_light_screen3">#93c6fd</color>
+    <color name="dot_light_screen4">#e4b5fc</color>
+
+</resources>

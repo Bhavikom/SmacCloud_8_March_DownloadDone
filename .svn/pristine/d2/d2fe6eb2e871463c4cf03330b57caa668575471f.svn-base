@@ -1,0 +1,872 @@
+package in.ssoft.salescloud.activity;
+
+import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.gson.Gson;
+import com.libaml.android.view.chip.ChipLayout;
+import com.pchmn.materialchips.ChipsInput;
+import com.pchmn.materialchips.model.ChipInterface;
+import com.pchmn.materialchips.views.ChipsInputEditText;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
+
+import in.ssoft.salescloud.R;
+import in.ssoft.salescloud.base.Activity;
+import in.ssoft.salescloud.base.Helper;
+import in.ssoft.salescloud.base.RequestParameter;
+import in.ssoft.salescloud.data.DataHelper;
+import in.ssoft.salescloud.fragment.MediaFragment;
+import in.ssoft.salescloud.helper.DataProvider;
+import in.ssoft.salescloud.helper.PreferenceHelper;
+import in.ssoft.salescloud.model.Channel;
+import in.ssoft.salescloud.model.Media;
+import in.ssoft.salescloud.model.User;
+
+/**
+ * Share file via email
+ */
+public class ShareActivity extends Activity implements View.OnClickListener
+{
+    public static final int PERMISSION_REQUEST_CONTACT = 101;
+    public static final int REQUEST_CODE_SHARE = 1001;
+    public static final int REQUEST_CODE_MEDIA_ATTACHMENT = 1101;
+    public static final int REQUEST_CODE_SIGNATURE_EDIT = 1102;
+    public static final int SEND_TYPE_LINK = 0;
+    public static final int SEND_TYPE_ATTACHMENT = 1;
+    public static final String KEY_SELECTED_MEDIA = "SelectedMedia";
+    public static ArrayList<Media> selectedAttachmentList;
+    public LinearLayout parentLayout;
+    public PreferenceHelper prefManager;
+    Media media;
+    Channel channel;
+    MenuInflater inflater;
+    User user;
+    LinearLayout linearAttachList;
+    TextView txtAttachment;
+    ImageView imageViewAttach, imageViewSignature, imageViewEditSignature;
+    //private ChipLayout textEmailTo, textEmailCC, textEmailBCC;
+    private ChipsInput chips_input_email_to;
+    private EditText textSubject, textEmailBody, textEmailFrom, textSignature;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        prefManager = new PreferenceHelper(context);
+        setContentView(R.layout.activity_share_file);
+
+        media = this.getIntent().getParcelableExtra(MediaFragment.EXTRA_MEDIA);
+        channel = this.getIntent().getParcelableExtra(MediaFragment.EXTRA_CHANNEL);
+        setTitle(getString(R.string.share));
+        user = new User();
+        user.id = PreferenceHelper.getUserContext(context);
+        try
+        {
+            DataHelper.getUser(context, user);
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        textEmailFrom.setText(user.email.toString());
+
+        selectedAttachmentList = new ArrayList<>();
+        linearAttachList.addView(addSelectedMedia(media));
+        selectedAttachmentList.add(media);
+        updateAttachmentLabel();
+        txtAttachment.setTypeface(Helper.robotoBoldTypeface);
+        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+        Helper.setupUI(ShareActivity.this, parentLayout, parentLayout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_share_file, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_delete:
+                notifySimple(getString(R.string.msg_click_to_delete));
+                break;
+
+            case android.R.id.home:
+                showLeaveMessage();
+                break;
+
+            case R.id.action_send:
+                List<String> enteredEmails = new ArrayList<>();
+                RecyclerView chipRecyclerView = (RecyclerView) chips_input_email_to.findViewById(R.id.chips_recycler);
+                ChipsInputEditText chipsInputEditText = (ChipsInputEditText) chipRecyclerView.getChildAt(chipRecyclerView.getChildCount() - 1);
+                for (ChipInterface chipInterface : chips_input_email_to.getSelectedChipList())
+                {
+                    enteredEmails.add(chipInterface.getLabel());
+                }
+                if (chipsInputEditText != null && chipsInputEditText.getEditableText() != null && !chipsInputEditText.getEditableText().toString().isEmpty())
+                {
+                    String emailText = chipsInputEditText.getEditableText().toString();
+                    if (Helper.isEmailValid(emailText))
+                    {
+                        chips_input_email_to.addChip(emailText, "");
+                        enteredEmails.add(emailText);
+                        chipsInputEditText.getEditableText().clear();
+                    }
+                    else
+                    {
+                        Helper.showMessage(this, false, getString(R.string.msg_invalid_email));
+                        break;
+                    }
+                }
+
+                boolean isValidEmail = Helper.checkEmailAddresses(enteredEmails);
+
+                /* Check all attach media is download */
+                boolean isAttachMediaDownloaded = true;
+                for (int i = 0; i < selectedAttachmentList.size(); i++)
+                {
+                    if (selectedAttachmentList.get(i).isDownloaded != 1)
+                    {
+                        isAttachMediaDownloaded = false;
+                        break;
+                    }
+                }
+                /* End of check all attach media is download */
+
+                Helper.hideSoftKeyboard(this);
+                if (user.id == -1)
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_re_login));
+                }
+                /*else if (textEmailTo.getText().isEmpty())
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_enter_to_address));
+                    textEmailTo.requestFocus();
+                }*/
+                else if (enteredEmails.isEmpty())
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_enter_to_address));
+                    chips_input_email_to.requestFocus();
+                }
+                else if (!Helper.checkEmailAddresses(enteredEmails))
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_invalid_email));
+                }
+                else if (textSubject.getText().toString().trim().isEmpty())
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_enter_subject));
+                    textSubject.requestFocus();
+                }
+                else if (selectedAttachmentList.isEmpty())
+                {
+                    Helper.showMessage(this, false, getString(R.string.msg_select_media_for_share));
+                }
+                else if (!isAttachMediaDownloaded)
+                {
+                    Helper.showMessage(this, false, getString(R.string.download_file_first));
+                }
+                else if (prefManager.isDemoLogin())
+                {
+                    Helper.demoUserDialog(context);
+                }
+                else
+                {
+
+                    sendMail(SEND_TYPE_LINK);
+                   /* if (Helper.getTotalMediaSize(selectedAttachmentList) / 1048576 < 26)
+                    {
+                        final BottomSheetDialog dialog = new BottomSheetDialog(context);
+                        View bottomSheetDialogView = View.inflate(context, R.layout.dialog_email_send_via_options, null);
+                        TextView btn_send_via_url = (TextView) bottomSheetDialogView.findViewById(R.id.btn_send_via_url);
+                        btn_send_via_url.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                sendMail(SEND_TYPE_LINK);
+                                dialog.dismiss();
+                            }
+                        });
+                        TextView btn_send_via_attachment = (TextView) bottomSheetDialogView.findViewById(R.id.btn_send_via_attachment);
+                        btn_send_via_attachment.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                sendMail(SEND_TYPE_ATTACHMENT);
+                                dialog.dismiss();
+                            }
+                        });
+                        TextView btn_cancel = (TextView) bottomSheetDialogView.findViewById(R.id.btn_cancel);
+                        btn_cancel.setOnClickListener(new View.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(View v)
+                            {
+                                dialog.dismiss();
+                            }
+                        });
+                        dialog.setTitle(R.string.title_send_via);
+                        dialog.setContentView(bottomSheetDialogView);
+                        dialog.setCancelable(true);
+                        dialog.show();
+                        dialog.getWindow().findViewById(R.id.design_bottom_sheet).setBackgroundResource(android.R.color.transparent);
+                    }
+                    else
+
+                */
+                }
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void initializeComponents()
+    {
+        super.initializeComponents();
+        parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
+        linearAttachList = (LinearLayout) findViewById(R.id.child_attachment_list);
+        /*textEmailTo = (ChipLayout) findViewById(R.id.textEmailTo);
+        textEmailTo.addLayoutTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (!TextUtils.isEmpty(s))
+                {
+                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
+                    if (ch.equalsIgnoreCase(" "))
+                    {
+                        if (generateChip(textEmailTo))
+                            textEmailTo.performClick();
+                    }
+                }
+            }
+        });
+
+        textEmailCC = (ChipLayout) findViewById(R.id.textEmailCc);
+        textEmailCC.addLayoutTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (!TextUtils.isEmpty(s))
+                {
+                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
+                    if (ch.equalsIgnoreCase(" "))
+                    {
+                        if (generateChip(textEmailCC))
+                            textEmailCC.performClick();
+                    }
+                }
+            }
+        });
+        textEmailBCC = (ChipLayout) findViewById(R.id.textEmailBcc);
+        textEmailBCC.addLayoutTextChangedListener(new TextWatcher()
+        {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count)
+            {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s)
+            {
+                if (!TextUtils.isEmpty(s))
+                {
+                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
+                    if (ch.equalsIgnoreCase(" "))
+                    {
+                        if (generateChip(textEmailBCC))
+                            textEmailBCC.performClick();
+                    }
+                }
+            }
+        });*/
+
+        /* New lib */
+        chips_input_email_to = (ChipsInput) findViewById(R.id.chips_input_email_to);
+        chips_input_email_to.addChipsListener(new ChipsInput.ChipsListener()
+        {
+            @Override
+            public void onChipAdded(ChipInterface chipInterface, int i)
+            {
+
+            }
+
+            @Override
+            public void onChipRemoved(ChipInterface chipInterface, int i)
+            {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence)
+            {
+                if (charSequence.toString().endsWith(" ") || charSequence.toString().endsWith(","))
+                {
+                    String strEmail = String.valueOf(charSequence.subSequence(0, charSequence.length() - 1));
+                    if (Helper.isEmailValid(strEmail))
+                    {
+                        chips_input_email_to.addChip(strEmail, "");
+                    }
+                }
+            }
+        });
+
+        /* End new lib */
+
+        textSubject = (EditText) findViewById(R.id.textSubject);
+        textEmailBody = (EditText) findViewById(R.id.textEmailbody);
+        textSignature = (EditText) findViewById(R.id.txt_signature);
+        textEmailFrom = (EditText) findViewById(R.id.textEmailFrom);
+
+        txtAttachment = (TextView) findViewById(R.id.txtAttachment);
+
+
+        imageViewAttach = (ImageView) findViewById(R.id.img_attach);
+        imageViewSignature = (ImageView) findViewById(R.id.img_signature);
+        imageViewEditSignature = (ImageView) findViewById(R.id.img_edit_signature);
+
+        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+        //textEmailTo.requestFocus();
+
+        LinearLayout.LayoutParams linearLayout = new LinearLayout.LayoutParams(Helper.getDeviceWidth(this) / 7, Helper.getDeviceHeight(this) / 7);
+        linearLayout.gravity = Gravity.RIGHT;
+        imageViewSignature.setLayoutParams(linearLayout);
+
+
+        textSignature.setText(PreferenceHelper.getSignature(context));
+        textSignature.setVisibility(View.GONE);
+        if (!TextUtils.isEmpty(PreferenceHelper.getSignatureImage(context)))
+            setImage(PreferenceHelper.getSignatureImage(context));
+
+        if (!PreferenceHelper.getSignature(context).isEmpty())
+        {
+            Spannable bodySpannableString = new SpannableString(PreferenceHelper.getEmailBody(context) + "\n\n\n" + PreferenceHelper.getSignature(context));
+            bodySpannableString.setSpan(new ForegroundColorSpan(Color.GRAY), bodySpannableString.toString().indexOf(PreferenceHelper.getSignature(context)), bodySpannableString.toString().length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            textEmailBody.setText(bodySpannableString);
+        }
+        else if (!PreferenceHelper.getEmailBody(context).isEmpty())
+        {
+            textEmailBody.setText(PreferenceHelper.getEmailBody(context) + "\n\n\n");
+        }
+
+        /*List<String> ccemail = new Gson().fromJson(PreferenceHelper.getEmailCcAddress(context), List.class);
+        if (ccemail != null && !ccemail.isEmpty())
+            textEmailCC.setText(ccemail);*/
+
+        /*List<String> bccemail = new Gson().fromJson(PreferenceHelper.getEmailBccAddress(context), List.class);
+        if (bccemail != null && !bccemail.isEmpty())
+            textEmailBCC.setText(bccemail);*/
+
+
+        imageViewAttach.setOnClickListener(this);
+        imageViewEditSignature.setOnClickListener(this);
+        textEmailFrom.setEnabled(false);
+    }
+
+    public void setImage(String path)
+    {
+        Glide.with(this)
+                .load(Uri.fromFile(new File(path)))
+                .placeholder(R.drawable.ic_loding)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageViewSignature);
+    }
+
+    @Override
+    protected void bindEvents()
+    {
+        super.bindEvents();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        showLeaveMessage();
+    }
+
+    /**
+     * Convert string to JSONObject for mail CC
+     *
+     * @param value
+     * @return
+     * @throws JSONException
+     */
+    public JSONObject toJsonCc(String value) throws JSONException
+    {
+        JSONObject userLike = new JSONObject();
+        userLike.put("CC", value);
+        return userLike;
+    }
+
+    /**
+     * Convert string to JSONObject for mail BCC
+     *
+     * @param value
+     * @return
+     * @throws JSONException
+     */
+    public JSONObject toJsonBcc(String value) throws JSONException
+    {
+        JSONObject userLike = new JSONObject();
+        userLike.put("Bcc", value);
+        return userLike;
+    }
+
+    /**
+     * Convert string to JSONObject for mail To
+     *
+     * @param value
+     * @return
+     * @throws JSONException
+     */
+    public JSONObject toJsonTo(String value) throws JSONException
+    {
+        JSONObject userLike = new JSONObject();
+        userLike.put("To", value);
+        return userLike;
+    }
+
+    public void showLeaveMessage()
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage(R.string.msg_sure_want_to_leave);
+        builder.setCancelable(true);
+        builder.setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.dismiss();
+                finish();
+            }
+        });
+        builder.setNegativeButton(R.string.label_no, new DialogInterface.OnClickListener()
+        {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i)
+            {
+                dialogInterface.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
+        dialog.show();
+    }
+
+    public void askForContactPermission()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+        {
+            if (ContextCompat.checkSelfPermission(ShareActivity.this, Manifest.permission.READ_CONTACTS) != PackageManager.PERMISSION_GRANTED)
+            {
+
+                // Should we show an explanation?
+                if (ActivityCompat.shouldShowRequestPermissionRationale(ShareActivity.this,
+                        Manifest.permission.READ_CONTACTS))
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(ShareActivity.this);
+                    builder.setTitle("Contacts access needed");
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    builder.setMessage("please confirm Contacts access");//TODO put real question
+                    builder.setOnDismissListener(new DialogInterface.OnDismissListener()
+                    {
+                        @TargetApi(Build.VERSION_CODES.M)
+                        @Override
+                        public void onDismiss(DialogInterface dialog)
+                        {
+                            requestPermissions(new String[]{Manifest.permission.READ_CONTACTS},
+                                    PERMISSION_REQUEST_CONTACT);
+                        }
+                    });
+                    builder.show();
+                    // Show an expanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+
+                }
+                else
+                {
+
+                    // No explanation needed, we can request the permission.
+
+                    ActivityCompat.requestPermissions(ShareActivity.this, new String[]{Manifest.permission.READ_CONTACTS},
+                            PERMISSION_REQUEST_CONTACT);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
+            }
+
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case PERMISSION_REQUEST_CONTACT:
+            {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    Toast.makeText(ShareActivity.this, "Permission granted for contacts", Toast.LENGTH_SHORT).show();
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+
+                }
+                else
+                {
+                    Toast.makeText(ShareActivity.this, "No permission for contacts", Toast.LENGTH_SHORT).show();
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    @Override
+    public void onClick(View v)
+    {
+        switch (v.getId())
+        {
+            case R.id.img_attach:
+                Intent i = new Intent(getApplicationContext(), ShareAttachmentActivity.class);
+                i.putExtra(KEY_SELECTED_MEDIA, selectedAttachmentList);
+                startActivityForResult(i, REQUEST_CODE_MEDIA_ATTACHMENT);
+                break;
+
+            case R.id.img_edit_signature:
+                Intent editSignature = new Intent(getApplicationContext(), SetSignatureActivity.class);
+                textSignature.setText(PreferenceHelper.getSignature(context));
+                setImage(PreferenceHelper.getSignatureImage(context));
+                startActivityForResult(editSignature, REQUEST_CODE_SIGNATURE_EDIT);
+                break;
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_CODE_MEDIA_ATTACHMENT)
+        {
+            selectedAttachmentList = data.getExtras().getParcelableArrayList(ShareActivity.KEY_SELECTED_MEDIA);
+            linearAttachList.removeAllViews();
+            if (selectedAttachmentList != null && !selectedAttachmentList.isEmpty())
+            {
+                for (Media media : selectedAttachmentList)
+                {
+                    linearAttachList.addView(addSelectedMedia(media));
+                }
+            }
+            updateAttachmentLabel();
+        }
+        else if (requestCode == REQUEST_CODE_SIGNATURE_EDIT)
+        {
+            textSignature.setText(PreferenceHelper.getSignature(context));
+            setImage(PreferenceHelper.getSignatureImage(context));
+
+
+        }
+    }
+
+    public View addSelectedMedia(Media media)
+    {
+        final View singleItemView = View.inflate(context, R.layout.attach_media_item_single, null);
+        FrameLayout attach_media_item_layout_content = (FrameLayout) singleItemView.findViewById(R.id.attach_media_item_layout_content);
+        ImageView img_media = (ImageView) singleItemView.findViewById(R.id.img_media);
+        TextView txt_name = (TextView) singleItemView.findViewById(R.id.txt_name);
+        ImageView img_close = (ImageView) singleItemView.findViewById(R.id.img_close);
+
+        txt_name.setText(media.name);
+        final Uri imageUri = Uri.parse(media.icon);
+        Glide.with(context)
+                .load(imageUri)
+                .placeholder(R.drawable.ic_loding)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(img_media);
+
+        img_close.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+               /* for (int i = 0; i < linearAttachList.getChildCount(); i++)
+                {
+                    FrameLayout singleLayout = (FrameLayout) linearAttachList.getChildAt(i);
+                    //if (singleLayout.getChildAt(1).getId() == v.getId())
+                    if (((FrameLayout) ((CardView) singleLayout.getChildAt(0)).getChildAt(0)).getChildAt(1).getId() == v.getId())
+                    {
+                        linearAttachList.removeView(singleItemView);
+                        selectedAttachmentList.remove(i);
+                        break;
+                    }
+                }*/
+                Media removingMedia = (Media) singleItemView.getTag();
+                linearAttachList.removeView(singleItemView);
+                selectedAttachmentList.remove(removingMedia);
+                updateAttachmentLabel();
+            }
+        });
+
+        int orientation = this.getResources().getConfiguration().orientation;
+        if (orientation == Configuration.ORIENTATION_PORTRAIT)
+        {
+            img_media.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (Helper.getDeviceHeight(ShareActivity.this) / 4.5)));
+            img_media.setScaleType(ImageView.ScaleType.FIT_XY);
+            attach_media_item_layout_content.setLayoutParams
+                    (new LinearLayout.LayoutParams((int) (Helper.getDeviceHeight(ShareActivity.this) / 3.5),
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+        }
+        else
+        {
+            // Landscape Mode
+            img_media.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (Helper.getDeviceHeight(ShareActivity.this) / 3.5)));
+            img_media.setScaleType(ImageView.ScaleType.FIT_XY);
+            attach_media_item_layout_content.setLayoutParams
+                    (new LinearLayout.LayoutParams((int) (Helper.getDeviceHeight(ShareActivity.this) / 2.5),
+                            ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        }
+
+        singleItemView.setTag(media);
+        return singleItemView;
+
+    }
+
+    public void updateAttachmentLabel()
+    {
+        txtAttachment.setText(getString(R.string.label_attachment) + " (" + selectedAttachmentList.size() + ")");
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.
+                INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        return true;
+    }
+
+    private void sendMail(int shareType)
+    {
+        try
+        {
+            JSONObject objJsonPayload = new JSONObject();
+            objJsonPayload.putOpt("UserId", user.id);
+            objJsonPayload.putOpt("Subject", textSubject.getText().toString());
+            objJsonPayload.putOpt("Body", textEmailBody.getText().toString());
+            objJsonPayload.putOpt("Signature", textSignature.getText().toString());
+            // IsAttach 0 = URL
+            // IsAttach 1 = Attach File
+            objJsonPayload.putOpt("IsAttach", shareType);
+            // For To Address
+            JSONArray jsonArrayToAddress = new JSONArray();
+            /*if (textEmailTo.getText() != null)
+            {
+                for (int i = 0; i < textEmailTo.getText().size(); i++)
+                    jsonArrayToAddress.put(new JSONObject().put("Email", textEmailTo.getText().get(i)));
+            }*/
+            if (chips_input_email_to.getSelectedChipList() != null)
+            {
+                for (int i = 0; i < chips_input_email_to.getSelectedChipList().size(); i++)
+                    jsonArrayToAddress.put(new JSONObject().put("Email", chips_input_email_to.getSelectedChipList().get(i).getLabel()));
+            }
+            objJsonPayload.put("ToAddress", jsonArrayToAddress);
+
+            // For CC Address
+            JSONArray jsonArrayCCAddress = new JSONArray();
+            if (!PreferenceHelper.getEmailCcAddress(context).isEmpty())
+            {
+                List<String> ccemail = new Gson().fromJson(PreferenceHelper.getEmailCcAddress(context), List.class);
+                for (int i = 0; i < ccemail.size(); i++)
+                    jsonArrayCCAddress.put(new JSONObject().put("Email", ccemail.get(i)));
+            }
+            objJsonPayload.put("CCAddress", jsonArrayCCAddress);
+
+            // For BCC Address
+            JSONArray jsonArrayBCCAddress = new JSONArray();
+            if (!PreferenceHelper.getEmailBccAddress(context).isEmpty())
+            {
+                List<String> bccemail = new Gson().fromJson(PreferenceHelper.getEmailBccAddress(context), List.class);
+                for (int i = 0; i < bccemail.size(); i++)
+                    jsonArrayBCCAddress.put(new JSONObject().put("Email", bccemail.get(i)));
+            }
+            objJsonPayload.put("BCCAddress", jsonArrayBCCAddress);
+
+
+            // For attachment file(media)
+            JSONObject jsonObjectAttachmentList = new JSONObject();
+            JSONArray jsonArrayMedia = new JSONArray();
+            for (Media media : selectedAttachmentList)
+            {
+                JSONObject objMedia = new JSONObject();
+                objMedia.put("Id", media.id);
+                //objMedia.put("ChannelId", DataHelper.getChannelIdFromMediaID(this, media.id));
+                objMedia.put("ChannelId", DataHelper.getChannelId(this, media.id));
+                objMedia.put("ParentId", media.parentId);
+                objMedia.put("VersionId", media.currentVersionId);
+                jsonArrayMedia.put(objMedia);
+            }
+            jsonObjectAttachmentList.put("Media", jsonArrayMedia);
+            objJsonPayload.put("AttachmentList", jsonObjectAttachmentList);
+
+
+            // TODO: 29-Jun-17 Pass IsAttach value dynamic
+            // IsAttach 0 = URL
+            // IsAttach 1 = Attach File
+            postNetworkRequest(REQUEST_CODE_SHARE, DataProvider.ENDPOINT_SHARE, DataProvider.Actions.SEND_MESSAGE,
+                    RequestParameter.urlEncoded("UserId", String.valueOf(user.id)), RequestParameter.urlEncoded("Subject", textSubject.getText().toString()),
+                    RequestParameter.urlEncoded("Body", textEmailBody.getText().toString()), RequestParameter.urlEncoded("Signature", textSignature.getText().toString()),
+                    RequestParameter.urlEncoded("IsAttach", String.valueOf(shareType)), RequestParameter.jsonArray("ToAddress", jsonArrayToAddress),
+                    RequestParameter.jsonArray("CCAddress", jsonArrayCCAddress), RequestParameter.jsonArray("BCCAddress", jsonArrayBCCAddress),
+                    RequestParameter.jsonObject("AttachmentList", jsonObjectAttachmentList));
+            Log.e("Requiest>>", String.valueOf(objJsonPayload));
+
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+    }
+
+    @Override
+    protected void onNetworkResponse(int requestCode, boolean status, String response)
+    {
+        super.onNetworkResponse(requestCode, status, response);
+        if (requestCode == REQUEST_CODE_SHARE)
+        {
+            Log.e("Share-Response>>", response);
+            if (status)
+            {
+                try
+                {
+                    JSONObject responseJson = new JSONObject(response);
+                    int requestStatus = responseJson.optInt("Status");
+                    if (requestStatus == 0)
+                    {
+                        Helper.showShareSuccessDialog(this);
+                    }
+                    else
+                    {
+                        if (responseJson.has("Message") && !responseJson.isNull("Message"))
+                            Helper.showMessage(this, false, responseJson.optString("Message"));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.e("Share>>", ex.getMessage());
+                }
+            }
+            else
+            {
+                notifySimple(getString(R.string.msg_cannot_complete_request));
+            }
+        }
+    }
+
+    public boolean generateChip(ChipLayout chipLayout)
+    {
+        List<String> tempList = chipLayout.getText();
+        if (Helper.checkEmailAddresses(tempList))
+        {
+            List<String> newData = new ArrayList<>();
+            for (String str : tempList)
+                newData.add(str.trim());
+            chipLayout.setText(newData);
+            return true;
+        }
+        return false;
+    }
+}

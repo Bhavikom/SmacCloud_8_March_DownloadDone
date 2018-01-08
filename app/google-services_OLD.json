@@ -1,0 +1,63 @@
+{
+  "project_info": {
+    "project_number": "645815223505",
+    "firebase_url": "https://smac-cloud-9ff55.firebaseio.com",
+    "project_id": "smac-cloud-9ff55",
+    "storage_bucket": "smac-cloud-9ff55.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:645815223505:android:0667ddcd148dcf39",
+        "android_client_info": {
+          "package_name": "de.smac.smaccloud"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "645815223505-qk3o9qau6rlqtr3aueo1rs98tviv38fn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "de.smac.smaccloud",
+            "certificate_hash": "79f02883987d6ef08326fdfcc9f74a2759e55cf6"
+          }
+        },
+        {
+          "client_id": "645815223505-l9a7ih38047u1k77fn79d5jgg2j6pe08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkhtzW-ipIoR5lwDWtRWXiNrYZt0HXloM"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "645815223505-p2v9fbg8nhfrkulb9u44lu4ntigbheck.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "de.smac.smaccloud.de",
+                "app_store_id": "20112017"
+              }
+            },
+            {
+              "client_id": "645815223505-l9a7ih38047u1k77fn79d5jgg2j6pe08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

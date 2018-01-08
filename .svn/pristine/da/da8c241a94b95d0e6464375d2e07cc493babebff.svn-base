@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:padding="0dp"
+            android:shape="rectangle">
+            <solid
+                android:color="@color/searchview_bgcolor"/>
+
+
+            <corners
+                android:bottomLeftRadius="@dimen/padding_small"
+                android:bottomRightRadius="@dimen/padding_small"
+                android:topLeftRadius="@dimen/padding_small"
+                android:topRightRadius="@dimen/padding_small"/>
+            <stroke android:width="0px" android:color="@color/searchview_bgcolor"/>
+
+
+        </shape>
+
+    </item>
+
+</selector>

@@ -1,0 +1,201 @@
+<manifest package="de.smac.smaccloud"
+          xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
+    <permission
+        android:name="de.smac.smaccloud.permission.C2D_MESSAGE"
+        android:protectionLevel="signature"/>
+
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+    <uses-permission android:name="de.smac.smaccloud.permission.C2D_MESSAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true"
+        android:xlargeScreens="true"/>
+
+    <application
+        android:name="de.smac.smaccloud.service.SMACCloudApplication"
+        android:allowBackup="false"
+        android:hardwareAccelerated="true"
+        android:icon="@drawable/ic_logo"
+        android:label="@string/app_name"
+        android:largeHeap="true"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.Eccelor.Base"
+        tools:replace="android:allowBackup">
+
+        <receiver
+            android:name="de.smac.smaccloud.service.SyncNotification"
+            android:label="Please Sync"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.SplashActivity"
+            android:configChanges="orientation|screenSize">
+            <intent-filter>
+                <category android:name="android.intent.category.LAUNCHER"/>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="de.smac.smaccloud.activity.LoginActivity"
+            android:configChanges="orientation"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.TryDemoActivity"
+            android:configChanges="orientation"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.DemoActivity"
+            android:configChanges="orientation"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.IntroScreenActivity"
+            android:configChanges="screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.DashboardActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.MediaSearchActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.ForgotPasswordActivity"
+            android:configChanges="orientation"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.MediaDetailActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.SyncActivity"
+            android:screenOrientation="unspecified"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.UserLikeViewActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.UserCommentViewActivity"
+            android:configChanges="orientation|screenSize"
+            android:windowSoftInputMode="adjustPan"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.ShareActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.ShareAttachmentActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.MediaAttachmentActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.MediaActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.DocumentViewerActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.ImageViewerActivity"
+            android:configChanges="orientation|screenSize"
+            />
+
+        <activity
+            android:name="de.smac.smaccloud.activity.VideoViewerActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.StorageActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.AboutUsActivity"
+            android:configChanges="orientation|screenSize"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.ChangePasswordActivity"
+            android:configChanges="orientation"
+            android:screenOrientation="unspecified"/>
+
+        <activity
+            android:name="de.smac.smaccloud.activity.CcAddressChipLayoutActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+        <activity
+            android:name="de.smac.smaccloud.activity.BccAddressChipLayoutActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+        <activity
+            android:name="de.smac.smaccloud.activity.EmailBodyActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+        <activity
+            android:name="de.smac.smaccloud.activity.SetSignatureActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+        <activity
+            android:name="de.smac.smaccloud.activity.TermsActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+        <activity
+            android:name="de.smac.smaccloud.activity.OpenSourceLibrariesActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="unspecified"/>
+
+
+        <activity
+            android:name="de.smac.smaccloud.activity.OrganizationActivity"
+            android:configChanges="orientation"/>
+
+        <service
+            android:name="de.smac.smaccloud.base.NetworkService"
+            android:enabled="true"
+            android:exported="true"/>
+        <service
+            android:name="de.smac.smaccloud.service.DownloadService"
+            android:enabled="true"
+            android:exported="true"/>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version"/>
+
+        <!-- FIREBASE CLOUD MESSAGING-->
+
+        <service
+            android:name="de.smac.smaccloud.service.FCMInstanceIdService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="de.smac.smaccloud.service.FCMMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- END FIREBASE CLOUD MESSAGING-->
+
+    </application>
+</manifest>

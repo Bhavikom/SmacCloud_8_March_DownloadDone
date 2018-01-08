@@ -1,0 +1,28 @@
+<resources>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Eccelor.Base" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="colorAccent">@color/primary_color</item>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/primary_dark_color</item>
+        <item name="colorButtonNormal">@color/primary_color</item>
+        <item name="drawerArrowStyle">@style/Theme.Eccelor.Base.DrawerArrowStyle</item>
+        <item name="android:windowActivityTransitions">true</item>
+    </style>
+
+    <!--<style name="EditTextStyle" parent="android:Widget.EditText">
+        <item name="android:textSize">@dimen/title_verysmall</item>
+        <item name="android:textColor">@color/White</item>
+        <item name="android:textColorHint">@color/White</item>
+        <item name="android:backgroundTint">@color/White</item>
+    </style>-->
+
+</resources>

@@ -1,0 +1,28 @@
+package in.ssoft.salescloud.service;
+
+import android.content.Intent;
+import android.support.multidex.MultiDexApplication;
+
+import in.ssoft.salescloud.base.NetworkService;
+
+/**
+ * Start network service
+ */
+public class SalesCloudApplication extends MultiDexApplication
+{
+    private static SalesCloudApplication _instance;
+
+    public static SalesCloudApplication getInstance()
+    {
+        return _instance;
+    }
+
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        _instance = this;
+        Intent networkServiceIntent = new Intent(this, NetworkService.class);
+        startService(networkServiceIntent);
+    }
+}

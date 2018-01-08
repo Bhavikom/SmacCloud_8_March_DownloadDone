@@ -1,0 +1,685 @@
+package in.ssoft.salescloud.activity;
+
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.AppCompatSeekBar;
+import android.text.format.DateUtils;
+import android.util.Log;
+import android.view.Display;
+import android.view.MenuItem;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
+import android.widget.TextView;
+import android.widget.VideoView;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.File;
+import java.text.ParseException;
+
+import in.ssoft.salescloud.R;
+import in.ssoft.salescloud.base.Activity;
+import in.ssoft.salescloud.base.Helper;
+import in.ssoft.salescloud.base.RequestParameter;
+import in.ssoft.salescloud.data.DataHelper;
+import in.ssoft.salescloud.fragment.MediaFragment;
+import in.ssoft.salescloud.helper.DataProvider;
+import in.ssoft.salescloud.helper.PreferenceHelper;
+import in.ssoft.salescloud.model.Channel;
+import in.ssoft.salescloud.model.Media;
+import in.ssoft.salescloud.model.UserComment;
+import in.ssoft.salescloud.model.UserLike;
+import in.ssoft.salescloud.widgets.UserCommentDialog;
+
+import static in.ssoft.salescloud.activity.MediaActivity.REQUEST_COMMENT;
+import static in.ssoft.salescloud.activity.MediaActivity.REQUEST_LIKE;
+import static in.ssoft.salescloud.base.Helper.LOCALIZATION_TYPE_ERROR_CODE;
+import static in.ssoft.salescloud.fragment.MediaFragment.BROADCAST_MEDIA_DOWNLOAD_COMPLETE;
+import static in.ssoft.salescloud.fragment.MediaFragment.EXTRA_CHANNEL;
+import static in.ssoft.salescloud.fragment.MediaFragment.EXTRA_PARENT;
+import static in.ssoft.salescloud.fragment.MediaFragment.FILETYPE_VIDEO_MP4;
+
+/**
+ * Created by Ssoft on 02-Mar-17.
+ */
+public class VideoViewerActivity extends Activity implements View.OnClickListener, MediaPlayer.OnCompletionListener, MediaPlayer.OnErrorListener, MediaPlayer.OnInfoListener,
+        MediaPlayer.OnPreparedListener, MediaPlayer.OnSeekCompleteListener, MediaPlayer.OnVideoSizeChangedListener,
+        SurfaceHolder.Callback
+{
+    public static final String EXTRA_MEDIA = "extraMedia";
+    public static int COMMENT_ACTIVITY_REQUEST_CODE = 1001;
+    public Boolean checkLike;
+    public PreferenceHelper prefManager;
+    VideoView videoView;
+    Display currentDisplay;
+    SurfaceView surfaceView;
+    SurfaceHolder surfaceHolder;
+    MediaPlayer mediaPlayer;
+    ImageView btn_play_pause_music;
+    AppCompatSeekBar seekBarVideo;
+    TextView txtTime;
+    Handler seekHandler;
+    Runnable runVideo;
+    int videoWidth = 0, videoHeight = 0;
+    boolean readyToPlay = false;
+    Bundle extras;
+    File mFolder;
+    Channel channel;
+    Media media;
+    LinearLayout btn_like;
+    LinearLayout btn_comment;
+    LinearLayout btn_attach;
+    LinearLayout btn_info;
+    LinearLayout btn_done;
+    ImageView img_like;
+    ImageView img_comment;
+    ImageView img_attach;
+    ImageView img_info;
+    UserCommentDialog commentDialog;
+    Bitmap bitmapMp3;
+    Uri uriForPlayer;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        prefManager = new PreferenceHelper(context);
+        setContentView(R.layout.activity_video_viewer);
+        // Helper.retainOrientation(VideoViewerActivity.this);
+
+    }
+
+    @Override
+    protected void initializeComponents()
+    {
+        super.initializeComponents();
+        extras = getIntent().getExtras();
+        if (extras != null)
+        {
+            if (extras.containsKey(EXTRA_MEDIA))
+            {
+                media = extras.getParcelable(EXTRA_MEDIA);
+                if (media != null)
+                    setTitle(media.name);
+            }
+        }
+        mFolder = new File("" + getFilesDir() + "/" + media.id);
+        final File videoFile = new File("" + context.getFilesDir() + "/" + media.id);
+        uriForPlayer = Uri.fromFile(videoFile);
+        mediaPlayer = MediaPlayer.create(context, uriForPlayer);
+
+        surfaceView = (SurfaceView) findViewById(R.id.surfaceView);
+        surfaceHolder = surfaceView.getHolder();
+
+        surfaceHolder.addCallback(this);
+        surfaceView.setOnClickListener(new View.OnClickListener()
+        {
+            public void onClick(View v)
+            {
+                Log.d("UiVisibility", "onClick");
+                hideUI();
+            }
+        });
+        getWindow().getDecorView().setOnSystemUiVisibilityChangeListener(new View.OnSystemUiVisibilityChangeListener()
+        {
+            @Override
+            public void onSystemUiVisibilityChange(int visibility)
+            {
+                // Note that system bars will only be "visible" if none of the
+                // LOW_PROFILE, HIDE_NAVIGATION, or FULLSCREEN flags are set.
+                if ((visibility & View.SYSTEM_UI_FLAG_HIDE_NAVIGATION) == 0)
+                {
+                    // The system bars are visible. Make any desired
+                    // adjustments to your UI
+                    VideoViewerActivity.this.findViewById(R.id.layout_progress).setVisibility(View.VISIBLE);
+                    VideoViewerActivity.this.findViewById(R.id.layout_header).setVisibility(View.VISIBLE);
+
+                }
+                else
+                {
+                    // The system bars are NOT visible. Make any desired
+                    // adjustments to your UI.
+                    VideoViewerActivity.this.findViewById(R.id.layout_progress).setVisibility(View.GONE);
+                    VideoViewerActivity.this.findViewById(R.id.layout_header).setVisibility(View.GONE);
+
+                }
+            }
+        });
+        surfaceHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
+        if (media.type.split("/")[0].equalsIgnoreCase("audio") || media.type.split("/")[1].equalsIgnoreCase("audio"))
+        {
+
+            bitmapMp3 = Helper.getBitmapFromURI(this, uriForPlayer);
+            if (bitmapMp3 != null)
+            {
+                Drawable drawable = new BitmapDrawable(getResources(), bitmapMp3);
+                surfaceView.setBackground(drawable);
+            }
+        }
+        btn_play_pause_music = (ImageView) findViewById(R.id.btn_play_pause_music);
+        seekBarVideo = (AppCompatSeekBar) findViewById(R.id.seekBarVideo);
+        txtTime = (TextView) findViewById(R.id.txtTime);
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setOnCompletionListener(this);
+        mediaPlayer.setOnErrorListener(this);
+        mediaPlayer.setOnInfoListener(this);
+        mediaPlayer.setOnPreparedListener(this);
+        mediaPlayer.setOnSeekCompleteListener(this);
+        mediaPlayer.setOnVideoSizeChangedListener(this);
+        mediaPlayer.setScreenOnWhilePlaying(true);
+        String filePath = Environment.getExternalStorageDirectory().getPath()
+                + "/Test.m4v";
+
+        try
+        {
+            mediaPlayer.setDataSource("" + context.getFilesDir() + "/" + media.id);
+        }
+        catch (Exception e)
+        {
+            Log.v("TEST", e.getMessage());
+        }
+        currentDisplay = getWindow().getWindowManager().getDefaultDisplay();
+
+        seekBarVideo.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener()
+        {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser)
+            {
+                if (fromUser)
+                {
+                    mediaPlayer.seekTo(progress);
+                    seekBar.setProgress(progress);
+                }
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar)
+            {
+
+            }
+        });
+
+        seekHandler = new Handler();
+        runVideo = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                if (mediaPlayer != null && mediaPlayer.isPlaying())
+                {
+                    if (mediaPlayer.getCurrentPosition() < mediaPlayer.getDuration())
+                    {
+                        seekBarVideo.setProgress(mediaPlayer.getCurrentPosition());
+                        txtTime.setText(DateUtils.formatElapsedTime(mediaPlayer.getCurrentPosition() / 1000) + " / " + DateUtils.formatElapsedTime(mediaPlayer.getDuration() / 1000));
+                        seekHandler.postDelayed(this, 100);
+                    }
+                    else
+                    {
+                        if (mediaPlayer.isPlaying())
+                        {
+                            mediaPlayer.pause();
+                            seekBarVideo.setProgress(0);
+                            btn_play_pause_music.setImageResource(R.drawable.ic_play);
+                            surfaceView.destroyDrawingCache();
+                        }
+                    }
+                }
+
+            }
+        };
+
+        btn_play_pause_music.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view)
+            {
+                if (mediaPlayer.isPlaying())
+                {
+                    mediaPlayer.pause();
+                    btn_play_pause_music.setImageResource(R.drawable.ic_play);
+                }
+                else
+                {
+                    mediaPlayer.start();
+                    btn_play_pause_music.setImageResource(R.drawable.ic_pause);
+                    seekHandler.postDelayed(runVideo, 100);
+                }
+            }
+        });
+
+
+        /* End Surface View*/
+
+        btn_done = (LinearLayout) findViewById(R.id.btn_done);
+        btn_like = (LinearLayout) findViewById(R.id.btn_like);
+        btn_comment = (LinearLayout) findViewById(R.id.btn_comment);
+        btn_attach = (LinearLayout) findViewById(R.id.btn_attach);
+        btn_info = (LinearLayout) findViewById(R.id.btn_info);
+
+        btn_done.setOnClickListener(this);
+        btn_like.setOnClickListener(this);
+        btn_comment.setOnClickListener(this);
+        btn_attach.setOnClickListener(this);
+        btn_info.setOnClickListener(this);
+
+
+        img_like = (ImageView) findViewById(R.id.img_like);
+        img_comment = (ImageView) findViewById(R.id.img_comment);
+        img_attach = (ImageView) findViewById(R.id.img_attach);
+        img_info = (ImageView) findViewById(R.id.img_info);
+
+        checkLike = DataHelper.checkLike(context, media.id, PreferenceHelper.getUserContext(context));
+        if (checkLike)
+            img_like.setBackground(getResources().getDrawable(R.drawable.ic_star_white));
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        resizeSurfaceView(newConfig);
+    }
+
+    public void resizeSurfaceView(Configuration newConfig)
+    {
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) surfaceView.getLayoutParams();
+        if (!media.type.split("/")[0].equalsIgnoreCase("audio") || !media.type.split("/")[1].equalsIgnoreCase("audio"))
+        {
+            if (videoWidth != 0 && videoHeight != 0)
+            {
+                if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE)
+                    surfaceView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, videoHeight));
+                else
+                {
+                    if (Helper.getDeviceHeight(this) > videoHeight)
+                        surfaceView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, videoHeight));
+                    else
+                        surfaceView.setLayoutParams(new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Helper.getDeviceHeight(this)));
+                }
+            }
+        }
+        params.addRule(RelativeLayout.CENTER_IN_PARENT);
+        surfaceView.setLayoutParams(params);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        onBackPressed();
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (fragmentManager.getBackStackEntryCount() == 1)
+            finish();
+        else
+            super.onBackPressed();
+
+    }
+
+    @Override
+    public void onClick(View view)
+    {
+        switch (view.getId())
+        {
+            case R.id.btn_done:
+            {
+                onBackPressed();
+                break;
+            }
+            case R.id.btn_like:
+                if (prefManager.isDemoLogin())
+                {
+
+                    Helper.demoUserDialog(context);
+                }
+                else
+                {
+                    if (DataHelper.checkLike(this, media.id, PreferenceHelper.getUserContext(this)))
+                    {
+                        notifySimple(getString(R.string.msg_it_already_like_by_you));
+                    }
+                    else
+                    {
+                        if (Helper.isNetworkAvailable(context))
+                        {
+                            Helper.IS_DIALOG_SHOW = false;
+                            postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
+                                    RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelId(context, media.id))),
+                                    RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
+                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)));
+                        }
+                        else
+                        {
+                            Helper.storeLikeOffline(this, media);
+                        }
+                    }
+                }
+                break;
+            case R.id.btn_comment:
+                Intent userCommentIntent = new Intent(context, UserCommentViewActivity.class);
+                userCommentIntent.putExtra(MediaFragment.EXTRA_MEDIA, media);
+                userCommentIntent.putExtra(MediaFragment.EXTRA_CHANNEL, channel);
+                startActivityForResult(userCommentIntent, COMMENT_ACTIVITY_REQUEST_CODE);
+                break;
+            case R.id.btn_attach:
+                startUserShareViewActivity();
+                break;
+            case R.id.btn_info:
+                Intent mediaDetails = new Intent(VideoViewerActivity.this, MediaDetailActivity.class);
+                Channel channel = new Channel();
+                try
+                {
+                    channel.id = DataHelper.getChannelIdFromMediaID(context, media.id);
+                    DataHelper.getChannel(context, channel);
+                }
+                catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+                mediaDetails.putExtra(EXTRA_CHANNEL, channel);
+                mediaDetails.putExtra(in.ssoft.salescloud.fragment.MediaFragment.EXTRA_MEDIA, media);
+                mediaDetails.putExtra(EXTRA_PARENT, media.parentId);
+                // TODO: 10-Jan-17 Transmission Animation
+                Pair<View, String> pair1 = Pair.create(findViewById(R.id.surfaceView), getString(R.string.text_transition_animation_media_image));
+                ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(VideoViewerActivity.this, pair1);
+                startActivity(mediaDetails, optionsCompat.toBundle());
+                break;
+        }
+    }
+
+    private void startUserShareViewActivity()
+    {
+        try
+        {
+            Channel channel = new Channel();
+            channel.id = DataHelper.getChannelIdFromMediaID(context, media.id);
+            DataHelper.getChannel(context, channel);
+            Intent shareViewActivityIntent = new Intent(context, ShareActivity.class);
+            shareViewActivityIntent.putExtra(MediaFragment.EXTRA_MEDIA, media);
+            shareViewActivityIntent.putExtra(MediaFragment.EXTRA_CHANNEL, channel);
+            startActivity(shareViewActivityIntent);
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder surfaceHolder)
+    {
+        mediaPlayer.setDisplay(surfaceHolder);
+
+        try
+        {
+            mediaPlayer.prepare();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2)
+    {
+
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder surfaceHolder)
+    {
+
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer)
+    {
+        mediaPlayer.pause();
+        seekBarVideo.setProgress(0);
+        btn_play_pause_music.setImageResource(R.drawable.ic_play);
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mediaPlayer, int i, int i1)
+    {
+        return false;
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp)
+    {
+        videoWidth = mp.getVideoWidth();
+        videoHeight = mp.getVideoHeight();
+        //surfaceView.setLayoutParams(new RelativeLayout.LayoutParams(videoWidth, videoHeight));
+        resizeSurfaceView(getResources().getConfiguration());
+        mp.start();
+        txtTime.setText(DateUtils.formatElapsedTime(mp.getCurrentPosition() / 1000) + " / " + DateUtils.formatElapsedTime(mp.getDuration() / 1000));
+        btn_play_pause_music.setImageResource(R.drawable.ic_pause);
+        seekBarVideo.setMax(mp.getDuration());
+        seekHandler.postDelayed(runVideo, 100);
+    }
+
+    @Override
+    public void onSeekComplete(MediaPlayer mediaPlayer)
+    {
+
+    }
+
+    @Override
+    public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1)
+    {
+
+    }
+
+    @Override
+    public boolean onError(MediaPlayer mediaPlayer, int i, int i1)
+    {
+        return false;
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        seekBarVideo.setProgress(mediaPlayer.getCurrentPosition());
+        if (!mediaPlayer.isPlaying())
+            btn_play_pause_music.setImageResource(R.drawable.ic_play);
+        else
+            btn_play_pause_music.setImageResource(R.drawable.ic_pause);
+
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        if (media.type.equalsIgnoreCase(FILETYPE_VIDEO_MP4))
+        {
+            if (mediaPlayer.isPlaying())
+            {
+                btn_play_pause_music.setImageResource(R.drawable.ic_pause);
+                seekBarVideo.setProgress(mediaPlayer.getCurrentPosition());
+                mediaPlayer.pause();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        super.onDestroy();
+        if (mediaPlayer.isPlaying())
+            mediaPlayer.stop();
+    }
+
+    public void callCommentService(String commentText)
+    {
+        postNetworkRequest(REQUEST_COMMENT, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_COMMENT,
+                RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelIdFromMediaID(this, media.id))),
+                RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
+                RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)),
+                RequestParameter.urlEncoded("Comment", commentText));
+    }
+
+    @Override
+    protected void onNetworkResponse(int requestCode, boolean status, String response)
+    {
+        super.onNetworkResponse(requestCode, status, response);
+        if (requestCode == REQUEST_LIKE)
+        {
+            if (status)
+            {
+                try
+                {
+                    JSONObject responseJson = new JSONObject(response);
+                    int requestStatus = responseJson.optInt("Status");
+                    if (requestStatus > 0)
+                    {
+                        Helper.storeLikeOffline(this, media);
+                        if (responseJson.has("Message") && !responseJson.isNull("Message") && !responseJson.optString("Message").equalsIgnoreCase("null"))
+                            notifySimple(DataHelper.getLocalizationMessageFromCode(context, String.valueOf(requestStatus), LOCALIZATION_TYPE_ERROR_CODE));
+                        else
+                        {
+                            // TODO: 16-Jun-17 Custom message
+                            notifySimple(getString(R.string.msg_please_try_again_later));
+                        }
+                    }
+                    else
+                    {
+                        JSONObject userLikeJson = responseJson.optJSONObject("Payload");
+                        UserLike userLike = new UserLike();
+                        if (userLikeJson != null)
+                        {
+                            UserLike.parseFromJson(userLikeJson, userLike);
+                            if (userLike.userId > 0)
+                                userLike.add(context);
+                        }
+                        else if (responseJson.has("Message") && !responseJson.isNull("Message") && !responseJson.optString("Message").equalsIgnoreCase("null"))
+                        {
+                            if (responseJson.optString("Message").equalsIgnoreCase(DataProvider.Messages.USERLIKE_OBJECT_IS_EMPTY))
+                            {
+                                userLike.isSynced = 1;
+                                userLike.associatedId = media.id;
+                                userLike.userId = PreferenceHelper.getUserContext(context);
+                                DataHelper.addUserLikes(context, userLike);
+                            }
+                        }
+                    }
+                    img_like.setBackground(getResources().getDrawable(R.drawable.ic_star_white));
+                    context.sendBroadcast(new Intent(BROADCAST_MEDIA_DOWNLOAD_COMPLETE));
+                }
+                catch (JSONException | ParseException e)
+                {
+                    notifySimple(getString(R.string.msg_invalid_response_from_server));
+                }
+            }
+            else
+            {
+                notifySimple(getString(R.string.msg_cannot_complete_request));
+            }
+        }
+        else if (requestCode == REQUEST_COMMENT)
+        {
+            if (status)
+            {
+                try
+                {
+                    JSONObject responseJson = new JSONObject(response);
+                    int requestStatus = responseJson.optInt("Status");
+                    if (requestStatus > 0)
+                    {
+                        Helper.storeCommentOffline(this, media, commentDialog.edtMediaComment.getText().toString());
+                        if (responseJson.has("Message") && !responseJson.isNull("Message") && !responseJson.optString("Message").equalsIgnoreCase("null"))
+                            notifySimple(DataHelper.getLocalizationMessageFromCode(context, String.valueOf(requestStatus), LOCALIZATION_TYPE_ERROR_CODE));
+                        else
+                        {
+                            // TODO: 16-Jun-17 Custom message
+                            notifySimple(getString(R.string.msg_please_try_again_later));
+                        }
+                        if (commentDialog != null && commentDialog.isShowing())
+                            commentDialog.dismiss();
+                    }
+                    else
+                    {
+                        JSONObject userCommentJson = responseJson.optJSONObject("Payload");
+                        UserComment userComment = new UserComment();
+                        if (userCommentJson != null)
+                        {
+                            UserComment.parseFromJSon(userCommentJson, userComment);
+                            if (userComment.userId > 0)
+                                userComment.add(context);
+                        }
+                        else if (responseJson.has("Message") && !responseJson.isNull("Message") && !responseJson.optString("Message").equalsIgnoreCase("null"))
+                        {
+                            /*if (responseJson.optString("Message").equalsIgnoreCase(DataProvider.Messages.USERLIKE_OBJECT_IS_EMPTY))
+                            {
+                                userComment.isSynced = 1;
+                                userComment.associatedId = media.id;
+                                userComment.userId = PreferenceHelper.getUserContext(context);
+                                DataHelper.addUserLikes(context, userLike);
+                            }*/
+                        }
+                        if (commentDialog != null && commentDialog.isShowing())
+                            commentDialog.dismiss();
+                    }
+                }
+                catch (JSONException | ParseException e)
+                {
+                    notifySimple(getString(R.string.msg_invalid_response_from_server));
+                }
+            }
+            else
+            {
+                notifySimple(getString(R.string.msg_cannot_complete_request));
+            }
+        }
+        Helper.IS_DIALOG_SHOW = true;
+    }
+
+    private void hideUI()
+    {
+        surfaceView.getHandler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                VideoViewerActivity.this.getWindow().getDecorView().setSystemUiVisibility(Helper.HIDE_FLAGS);
+            }
+        }, 600);
+    }
+
+    private void showUI()
+    {
+        VideoViewerActivity.this.getWindow().getDecorView().setSystemUiVisibility(0);
+    }
+}

@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/parentLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/selectableItemBackground"
+    android:orientation="vertical"
+    android:padding="@dimen/padding_5dp">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/white_border"
+        android:padding="@dimen/padding_3dp">
+
+        <LinearLayout
+            android:id="@+id/layout_parent_border"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <FrameLayout
+                android:id="@+id/framelayout_media_thumbnail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical|center_horizontal|center"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imageIcon"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/intro_background"
+                        android:layout_gravity="center"
+                        android:scaleType="fitXY"
+                        android:transitionName="@string/text_transition_animation_media_image"/>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/thirty_five_dp"
+                    android:layout_gravity="top"
+                    android:background="@color/black_transparent">
+
+                    <TextView
+                        android:id="@+id/labelName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/padding_5dp"
+                        android:layout_marginRight="@dimen/padding_5dp"
+                        android:ellipsize="end"
+                        android:freezesText="true"
+                        android:maxLines="1"
+                        android:singleLine="true"
+                        android:text=""
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/title_very_small"
+                        android:textStyle="bold"
+                        android:layout_marginStart="@dimen/padding_5dp"
+                        android:transitionName="@string/text_transition_animation_media_title"/>
+
+
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/relative_option"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/thirty_five_dp"
+                    android:layout_gravity="bottom"
+                    android:background="@color/black_transparent"
+                    android:gravity="center_vertical"
+                    android:padding="5dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/txtChannelName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Test"
+                        android:maxLines="1"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:layout_marginStart="@dimen/padding_5dp"
+                        android:gravity="center_vertical"
+                        android:layout_marginTop="@dimen/padding_5dp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/title_ultra_small" />
+
+                    <TextView
+                        android:id="@+id/txtLastOpenTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_margin="@dimen/padding_5dp"
+                        android:textColor="@color/white"
+                        android:gravity="center_vertical"
+                        android:layout_weight="0.5"
+                        android:textSize="@dimen/title_ultra_small"/>
+
+
+                </LinearLayout>
+
+
+            </FrameLayout>
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>

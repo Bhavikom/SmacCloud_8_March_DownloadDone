@@ -1,0 +1,332 @@
+package in.ssoft.salescloud.activity;
+
+import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.Configuration;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
+
+import java.text.ParseException;
+import java.util.ArrayList;
+
+import in.ssoft.salescloud.R;
+import in.ssoft.salescloud.base.Activity;
+import in.ssoft.salescloud.base.Helper;
+import in.ssoft.salescloud.fragment.ChannelsFragment;
+import in.ssoft.salescloud.fragment.RecentActivitiesFragment;
+import in.ssoft.salescloud.fragment.SettingsFragment;
+import in.ssoft.salescloud.helper.PreferenceHelper;
+import in.ssoft.salescloud.model.MediaAllDownload;
+import in.ssoft.salescloud.model.User;
+import in.ssoft.salescloud.model.UserPreference;
+
+/**
+ * Main activity class
+ */
+public class DashboardActivity extends Activity implements SettingsFragment.InterfacechangeLanguage
+{
+    private static ActionBarDrawerToggle drawerToggle;
+    public LinearLayout parentLayout;
+    public NavigationView navigationDashboard;
+    private Menu menu;
+    private DrawerLayout drawerLayout;
+    private TextView textviewNavigationHeader;
+    private int currentNavigationItem = 0;
+    private NavigationView.OnNavigationItemSelectedListener menuItemCallback;
+    private ArrayList<MediaAllDownload> arraylistDownloadList = new ArrayList<MediaAllDownload>();
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
+    public static void disableDrawerNavigation()
+    {
+        actionBar.setDisplayHomeAsUpEnabled(true);
+        drawerToggle.setDrawerIndicatorEnabled(false);
+
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_dashboard);
+        Helper.retainOrientation(DashboardActivity.this);
+        User user = new User();
+        UserPreference userPreference = new UserPreference();
+        user.id = PreferenceHelper.getUserContext(context);
+        try
+        {
+            user.populateUsingId(context);
+            userPreference.userId = user.id;
+        }
+        catch (ParseException e)
+        {
+            e.printStackTrace();
+        }
+        textviewNavigationHeader.setText(user.name + "\n" + user.email);
+        navigate(R.id.menuChannels, false);
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+        getSupportActionBar().setDisplayShowTitleEnabled(true);
+
+
+    }
+
+    @Override
+    protected void initializeComponents()
+    {
+        super.initializeComponents();
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        navigationDashboard = (NavigationView) findViewById(R.id.navigationDashboard);
+        textviewNavigationHeader = (TextView) navigationDashboard.getHeaderView(0).findViewById(R.id.labelNavigationHeader);
+        parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
+
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name)
+        {
+            @Override
+            public void onDrawerOpened(View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView)
+            {
+                super.onDrawerClosed(drawerView);
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset)
+            {
+                super.onDrawerSlide(drawerView, 0);
+            }
+        };
+    }
+
+    @Override
+    protected void bindEvents()
+    {
+        super.bindEvents();
+
+        menuItemCallback = new NavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(MenuItem item)
+            {
+                navigate(item.getItemId(), false);
+                return true;
+            }
+        };
+        navigationDashboard.setNavigationItemSelectedListener(menuItemCallback);
+        drawerLayout.setDrawerListener(drawerToggle);
+    }
+
+    /**
+     * Redirect to navigation menu
+     *
+     * @param id
+     * @param addToBackStack
+     */
+    private void navigate(int id, boolean addToBackStack)
+    {
+        if (id != currentNavigationItem)
+        {
+            switch (id)
+            {
+                case R.id.menuChannels:
+                    navigateToFragment(R.id.layoutFrame, new ChannelsFragment(), false);
+                    ((DashboardActivity) this).getSupportActionBar().setTitle(R.string.label_channels);
+                    drawerLayout.closeDrawer(navigationDashboard);
+                    break;
+
+                case R.id.menuActivities:
+                    navigateToFragment(R.id.layoutFrame, new RecentActivitiesFragment(), true);
+                    ((DashboardActivity) this).getSupportActionBar().setTitle(R.string.label_recent);
+                    drawerLayout.closeDrawer(navigationDashboard);
+                    break;
+                case R.id.menuAnnouncements:
+                    actionBar.setTitle(getString(R.string.announcements));
+                    break;
+                case R.id.menuLogout:
+                    drawerLayout.closeDrawer(navigationDashboard);
+                    actionBar.setTitle(getString(R.string.lable_sign_out));
+                    buildDialog(R.style.DialogAnimation, getString(R.string.sign_out_message));
+                    break;
+
+                case R.id.menuSettings:
+                    navigateToFragment(R.id.layoutFrame, new SettingsFragment(), true);
+                    ((DashboardActivity) this).getSupportActionBar().setTitle(R.string.settings);
+                    drawerLayout.closeDrawer(navigationDashboard);
+                    break;
+            }
+            currentNavigationItem = id;
+        }
+    }
+
+
+    private void buildDialog(int animationSource, String type)
+    {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.label_sign_out));
+        builder.setIcon(R.drawable.ic_signout);
+        builder.setMessage(getString(R.string.sign_out_message));
+        builder.setMessage(type);
+        builder.setPositiveButton(getString(R.string.yes),
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        PreferenceHelper.removeUserContext(context);
+                        Intent loginActivity = new Intent(getApplicationContext(), DemoActivity.class);
+                        loginActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(loginActivity);
+                        finish();
+                    }
+                });
+        builder.setNegativeButton(getString(R.string.no),
+                new DialogInterface.OnClickListener()
+                {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.getWindow().getAttributes().windowAnimations = animationSource;
+
+        dialog.show();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig)
+    {
+        super.onConfigurationChanged(newConfig);
+        drawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState)
+    {
+        super.onPostCreate(savedInstanceState);
+        drawerToggle.syncState();
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                break;
+            case R.id.download_All:
+                Helper.downloadAllFiles(DashboardActivity.this, true);
+                break;
+            case R.id.action_search:
+                /*SearchDialog searchDialog = new SearchDialog(DashboardActivity.this);
+                searchDialog.show();*/
+                startActivity(new Intent(DashboardActivity.this, MediaSearchActivity.class));
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Start forgot activity
+     */
+    @Override
+    public void onBackPressed()
+    {
+        if (getSupportFragmentManager().getBackStackEntryCount() > 0)
+        {
+            getSupportFragmentManager().popBackStackImmediate();
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            {
+                //actionBar.setDisplayHomeAsUpEnabled(false);
+                //drawerToggle.setDrawerIndicatorEnabled(true);
+                actionBar.setTitle(getString(R.string.channels));
+            }
+            else
+            {
+                Fragment fragment = getFragment();
+                setTitleFromFragment(fragment);
+            }
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+        //}
+    }
+
+    public void setTitleFromFragment(Fragment fragment)
+    {
+        if (fragment.getClass().getName().equals(SettingsFragment.class.getName()))
+        {
+            actionBar.setTitle(getString(R.string.settings));
+        }
+        else if (fragment.getClass().getName().equals(RecentActivitiesFragment.class.getName()))
+        {
+            actionBar.setTitle(getString(R.string.label_recent));
+        }
+    }
+
+    private Fragment getFragment()
+    {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.layoutFrame);
+        return fragment;
+    }
+
+    public void updateNavigationMenuString()
+    {
+        navigationDashboard.getMenu().removeGroup(R.id.menuDashboard);
+        navigationDashboard.inflateMenu(R.menu.menu_activity_dashboard);
+        navigationDashboard.getMenu().findItem(R.id.menuSettings).setCheckable(true).setChecked(true);
+        //navigationDashboard.getMenu().findItem(R.id.menuSettings).setCheckable(true).setChecked(true);
+    }
+    /*@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        this.menu = menu;
+        //getMenuInflater().inflate(R.menu.menu_activity_dashboard, menu);
+        return false;
+    }*/
+
+    public void changeLangaugeMenu(String lang)
+    {
+        Menu menu = navigationDashboard.getMenu();
+        menu.findItem(R.id.menuChannels).setTitle(getString(R.string.channels));
+        menu.findItem(R.id.menuActivities).setTitle(getString(R.string.activities));
+        menu.findItem(R.id.menuAnnouncements).setTitle(getString(R.string.announcements));
+        menu.findItem(R.id.menuSettings).setTitle(getString(R.string.settings));
+        menu.findItem(R.id.menuLogout).setTitle(getString(R.string.label_sign_out));
+        actionBar.setTitle(getString(R.string.settings));
+    }
+
+
+    @Override
+    public void changeLanguage(String lang)
+    {
+        changeLangaugeMenu(lang);
+    }
+
+}

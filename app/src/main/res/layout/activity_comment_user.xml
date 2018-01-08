@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:id="@+id/parentLayout"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+    <include
+        android:id="@+id/navBar"
+        layout="@layout/partial_toolbar"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/listComments"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearCommentBar"
+        android:layout_below="@+id/navBar"
+        android:transcriptMode="alwaysScroll"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:id="@+id/scrollComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearCommentBar"
+        android:layout_below="@+id/navBar"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:id="@+id/commentLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/linearCommentBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/grey3"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_small">
+
+        <EditText
+            android:id="@+id/edtMediaComment"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/rounded_search_edittext_background"
+            android:focusable="true"
+            android:hint="@string/msg_please_enter_comment"
+            android:imeOptions="actionDone"
+            android:inputType="textMultiLine"
+            android:maxLines="2"
+            android:padding="@dimen/padding_very_small"
+            android:scrollbarStyle="insideOverlay"/>
+
+        <ImageView
+            android:id="@+id/btnsubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:padding="@dimen/padding_small"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_send"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:background="@null"
+            android:text="@string/send"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>
+

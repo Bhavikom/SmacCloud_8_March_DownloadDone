@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/theme_overcast_background"
+              android:gravity="center"
+              android:orientation="horizontal"
+              android:padding="@dimen/padding_small">
+
+    <ImageView
+        android:id="@+id/btn_play_pause_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_play"/>
+
+    <android.support.v7.widget.AppCompatSeekBar
+        android:id="@+id/seekbarMusic"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/padding_small"
+        android:layout_marginRight="@dimen/padding_small"
+        android:layout_weight="1"
+        android:thumbTintMode="multiply"/>
+
+    <ImageView
+        android:id="@+id/btn_close_music"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close"/>
+
+
+</LinearLayout>
