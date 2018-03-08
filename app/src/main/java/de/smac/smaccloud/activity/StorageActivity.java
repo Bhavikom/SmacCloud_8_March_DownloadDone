@@ -1,6 +1,10 @@
 package de.smac.smaccloud.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StatFs;
@@ -17,7 +21,9 @@ import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.data.DataHelper;
 import de.smac.smaccloud.fragment.MediaFragment;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Media;
+import de.smac.smaccloud.service.FCMMessagingService;
 
 public class StorageActivity extends Activity
 {
@@ -41,13 +47,7 @@ public class StorageActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting_storage);
         Helper.retainOrientation(StorageActivity.this);
-        if (getSupportActionBar() != null)
-        {
-            getSupportActionBar().setTitle(getString(R.string.label_storage));
-        }
-        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
-        txtStorage.setTypeface(Helper.robotoBoldTypeface);
-        txtMedia.setTypeface(Helper.robotoBoldTypeface);
+
 
     }
 
@@ -95,6 +95,16 @@ public class StorageActivity extends Activity
         textAudioMemorySize = (TextView) findViewById(R.id.textAudiosMemorySize);
         textDocumentsMemorySize = (TextView) findViewById(R.id.textDocumentsMemorySize);
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
+        applyThemeColor();
+        FCMMessagingService.themeChangeNotificationListener=new FCMMessagingService.ThemeChangeNotificationListener()
+        {
+            @Override
+            public void onThemeChangeNotificationReceived()
+            {
+                applyThemeColor();
+            }
+        };
+
 
 
         try
@@ -152,6 +162,22 @@ public class StorageActivity extends Activity
 
     }
 
+    public void applyThemeColor()
+    {
+        updateParentThemeColor();
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setTitle(getString(R.string.label_storage));
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back_material_vector);
+            upArrow.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        }
+        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+
+    }
+
     @Override
     protected void bindEvents()
     {
@@ -184,5 +210,10 @@ public class StorageActivity extends Activity
         //finish();
     }
 
-
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        applyThemeColor();
+    }
 }

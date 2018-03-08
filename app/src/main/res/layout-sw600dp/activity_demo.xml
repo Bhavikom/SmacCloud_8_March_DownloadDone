@@ -72,14 +72,14 @@
                 android:textSize="@dimen/title_ultra_small"/>
 
             <Button
-                android:id="@+id/btn_try_demo"
+                android:id="@+id/btn_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_extra_large"
-                android:background="@drawable/orange_border_background"
-                android:text="@string/tra_demo"
+                android:background="@drawable/border"
+                android:text="@string/sign_up"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/orange"
                 android:textSize="@dimen/title_ultra_small"/>
 
 
@@ -93,8 +93,20 @@
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/padding_extra_large"
             android:gravity="bottom|center_horizontal"
-            android:text="@string/configure_url"
+            android:text="@string/smac_link"
+            android:visibility="gone"
             android:textColor="@color/button_orange_color"
+            android:textSize="@dimen/title_ultra_small"/>
+
+        <TextView
+            android:id="@+id/txt_smac_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_marginBottom="@dimen/padding_extra_large"
+            android:gravity="bottom|center_horizontal"
+            android:text="@string/smac_link"
+            android:textColor="@color/blue"
             android:textSize="@dimen/title_ultra_small"/>
 
 

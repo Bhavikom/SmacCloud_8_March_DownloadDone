@@ -166,8 +166,6 @@ public class ShowdownloadProcessFragment extends Fragment implements DownloadFil
                             txtStopStart.setText("Start");
                             downloadContent.onPostExecute("");
                             downloadContent.onProgressUpdate("");
-                            //downloadContent.cancel(true);
-                            //downloadContent=null;
                             resetAllValue();
                         }
 
@@ -176,9 +174,6 @@ public class ShowdownloadProcessFragment extends Fragment implements DownloadFil
                     {
                         txtStopStart.setText("Stop");
                         callServiceTogetUrl();
-                        //new AsychTaskDownloadFileFromURL(activity, mediaItem).execute(url);
-                        // downloadContent = new AsychTaskDownloadFileFromURL(activity, mediaItem);
-                        // downloadContent.execute(url);
                         flagStartStop = false;
                     }
                 }
@@ -187,10 +182,13 @@ public class ShowdownloadProcessFragment extends Fragment implements DownloadFil
             }
         });
     }
+    @Override
+    public void processFinish(String output, Media media, int pos) {
+
+    }
 
     @Override
-    public void processFinish(String output)
-    {
+    public void statusOfDownload(Media media, int pos) {
 
     }
 
@@ -364,13 +362,7 @@ public class ShowdownloadProcessFragment extends Fragment implements DownloadFil
                 URLConnection conection = url.openConnection();
                 conection.setConnectTimeout(600 * 1000);
                 conection.setReadTimeout(600 * 1000);
-                //conection.setRequestProperty(KEY_LANGUAGE_HEADER_PARAM, Locale.getDefault().getLanguage());
-                // input stream to read file - with 8k buffer
-                //InputStream input = new BufferedInputStream(url.openStream(), 8192);
-                // Output stream to write file
-                //OutputStream output = new FileOutputStream("/sdcard/downloadedfile.jpg");
 
-                //byte data[] = new byte[1024];
 
 
                 int userId = PreferenceHelper.getUserContext(context);

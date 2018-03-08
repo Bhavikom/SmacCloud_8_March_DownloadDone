@@ -98,7 +98,7 @@ public class AnnouncementListViewAdapter extends BaseAdapter
             currentUser.id = currentAnnouncement.userId;
             DataHelper.getUser(activity, currentUser);
 
-            if (currentAnnouncement.type.equals(FCMMessagingService.PUSH_TYPE__ADD_LIKE))
+            if (currentAnnouncement.type.equals(FCMMessagingService.PUSH_TYPE_ADD_LIKE))
             {
                 mViewHolder.txt_media_name.setText(currentMedia.name + " " + activity.getString(R.string.msg_like_by) + " " + currentUser.name);
             }
@@ -138,7 +138,7 @@ public class AnnouncementListViewAdapter extends BaseAdapter
             @Override
             public void onClick(View v)
             {
-                if (currentAnnouncement.type.equals(FCMMessagingService.PUSH_TYPE__ADD_LIKE))
+                if (currentAnnouncement.type.equals(FCMMessagingService.PUSH_TYPE_ADD_LIKE))
                 {
                     if (currentMedia.isDownloaded == 1)
                     {
@@ -179,6 +179,11 @@ public class AnnouncementListViewAdapter extends BaseAdapter
                 {
                     activity.askForSync();
                 }
+                else if (currentAnnouncement.type.equals(FCMMessagingService.PUSH_TYPE_THEME_CHANGE))
+                {
+                    currentAnnouncement.isRead = true;
+                    DataHelper.updateAnnouncement(activity, currentAnnouncement);
+                }
 
                 // Dismiss announcements list dialog from dashboard activity
                 if (activity instanceof DashboardActivity)
@@ -186,11 +191,13 @@ public class AnnouncementListViewAdapter extends BaseAdapter
                     if (((DashboardActivity) activity).notificationDialog != null && ((DashboardActivity) activity).notificationDialog.getDialog() != null && ((DashboardActivity) activity).notificationDialog.getDialog().isShowing())
                     {
                         ((DashboardActivity) activity).notificationDialog.dismiss();
+
                     }
+
                     de.smac.smaccloud.base.Fragment dashFragment = (ChannelsFragment) activity.getSupportFragmentManager().findFragmentById(R.id.layoutFrame);
                     if (dashFragment != null && dashFragment instanceof ChannelsFragment)
                     {
-                        ((ChannelsFragment) dashFragment).updateNotificationIcon();
+                        ((ChannelsFragment) dashFragment).applyThemeColor();
                     }
                 }
             }
@@ -219,6 +226,7 @@ public class AnnouncementListViewAdapter extends BaseAdapter
                 mViewHolder.imageIcon.setLayoutParams(new LinearLayout.LayoutParams(Helper.getDeviceWidth(activity) / 5, Helper.getDeviceHeight(activity) / 6));
             }
         }
+        Helper.setupTypeface(mViewHolder.parentLayout1, Helper.robotoRegularTypeface);
 
 
         return convertView;
@@ -227,13 +235,14 @@ public class AnnouncementListViewAdapter extends BaseAdapter
 
     private class MyViewHolder
     {
-        LinearLayout parentLayout;
+        LinearLayout parentLayout, parentLayout1;
         SquareImageView imageIcon;
         TextView txt_media_name;
 
         public MyViewHolder(View convertView)
         {
             parentLayout = (LinearLayout) convertView.findViewById(R.id.parentLayout);
+            parentLayout1 = (LinearLayout) convertView.findViewById(R.id.parentLayout1);
             imageIcon = (SquareImageView) convertView.findViewById(R.id.imageIcon);
             txt_media_name = (TextView) convertView.findViewById(R.id.txt_media_name);
         }

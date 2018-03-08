@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.BatteryManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -42,6 +43,7 @@ import de.smac.smaccloud.activity.DashboardActivity;
 import de.smac.smaccloud.activity.DemoActivity;
 import de.smac.smaccloud.activity.EmailBodyActivity;
 import de.smac.smaccloud.activity.OpenSourceLibrariesActivity;
+import de.smac.smaccloud.activity.PrivacyPolicyActivity;
 import de.smac.smaccloud.activity.SetSignatureActivity;
 import de.smac.smaccloud.activity.StorageActivity;
 import de.smac.smaccloud.activity.SyncActivity;
@@ -66,6 +68,7 @@ import de.smac.smaccloud.model.UserLike;
 import de.smac.smaccloud.model.UserPreference;
 import de.smac.smaccloud.service.DownloadService;
 import de.smac.smaccloud.service.FCMInstanceIdService;
+import de.smac.smaccloud.service.FCMMessagingService;
 
 import static de.smac.smaccloud.activity.SetSignatureActivity.PERMISSION_REQUEST_CODE;
 import static de.smac.smaccloud.base.Helper.LOCALIZATION_TYPE_ERROR_CODE;
@@ -73,7 +76,7 @@ import static de.smac.smaccloud.base.Helper.LOCALIZATION_TYPE_ERROR_CODE;
 /**
  * Show settings
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener
+public class SettingsFragment extends Fragment implements FCMMessagingService.ThemeChangeNotificationListener
 {
 
     public static final int REQUEST_CODE_SAVE_SIGNATURE = 101;
@@ -93,6 +96,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
     RelativeLayout btnBCCAddress;
     RelativeLayout buttonStorage;
     RelativeLayout buttonTerms;
+    RelativeLayout buttonPrivacyPolicy;
     RelativeLayout buttonOpenSourceLibraries;
     RelativeLayout buttonHelp;
     RelativeLayout btnSynchronizeNow;
@@ -121,12 +125,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
     public void onStart()
     {
         super.onStart();
-        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
-        textViewAccount.setTypeface(Helper.robotoBoldTypeface);
-        textViewSharing.setTypeface(Helper.robotoBoldTypeface);
-        textViewTitleSynchronization.setTypeface(Helper.robotoBoldTypeface);
-        textViewInformation.setTypeface(Helper.robotoBoldTypeface);
-        textViewLogin.setTypeface(Helper.robotoBoldTypeface);
+        //applyThemeColor();
     }
 
     @Override
@@ -143,6 +142,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
             }
             ((DashboardActivity) (activity)).navigationDashboard.getMenu().findItem(R.id.menuSettings).setCheckable(true).setChecked(true);
         }
+        applyThemeColor();
     }
 
     @Override
@@ -175,6 +175,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
         btnSynchronizeNow = (RelativeLayout) findViewById(R.id.btn_synchronize_now);
         buttonStorage = (RelativeLayout) findViewById(R.id.buttonStorage);
         buttonTerms = (RelativeLayout) findViewById(R.id.buttonTerms);
+        buttonPrivacyPolicy = (RelativeLayout) findViewById(R.id.buttonPrivacy);
         buttonOpenSourceLibraries = (RelativeLayout) findViewById(R.id.button_openSource_Libraries);
         buttonHelp = (RelativeLayout) findViewById(R.id.button_help);
         btnAboutUs = (RelativeLayout) findViewById(R.id.btn_about_us);
@@ -202,14 +203,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
         textViewSynchronizeNow = (TextView) findViewById(R.id.txt_synchronize_now);
         toggleButtonAutoDownload = (SwitchButton) findViewById(R.id.toggleAutoDownload);
 
-        if (prefManager.isDemoLogin())
-        {
-            btnPassword.setVisibility(View.GONE);
-        }
-        else
-        {
-            btnPassword.setVisibility(View.VISIBLE);
-        }
+
+        new FCMInstanceIdService(context).onTokenRefresh();
+        applyThemeColor();
+
         if (prefManager.isFullDownloadMedia())
         {
             toggleButtonAutoDownload.setChecked(true);
@@ -281,6 +278,23 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                 }
             }
         });
+        FCMMessagingService.themeChangeNotificationListener = new FCMMessagingService.ThemeChangeNotificationListener()
+        {
+            @Override
+            public void onThemeChangeNotificationReceived()
+            {
+                applyThemeColor();
+            }
+        };
+    }
+
+    public void applyThemeColor()
+    {
+        activity.updateParentThemeColor();
+        // TODO: 2/20/2018 Remove unnecessary code
+        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+        Helper.setupTypeface(getActivity().findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
     }
 
     public void showLowBatteryStatusDialog()
@@ -394,7 +408,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
             public void onClick(View view)
             {
                 final AlertDialog alertDialog;
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 switch (view.getId())
                 {
                     case R.id.btn_change_language:
@@ -425,6 +438,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                         startActivity(new Intent(getActivity(), TermsActivity.class));
                         break;
 
+                    case R.id.buttonPrivacy:
+                        startActivity(new Intent(getActivity(), PrivacyPolicyActivity.class));
+                        break;
+
                     case R.id.button_openSource_Libraries:
                         startActivity(new Intent(getActivity(), OpenSourceLibrariesActivity.class));
                         break;
@@ -434,7 +451,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                         Helper.preventTwoClick(buttonHelp);
                         Intent intent = new Intent(Intent.ACTION_SEND);
                         intent.setType("plain/text");
-                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{""});
+                        intent.putExtra(Intent.EXTRA_EMAIL, new String[]{"support@smacsoftwares.de"});
                         intent.putExtra(Intent.EXTRA_SUBJECT, "");
                         intent.putExtra(Intent.EXTRA_TEXT, "");
                         startActivity(Intent.createChooser(intent, ""));
@@ -443,7 +460,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                     case R.id.btn_synchronize_now:
                         Helper.preventTwoClick(btnSynchronizeNow);
                         AlertDialog dialog = new AlertDialog.Builder(context).create();
-                        dialog.setTitle(context.getString(R.string.app_title));
+                        dialog.setTitle(context.getString(R.string.app_name));
                         dialog.setMessage(context.getString(R.string.sync_update_dialog));
                         dialog.setButton(AlertDialog.BUTTON_POSITIVE, context.getString(R.string.ok),
                                 new DialogInterface.OnClickListener()
@@ -481,8 +498,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
 
                                             }
                                             postNetworkRequest(REQUEST_SYNC, DataProvider.ENDPOINT_SYNC, DataProvider.Actions.SYNC,
+                                                    /*RequestParameter.urlEncoded("Org_Id", String.valueOf()),*/
                                                     RequestParameter.jsonArray("UserLikes", jsonArrayUserLikes), RequestParameter.jsonArray("UserComments", jsonArrayUserComments),
-                                                    RequestParameter.urlEncoded("UserId", String.valueOf(userPreference.userId)), RequestParameter.urlEncoded("LastSyncDate", lastSyncDate));
+                                                    RequestParameter.urlEncoded("UserId", String.valueOf(userPreference.userId)), RequestParameter.urlEncoded("LastSyncDate", lastSyncDate), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
 
 
                                         }
@@ -507,20 +525,33 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                         dialog.show();
                         break;
 
-                  /*  case R.id.compoundButtonLogout:
-                        PreferenceHelper.removeUserContext(getActivity());
-                        Intent loginActivity = new Intent(getActivity(), LoginActivity.class);
-                        loginActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                        startActivity(loginActivity);
-                        getActivity().finish();
-                        break;*/
-
                     case R.id.btn_about_us:
                         startActivity(new Intent(getActivity(), AboutUsActivity.class));
                         break;
 
                     case R.id.btn_password:
-                        startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
+                        if (prefManager.isDemoLogin())
+                        {
+                            AlertDialog.Builder builder1 = new AlertDialog.Builder(context);
+                            builder1.setTitle(getString(R.string.access_denied_title));
+                            builder1.setMessage(getString(R.string.access_denied_message));
+                            builder1.setPositiveButton(getString(R.string.ok),
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            AlertDialog dialog1 = builder1.create();
+
+                            dialog1.show();
+                        }
+                        else
+                        {
+                            startActivity(new Intent(getActivity(), ChangePasswordActivity.class));
+                        }
                         break;
 
                     case R.id.btn_sign_out:
@@ -534,7 +565,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                 }
             }
         };
-        Helper.setupTypeface(getActivity().findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+
         btnPassword.setOnClickListener(onClickListener);
         btnChangeLanguage.setOnClickListener(onClickListener);
         btnEmailBody.setOnClickListener(onClickListener);
@@ -543,6 +574,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
         btnSignature.setOnClickListener(onClickListener);
         buttonStorage.setOnClickListener(onClickListener);
         buttonTerms.setOnClickListener(onClickListener);
+        buttonPrivacyPolicy.setOnClickListener(onClickListener);
         buttonOpenSourceLibraries.setOnClickListener(onClickListener);
         buttonHelp.setOnClickListener(onClickListener);
         btnAboutUs.setOnClickListener(onClickListener);
@@ -574,8 +606,8 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
         LinearLayout linearParent = (LinearLayout) view.findViewById(R.id.parentLayout);
         Helper.setupTypeface(linearParent, Helper.robotoRegularTypeface);
 
-        TextView txt = (TextView) view.findViewById(R.id.txt_signOut_title);
-        txt.setTypeface(Helper.robotoBlackTypeface);
+        TextView txtSignOutTitle = (TextView) view.findViewById(R.id.txt_signOut_title);
+        txtSignOutTitle.setTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
 
         RelativeLayout keepDownloadFile = (RelativeLayout) view.findViewById(R.id.btn_keep_download_files);
         final RelativeLayout deleteDownloadFile = (RelativeLayout) view.findViewById(R.id.btn_delete_download_files);
@@ -588,7 +620,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
             {
                 if (Helper.isNetworkAvailable(context))
                 {
-                    postNetworkRequest(REQUEST_LOGOUT, DataProvider.ENDPOINT_LOGOUT, DataProvider.Actions.LOGOUT);
+                    DELETE_USER_PREFERENCE = false;
+                    postNetworkRequest(REQUEST_LOGOUT, DataProvider.ENDPOINT_LOGOUT, DataProvider.Actions.LOGOUT,
+                            RequestParameter.urlEncoded("DeviceToken", PreferenceHelper.getFCMTokenId(context)), RequestParameter.urlEncoded("Platform", "Android"), RequestParameter.urlEncoded("Org_Id", PreferenceHelper.getOrganizationId(context)));
 
                 }
                 else
@@ -602,13 +636,15 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
         });
         deleteDownloadFile.setOnClickListener(new View.OnClickListener()
         {
+
             @Override
             public void onClick(View v)
             {
                 if (Helper.isNetworkAvailable(context))
                 {
                     DELETE_USER_PREFERENCE = true;
-                    postNetworkRequest(REQUEST_LOGOUT, DataProvider.ENDPOINT_LOGOUT, DataProvider.Actions.LOGOUT);
+                    postNetworkRequest(REQUEST_LOGOUT, DataProvider.ENDPOINT_LOGOUT, DataProvider.Actions.LOGOUT,
+                            RequestParameter.urlEncoded("DeviceToken", PreferenceHelper.getFCMTokenId(context)), RequestParameter.urlEncoded("Platform", "Android"), RequestParameter.urlEncoded("Org_Id", PreferenceHelper.getOrganizationId(context)));
 
                 }
                 else
@@ -752,8 +788,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                     else
                     {
 
-                        /*notifySimple(getString(R.string.msg_data_sync));*/
-
                         syncJson = syncJson.optJSONObject("Payload");
                         Log.e("Setting Sync Payload>>", syncJson.toString());
 
@@ -771,12 +805,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                                 userComment.removeOffline(context);
                             }
                         }
-                        ArrayList<Channel> arraylistChannels = new ArrayList<>();
+                        ArrayList<Channel> arrayListChannels = new ArrayList<>();
                         JSONArray channelJsonArray = syncJson.optJSONArray("Channels");
                         try
                         {
-                            Channel.parseListFromJson(channelJsonArray, arraylistChannels);
-                            for (Channel channel : arraylistChannels)
+                            Channel.parseListFromJson(channelJsonArray, arrayListChannels);
+                            for (Channel channel : arrayListChannels)
                             {
                                 switch (channel.syncType)
                                 {
@@ -798,9 +832,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                             if (syncJson.has("Media") && !syncJson.isNull("Media"))
                             {
                                 JSONArray mediaJsonArray = syncJson.optJSONArray("Media");
-                                ArrayList<Media> arraylistMediallist = new ArrayList<>();
-                                Media.parseListFromJson(mediaJsonArray, arraylistMediallist);
-                                for (Media media : arraylistMediallist)
+                                ArrayList<Media> arrayListMediaList = new ArrayList<>();
+                                Media.parseListFromJson(mediaJsonArray, arrayListMediaList);
+                                for (Media media : arrayListMediaList)
                                 {
                                     switch (media.syncType)
                                     {
@@ -834,9 +868,9 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                             if (syncJson.has("ChannelFiles") && !syncJson.isNull("ChannelFiles"))
                             {
                                 JSONArray channelFilesJsonArray = syncJson.optJSONArray("ChannelFiles");
-                                ArrayList<ChannelFiles> arraylistChhannelFiles = new ArrayList<>();
-                                ChannelFiles.parseListFromJson(channelFilesJsonArray, arraylistChhannelFiles);
-                                for (ChannelFiles channelFile : arraylistChhannelFiles)
+                                ArrayList<ChannelFiles> arrayListChannelFiles = new ArrayList<>();
+                                ChannelFiles.parseListFromJson(channelFilesJsonArray, arrayListChannelFiles);
+                                for (ChannelFiles channelFile : arrayListChannelFiles)
                                 {
                                     switch (channelFile.syncType)
                                     {
@@ -934,7 +968,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                             user.populateUsingId(context);
                             userPreference.userId = user.id;
                             PreferenceHelper.storeSyncStatus(context, true);
-                            showUpdatedDialog(getString(R.string.label_synchronization), getString(R.string.sync_data_update_sucessfully));
+                            showUpdatedDialog(getString(R.string.title_synchronization), getString(R.string.sync_data_update_sucessfully));
                             //Helper.showSimpleDialog(context, getString(R.string.sync_data_update_sucessfully));
 
 
@@ -976,6 +1010,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                     }
                     else
                     {
+
                         if (DELETE_USER_PREFERENCE)
                         {
                             UserPreference userPreference = new UserPreference();
@@ -983,6 +1018,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                             DataHelper.getUserPreference(getActivity(), userPreference);
                             DataHelper.removeMediaPhysically(activity, parentLayout);
                             DataHelper.closeLocalDatabase(context);
+                            PreferenceHelper.removeUserThemePreferences(context);
                             prefManager.saveFullDownloadMedia(false);
 
                             if (context.deleteDatabase(userPreference.databaseName))
@@ -994,10 +1030,10 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
                         }
 
                         PreferenceHelper.removeUserContext(context);
-
                         Intent loginActivity = new Intent(getActivity(), DemoActivity.class);
                         loginActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         new FCMInstanceIdService(context).deleteInstanceId();
+                        PreferenceHelper.removeUserThemePreferences(context);
                         startActivity(loginActivity);
                         getActivity().finish();
                     }
@@ -1104,16 +1140,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
     }
 
     @Override
-    public void onClick(View v)
-    {
-        /*switch (v.getId()) {
-            case R.id.btn_sign_out:
-                buildDialog(R.style.DialogAnimation, getString(R.string.sign_out_message));
-                break;
-        }*/
-    }
-
-    @Override
     public void onAttach(Context context)
     {
         super.onAttach(context);
@@ -1126,6 +1152,12 @@ public class SettingsFragment extends Fragment implements View.OnClickListener
     {
         super.onConfigurationChanged(newConfig);
         updateLanguage();
+    }
+
+    @Override
+    public void onThemeChangeNotificationReceived()
+    {
+        applyThemeColor();
     }
 
     public interface InterfacechangeLanguage

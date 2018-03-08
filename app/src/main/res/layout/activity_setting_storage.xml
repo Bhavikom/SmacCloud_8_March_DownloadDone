@@ -3,7 +3,6 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@color/light_gray"
               android:orientation="vertical">
 
     <include layout="@layout/partial_toolbar"/>
@@ -15,7 +14,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/light_gray"
             android:orientation="vertical">
 
             <TextView
@@ -26,7 +24,8 @@
                 android:layout_marginTop="@dimen/padding_extra_large"
                 android:padding="@dimen/padding_very_small"
                 android:text="@string/label_storage"
-                android:textSize="@dimen/title_medium"/>
+                android:textSize="@dimen/title_medium"
+                android:textStyle="bold"/>
 
 
             <LinearLayout
@@ -117,7 +116,8 @@
                     android:layout_marginTop="@dimen/padding_extra_large"
                     android:padding="@dimen/padding_very_small"
                     android:text="@string/label_used"
-                    android:textSize="@dimen/title_medium"/>
+                    android:textSize="@dimen/title_medium"
+                    android:textStyle="bold"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

@@ -2,6 +2,7 @@ package de.smac.smaccloud.adapter;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import de.smac.smaccloud.R;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.data.DataHelper;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Channel;
 import de.smac.smaccloud.model.Media;
 import de.smac.smaccloud.model.RecentItem;
@@ -63,10 +65,6 @@ public class MostVisitedItemRecyclerAdapter extends RecyclerView.Adapter<Recycle
 
         final CommentHolder mostVisitedItemHolder = (CommentHolder) holder;
         RecentItem recentItem = recentItems.get(position);
-        mostVisitedItemHolder.txtFileName.setTypeface(Helper.robotoBoldTypeface);
-        mostVisitedItemHolder.txtChannelName.setTypeface(Helper.robotoRegularTypeface);
-        mostVisitedItemHolder.labelVisit.setTypeface(Helper.robotoRegularTypeface);
-        mostVisitedItemHolder.txtVisitCount.setTypeface(Helper.robotoRegularTypeface);
 
         try
         {
@@ -80,7 +78,7 @@ public class MostVisitedItemRecyclerAdapter extends RecyclerView.Adapter<Recycle
             DataHelper.getMedia(context, media);
             mostVisitedItemHolder.txtFileName.setText(media.name);
 
-            // Converting timestamp into x ago format
+
             CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                     //dateFormat.parse(recentItem.visitTimestamp).getTime(),
                     Long.parseLong(recentItem.visitTimestamp),
@@ -143,6 +141,7 @@ public class MostVisitedItemRecyclerAdapter extends RecyclerView.Adapter<Recycle
                     Helper.openFile(context, media);
                 }
             });
+
         }
         catch (Exception ex)
         {
@@ -161,7 +160,7 @@ public class MostVisitedItemRecyclerAdapter extends RecyclerView.Adapter<Recycle
     class CommentHolder extends RecyclerView.ViewHolder
     {
         RelativeLayout parentLayout;
-        ImageView imgIcon;
+        ImageView imgIcon, imgVisibleIcon;
         TextView txtChannelName, txtFileName, labelVisit, txtVisitCount;
 
         public CommentHolder(View itemView)
@@ -170,10 +169,14 @@ public class MostVisitedItemRecyclerAdapter extends RecyclerView.Adapter<Recycle
             itemView.setId(R.id.itemView);
             parentLayout = (RelativeLayout) itemView.findViewById(R.id.parentLayout);
             imgIcon = (ImageView) itemView.findViewById(R.id.imgIcon);
+            imgVisibleIcon = (ImageView) itemView.findViewById(R.id.img_visible_count);
             txtChannelName = (TextView) itemView.findViewById(R.id.txtChannelName);
             txtFileName = (TextView) itemView.findViewById(R.id.txtFileName);
             labelVisit = (TextView) itemView.findViewById(R.id.labelVisit);
             txtVisitCount = (TextView) itemView.findViewById(R.id.txtVisitCount);
+            imgVisibleIcon.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+
         }
     }
 }

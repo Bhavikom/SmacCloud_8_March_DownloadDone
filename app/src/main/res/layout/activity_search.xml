@@ -59,9 +59,18 @@
                     android:id="@+id/btnSort"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/padding_small"
+                    android:background="@drawable/rounded_header_bg"
+                    android:paddingBottom="@dimen/padding_very_small"
+                    android:paddingLeft="@dimen/padding_extra_large"
+                    android:paddingRight="@dimen/padding_extra_large"
+                    android:paddingTop="@dimen/padding_very_small"
                     android:text="@string/label_sort"
-                    android:textColor="@color/blue_link"
-                    android:textSize="@dimen/title_medium"/>
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/title_medium"
+                    android:visibility="visible"/>
+
             </LinearLayout>
 
             <LinearLayout
@@ -79,13 +88,14 @@
                         android:id="@+id/btnFilter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/padding_small"
+                        android:layout_margin="@dimen/padding_large"
                         android:background="@drawable/rounded_header_bg"
-                        android:paddingBottom="@dimen/padding_5dp"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingRight="@dimen/padding_large"
-                        android:paddingTop="@dimen/padding_5dp"
+                        android:paddingBottom="@dimen/padding_very_small"
+                        android:paddingLeft="@dimen/padding_extra_large"
+                        android:paddingRight="@dimen/padding_extra_large"
+                        android:paddingTop="@dimen/padding_very_small"
                         android:text="@string/label_filter"
+                        android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="@dimen/title_medium"
                         android:visibility="visible"/>
@@ -96,7 +106,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="top|right"
                         android:gravity="center"
-                        android:padding="@dimen/padding_3dp"
+                        android:padding="@dimen/padding_5dp"
                         android:text="10"
                         android:textColor="@color/white"
                         android:textSize="@dimen/title_extra_small"

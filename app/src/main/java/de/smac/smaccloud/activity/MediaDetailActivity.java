@@ -3,10 +3,17 @@ package de.smac.smaccloud.activity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +21,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,6 +42,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import de.smac.smaccloud.R;
+import de.smac.smaccloud.adapter.MediaAdapter;
 import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.base.NetworkRequest;
@@ -47,12 +58,20 @@ import de.smac.smaccloud.model.Media;
 import de.smac.smaccloud.model.MediaVersion;
 import de.smac.smaccloud.model.User;
 import de.smac.smaccloud.service.DownloadFileFromURL;
+import de.smac.smaccloud.service.FCMMessagingService;
+import de.smac.smaccloud.service.MultiDownloadService;
 
 import static de.smac.smaccloud.base.NetworkService.KEY_AUTHORIZATION;
 
-public class MediaDetailActivity extends Activity implements DownloadFileFromURL.interfaceAsyncResponse
+public class MediaDetailActivity extends Activity
 {
+    int mediaPosition;
+    SeekBar seekbar;
+    private static final String FILETYPE_VIDEO = "video";
+    private static final String FILETYPE_VIDEO_MP4 = "video/mp4";
     private static final String FILETYPE_IMAGE = "image";
+    private static final String FILETYPE_FOLDER = "folder";
+    private static final String FILETYPE_PDF = "application/pdf";
     //public InterfaceDonwloaded download;
     public static int COMMENT_ACTIVITY_REQUEST_CODE = 1001;
     public int parentId;
@@ -61,20 +80,26 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
     public ProgressDialog dialog;
     Activity activity;
     DownloadFileFromURL.interfaceAsyncResponse interfaceResponse = null;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    ProgressBar progressBar;
+    LinearLayout parentLayout, btnLike, btnComment;
     private Channel channel;
     private User user;
     private Media media;
-    private ImageView mediaImage;
+    private ImageView mediaImage, imageViewLike, imageViewComment;
     private TextView txtFileName;
     private TextView txtInsertTime;
-    private LinearLayout btn_open;
+    private LinearLayout linearDownload;
     private TextView txtLikesCounter, txtCommentCounter, txtOpen;
     private ImageView btnShare;
     private LinearLayout layoutFileDescription;
     private TextView txtFileDescription;
     private TextView textMediaType, textMediaSize, textMediaAvailableOnDevice, textMediaOwner, textMediaLocation, textMediaCreatedDate, textMediaModifiedDate;
     private Button btnDelete;
-
+    RelativeLayout relativeSeekbar;
+    ImageView imgCancel;
+    private int progressStatus = 0;
+    String comeFrom="";
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -83,26 +108,64 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
         setContentView(R.layout.fragment_media_detail_view);
         Helper.retainOrientation(MediaDetailActivity.this);
         Bundle arguments = getIntent().getExtras();
+        comeFrom = arguments.getString("comefrom");
         channel = arguments.getParcelable(MediaFragment.EXTRA_CHANNEL);
         media = arguments.getParcelable(MediaFragment.EXTRA_MEDIA);
+        mediaPosition = arguments.getInt("POSITION");
         this.dialog = new ProgressDialog(context);
-        this.interfaceResponse = this;
         this.dialog.setCancelable(false);
         this.activity = this;
         user = new User();
         setMediaDetails(media);
+        applyThemeColor();
+
         if (media.isDownloaded == 0)
         {
             txtOpen.setText(getString(R.string.download));
         }
         else
         {
-            txtOpen.setText(getString(R.string.open));
+            String[] contentType = media.type.split("/");
+            if (contentType[0].equals(FILETYPE_IMAGE) || media.type.equals(FILETYPE_PDF))
+            {
+
+                txtOpen.setText(getString(R.string.open));
+            }
+            else
+            {
+                txtOpen.setText(getString(R.string.play));
+            }
+
+
         }
+
+        relativeSeekbar = (RelativeLayout) findViewById(R.id.linear_seekbar);
+        seekbar = (SeekBar) findViewById(R.id.seekbar);
+        relativeSeekbar.setVisibility(View.GONE);
         activity.getSupportActionBar().setTitle("");
-        txtOpen.setTypeface(Helper.robotoBoldTypeface);
-        btnDelete.setTypeface(Helper.robotoBoldTypeface);
-        txtFileName.setTypeface(Helper.robotoBoldTypeface);
+        registerReceiver();
+
+        if(media.isDownloading == 1){
+            linearDownload.setVisibility(View.GONE);
+            relativeSeekbar.setGravity(View.VISIBLE);
+
+        }
+        /*if(!TextUtils.isEmpty(comeFrom)){
+            *//*if(media.isDownloading == 1){
+                Log.e(""," download is running : ");
+            }*//*
+           *//* else*//* if (media.isDownloaded == 0) {
+                try {
+                    onNetworkReady(media);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+            }
+        }*/
     }
 
     @Override
@@ -110,12 +173,12 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
     {
         super.initializeComponents();
         mediaImage = (ImageView) findViewById(R.id.imageMediaView);
-        mediaImage.setLayoutParams(new CollapsingToolbarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Helper.getDeviceHeight(this) / 3));
-
+        imageViewLike = (ImageView) findViewById(R.id.img_like);
+        imageViewComment = (ImageView) findViewById(R.id.img_comment);
         txtFileName = (TextView) findViewById(R.id.txtFileName);
         txtInsertTime = (TextView) findViewById(R.id.txtInsertTime);
         txtOpen = (TextView) findViewById(R.id.txt_open);
-        btn_open = (LinearLayout) findViewById(R.id.btn_open);
+        linearDownload = (LinearLayout) findViewById(R.id.linear_download);
         txtLikesCounter = (TextView) findViewById(R.id.txtLikesCounter);
         txtCommentCounter = (TextView) findViewById(R.id.txtCommentCounter);
         btnShare = (ImageView) findViewById(R.id.btnShare);
@@ -128,9 +191,36 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
         textMediaLocation = (TextView) findViewById(R.id.textMediaLocation);
         textMediaCreatedDate = (TextView) findViewById(R.id.textMediaCreatedDate);
         textMediaModifiedDate = (TextView) findViewById(R.id.textMediaModifiedDate);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbar);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        parentLayout = (LinearLayout) findViewById(R.id.parentLayout1);
+        btnLike = (LinearLayout) findViewById(R.id.btnMediaLike);
+        btnComment = (LinearLayout) findViewById(R.id.btnMediaComment);
+        imgCancel = (ImageView)findViewById(R.id.img_cancel);
         btnDelete = (Button) findViewById(R.id.btnDelete);
-        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoBoldTypeface);
+        mediaImage.setLayoutParams(new CollapsingToolbarLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Helper.getDeviceHeight(this) / 3));
+        applyThemeColor();
 
+
+
+    }
+
+    public void applyThemeColor()
+    {
+        updateParentThemeColor();
+
+        imageViewLike.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        imageViewComment.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        btnShare.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            linearDownload.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(PreferenceHelper.getAppColor(context))));
+        }
+        else
+        {
+            linearDownload.setBackgroundColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        }
 
     }
 
@@ -145,8 +235,21 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
             {
                 switch (view.getId())
                 {
-                    case R.id.btn_open:
-                        if (media.isDownloaded == 0)
+                    case R.id.img_cancel:
+                        if(media.isDownloading == 1) {
+
+                            Intent intent = new Intent(activity, MultiDownloadService.class);
+                            intent.setAction(Helper.STOP_DOWNLOAD);
+                            intent.putExtra("media_object", media);
+                            //intent.putExtra("position", String.valueOf(pos));
+                            activity.startService(intent);
+                        }
+                        break;
+                    case R.id.linear_download:
+                        if(media.isDownloading == 1){
+                            Log.e(""," download is running : ");
+                        }
+                        else if (media.isDownloaded == 0)
                         {
                             try
                             {
@@ -168,6 +271,8 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
                         }
                         else
                         {
+
+
                             String[] contentType = media.type.split("/");
                             if (contentType[0].equals(FILETYPE_IMAGE))
                             {
@@ -199,7 +304,7 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
 
                         }
                         break;
-                    case R.id.txtLikesCounter:
+                    case R.id.btnMediaLike:
                         if (media.isDownloaded == 1)
                         {
                             startUserLikeViewActivity();
@@ -216,7 +321,7 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
                         }
 
                         break;
-                    case R.id.txtCommentCounter:
+                    case R.id.btnMediaComment:
                         if (media.isDownloaded == 1)
                         {
                             startUserCommentViewActivity();
@@ -248,17 +353,50 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
 
                         break;
                     case R.id.btnDelete:
-                        showDeleteConfirmDialog(R.style.DialogAnimation, getString(R.string.sign_out_message));
+                        if (prefManager.isDemoLogin())
+                        {
+                            AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                            builder.setTitle(getString(R.string.access_denied_title));
+                            builder.setMessage(getString(R.string.access_denied_message));
+                            builder.setPositiveButton(getString(R.string.ok),
+                                    new DialogInterface.OnClickListener()
+                                    {
+                                        public void onClick(DialogInterface dialog, int which)
+                                        {
+                                            dialog.dismiss();
+                                        }
+                                    });
+
+                            AlertDialog dialog = builder.create();
+
+                            dialog.show();
+                        }
+                        else
+                        {
+
+                            showDeleteConfirmDialog(R.style.DialogAnimation, getString(R.string.sign_out_message));
+                        }
                         break;
                 }
             }
         };
-        btn_open.setOnClickListener(clickListener);
+        linearDownload.setOnClickListener(clickListener);
         txtLikesCounter.setOnClickListener(clickListener);
         txtCommentCounter.setOnClickListener(clickListener);
         btnShare.setOnClickListener(clickListener);
         btnDelete.setOnClickListener(clickListener);
+        btnLike.setOnClickListener(clickListener);
+        btnComment.setOnClickListener(clickListener);
+        imgCancel.setOnClickListener(clickListener);
 
+        FCMMessagingService.themeChangeNotificationListener = new FCMMessagingService.ThemeChangeNotificationListener()
+        {
+            @Override
+            public void onThemeChangeNotificationReceived()
+            {
+                applyThemeColor();
+            }
+        };
     }
 
 
@@ -281,6 +419,9 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
         super.onResume();
         txtLikesCounter.setText(String.valueOf(DataHelper.getMediaLikeCount(context, media.id)));
         txtCommentCounter.setText(String.valueOf(DataHelper.getMediaCommentCount(context, media.id)));
+        applyThemeColor();
+
+
     }
 
     private void startUserLikeViewActivity()
@@ -312,15 +453,8 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
         //mFolder = new File("" + getFilesDir() + "/" + media.id);
         user.id = PreferenceHelper.getUserContext(context);
         Glide.with(context).load(media.icon).diskCacheStrategy(DiskCacheStrategy.ALL).into(mediaImage);
-      /*  if (actionBar != null)
-        {
-            actionBar.setBackgroundDrawable(getResources().getDrawable(R.color.transparent));
-        }*/
-
         txtFileName.setText(mediaTemp.name);
         txtInsertTime.setText(Helper.getDateFormate2().format(mediaTemp.insertDate));
-        /*txtLikesCounter.setText(String.valueOf(DataHelper.getMediaLikeCount(context, mediaTemp.id)));
-        txtCommentCounter.setText(String.valueOf(DataHelper.getMediaCommentCount(context, mediaTemp.id)));*/
         if (mediaTemp.description != null && !mediaTemp.description.trim().isEmpty())
         {
             layoutFileDescription.setVisibility(View.VISIBLE);
@@ -348,6 +482,7 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
             ownerDetail.id = mediaVersion.modifierId;
             DataHelper.getUser(context, ownerDetail);
             textMediaModifiedDate.setText(Helper.getDateFormate2().format(mediaTemp.updateDate) + " " + getString(R.string.label_by) + " " + ownerDetail.name);
+            //   applyTheme();
         }
         catch (Exception ex)
         {
@@ -393,11 +528,19 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
                     }
                     else
                     {
-                        dialog.setMessage(context.getString(R.string.menu_download_option_download));
-                        dialog.show();
+                        //dialog.setMessage(context.getString(R.string.menu_download_option_download));
+                        //dialog.show();
                         media1.isDownloading = 1;
-                        DownloadFileFromURL downloadContent = new DownloadFileFromURL(context, media1, interfaceResponse);
-                        downloadContent.execute(response.optString("Payload"));
+
+                        Intent intent = new Intent(activity,MultiDownloadService.class);
+                        intent.setAction(Helper.START_DOWNLOAD);
+                        intent.putExtra("media_object", media1);
+                        intent.putExtra("position",String.valueOf(mediaPosition));
+                        intent.putExtra("url",response.optString("Payload"));
+                        activity.startService(intent);
+
+                        /*DownloadFileFromURL downloadContent = new DownloadFileFromURL(context, media1,"", interfaceResponse);
+                        downloadContent.execute(response.optString("Payload"));*/
 
                     }
                 }
@@ -425,8 +568,63 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
 
         request.execute();
     }
+    private BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
 
-    @Override
+            if(intent.getAction().equals(MediaAdapter.MESSAGE_PROGRESS)){
+
+                Media mediaReceived = intent.getParcelableExtra("media_from_service");
+                if (media.id == mediaReceived.id) {
+                    media.isDownloading = 1;
+                    //if(seekbar == null){
+                    //}
+                    if(seekbar != null) {
+                        if(linearDownload.getVisibility() == View.VISIBLE){
+                            linearDownload.setVisibility(View.GONE);
+                        }
+                        relativeSeekbar.setVisibility(View.VISIBLE);
+                        Log.e(" detail "," media progress to show seekbar : "+mediaReceived.progress);
+                        seekbar.setProgress(mediaReceived.progress);
+
+                        if(mediaReceived.progress == 100){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    linearDownload.setVisibility(View.VISIBLE);
+                                    txtOpen.setText(checkMediaType());
+                                    relativeSeekbar.setVisibility(View.GONE);
+                                }
+                            });
+                            media = mediaReceived;
+                            DataHelper.updateMedia(context,mediaReceived);
+                        }
+                    }
+                }
+            }
+            else if(intent.getAction().equals(MediaAdapter.MESSAGE_FAIL)){
+                Media mediaReceived = intent.getParcelableExtra("media_from_service");
+
+                if (media.id == mediaReceived.id) {
+                    //if(seekbar == null){
+                    //}
+                    if(seekbar != null) {
+                        relativeSeekbar.setVisibility(View.GONE);
+                        seekbar.setProgress(0);
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    linearDownload.setVisibility(View.VISIBLE);
+                                    txtOpen.setText(getString(R.string.download));
+                                }
+                            });
+                            media = mediaReceived;
+                        }
+                }
+            }
+        }
+    };
+    /*@Override
     public void processFinish(String output)
     {
 
@@ -464,7 +662,9 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
         {
             Helper.openFile(context, media);
         }
-    }
+    }*/
+
+
 
 
     private void showDeleteConfirmDialog(int animationSource, String type)
@@ -507,6 +707,25 @@ public class MediaDetailActivity extends Activity implements DownloadFileFromURL
 
         dialog.show();
     }
+    private void registerReceiver(){
 
+        LocalBroadcastManager bManager = LocalBroadcastManager.getInstance(activity);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(MediaAdapter.MESSAGE_PROGRESS);
+        intentFilter.addAction(MediaAdapter.MESSAGE_FAIL);
+        bManager.registerReceiver(broadcastReceiver, intentFilter);
+    }
+    public String checkMediaType(){
+        String[] contentType = media.type.split("/");
+        if (contentType[0].equals(FILETYPE_IMAGE) || media.type.equals(FILETYPE_PDF))
+        {
+
+            return getString(R.string.open);
+        }
+        else
+        {
+            return getString(R.string.play);
+        }
+    }
 
 }

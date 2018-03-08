@@ -15,21 +15,25 @@
         android:layout_marginLeft="4dp"
         android:layout_weight="1"
         android:gravity="center_vertical"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:paddingLeft="2dp"
         android:paddingRight="2dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:id="@+id/img_user"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_user"/>
 
         <TextView
             android:id="@+id/labelUserName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:drawableLeft="@drawable/ic_user"
-            android:drawablePadding="@dimen/padding_small"
+            android:layout_marginLeft="@dimen/padding_very_small"
             android:ellipsize="middle"
             android:gravity="center_vertical"
             android:singleLine="true"
-            android:text="hello"
             android:textSize="@dimen/title_very_small"
             android:textStyle="bold"
             />

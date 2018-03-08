@@ -2,10 +2,16 @@ package de.smac.smaccloud.adapter;
 
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.text.ParseException;
@@ -14,6 +20,7 @@ import java.util.Date;
 
 import de.smac.smaccloud.R;
 import de.smac.smaccloud.base.Helper;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.User;
 import de.smac.smaccloud.model.UserLike;
 
@@ -47,12 +54,9 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeHolder>
         final int finalPosition = position;
         User user = userLikes.get(position).user;
         holder.labelUserName.setText(user.name);
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a",Locale.getDefault());
-        //dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-        //holder.labelInsertDate.setText(Helper.getDateFormate().format(user.insertDate));
         try
         {
-            /* getting comment time from database and parse it */
+
             String strDate = Helper.getDateFormatCurrentDateTime().format(userLikes.get(position).insertDate);
             Date date = Helper.getDateFormatCurrentDateTime().parse(strDate);
             holder.labelInsertDate.setText(strDate);
@@ -61,8 +65,9 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeHolder>
         {
             parseEx.printStackTrace();
         }
-        holder.labelInsertDate.setTypeface(Helper.robotoLightTypeface);
-        holder.labelUserName.setTypeface(Helper.robotoBoldTypeface);
+        Drawable drawable = ResourcesCompat.getDrawable(context.getResources(), R.drawable.ic_user, null);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, Color.parseColor(PreferenceHelper.getAppColor(context)));
     }
 
     @Override
@@ -75,13 +80,20 @@ public class LikeAdapter extends RecyclerView.Adapter<LikeAdapter.LikeHolder>
     {
 
         TextView labelUserName, labelInsertDate;
+        ImageView imgUser;
+        LinearLayout parentLayout;
 
-        public LikeHolder(View itemView)
+        private LikeHolder(View itemView)
         {
             super(itemView);
             itemView.setId(R.id.itemView);
+            imgUser = (ImageView) itemView.findViewById(R.id.img_user);
             labelUserName = (TextView) itemView.findViewById(R.id.labelUserName);
             labelInsertDate = (TextView) itemView.findViewById(R.id.labelInsertDate);
+            parentLayout = (LinearLayout) itemView.findViewById(R.id.parentLayout);
+            imgUser.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            Helper.setupTypeface(itemView, Helper.robotoRegularTypeface);
         }
     }
+
 }

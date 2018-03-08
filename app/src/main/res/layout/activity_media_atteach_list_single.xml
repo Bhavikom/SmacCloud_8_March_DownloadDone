@@ -36,7 +36,7 @@
                 android:singleLine="true"
                 android:text="Test"
                 android:textColor="@color/black"
-                android:textSize="@dimen/title_ultra_small"
+                android:textSize="@dimen/title_very_small"
                 android:textStyle="bold"/>
 
             <ImageView

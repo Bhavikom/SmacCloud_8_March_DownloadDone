@@ -32,6 +32,7 @@
                     android:transitionName="@string/text_transition_animation_media_image"/>
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/thirty_five_dp"
@@ -55,7 +56,7 @@
                     android:textColor="@color/white"
                     android:textSize="@dimen/title_ultra_small"
                     android:textStyle="bold"
-                    android:transitionName="@string/text_transition_animation_media_title" />
+                    android:transitionName="@string/text_transition_animation_media_title"/>
 
 
                 <TextView
@@ -63,17 +64,47 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="end|center_vertical"
-                    android:layout_marginLeft="@dimen/padding_5dp"
-                    android:layout_marginRight="@dimen/padding_5dp"
+                    android:layout_marginEnd="@dimen/padding_very_small"
                     android:layout_weight="0.2"
-                    android:drawableEnd="@drawable/ic_visibility_white"
-                    android:drawablePadding="@dimen/padding_5dp"
                     android:gravity="end|center_vertical"
                     android:textColor="@color/white"
                     android:textSize="@dimen/title_ultra_small"
                     android:textStyle="bold"/>
 
+                <ImageView
+                    android:id="@+id/img_visible_count"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="@dimen/padding_5dp"
+                    android:gravity="end|center_vertical"
+                    android:src="@drawable/ic_visibility_white"/>
+
             </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_extra_large"
+                android:layout_gravity="bottom|center_vertical"
+                android:layout_marginBottom="@dimen/thirty_five_dp"
+                android:background="@color/dialog_color"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/labelVisit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/padding_very_small"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/title_ultra_small"/>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -92,17 +123,6 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
-                    android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/title_ultra_small"/>
-
-                <TextView
-                    android:id="@+id/labelVisit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.3"
-                    android:gravity="end|center_vertical"
                     android:maxLines="1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/title_ultra_small"/>

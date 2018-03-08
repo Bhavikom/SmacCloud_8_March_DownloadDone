@@ -1,9 +1,13 @@
 package de.smac.smaccloud.activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -101,7 +105,10 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
         prefManager = new PreferenceHelper(context);
         setContentView(R.layout.activity_video_viewer);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // Helper.retainOrientation(VideoViewerActivity.this);
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+        }
 
     }
 
@@ -145,6 +152,11 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
             playVideo(uriForPlayer);
             // for video file
         }
+        img_like = (ImageView) findViewById(R.id.img_like);
+        img_comment = (ImageView) findViewById(R.id.img_comment);
+        img_attach = (ImageView) findViewById(R.id.img_attach);
+        img_info = (ImageView) findViewById(R.id.img_info);
+        //   img_like.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
         /*mediaPlayer = MediaPlayer.create(context, uriForPlayer);
 
         surfaceView = (VideoSurfaceView) findViewById(R.id.surfaceView);
@@ -312,10 +324,7 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
         btn_info.setOnClickListener(this);
 
 
-        img_like = (ImageView) findViewById(R.id.img_like);
-        img_comment = (ImageView) findViewById(R.id.img_comment);
-        img_attach = (ImageView) findViewById(R.id.img_attach);
-        img_info = (ImageView) findViewById(R.id.img_info);
+
 
         checkLike = DataHelper.checkLike(context, media.id, PreferenceHelper.getUserContext(context));
         if (checkLike)
@@ -448,8 +457,22 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
             case R.id.btn_like:
                 if (prefManager.isDemoLogin())
                 {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(getString(R.string.disable_like_title));
+                    builder.setMessage(getString(R.string.disable_like_message));
+                    builder.setPositiveButton(getString(R.string.ok),
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
 
-                    Helper.demoUserDialog(context);
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
+                    //Helper.demoUserDialog(context);
                 }
                 else
                 {
@@ -465,7 +488,7 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
                             postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
                                     RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelId(context, media.id))),
                                     RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
-                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)));
+                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
                         }
                         else
                         {
@@ -530,7 +553,7 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
                 RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelIdFromMediaID(this, media.id))),
                 RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
                 RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)),
-                RequestParameter.urlEncoded("Comment", commentText));
+                RequestParameter.urlEncoded("Comment", commentText), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
     }
 
     @Override
@@ -578,6 +601,7 @@ public class VideoViewerActivity extends Activity implements View.OnClickListene
                         }
                     }
                     img_like.setBackground(getResources().getDrawable(R.drawable.ic_like));
+
                     context.sendBroadcast(new Intent(BROADCAST_MEDIA_DOWNLOAD_COMPLETE));
                 }
                 catch (JSONException | ParseException e)

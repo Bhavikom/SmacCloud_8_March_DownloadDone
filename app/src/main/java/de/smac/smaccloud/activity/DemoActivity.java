@@ -2,7 +2,14 @@ package de.smac.smaccloud.activity;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -20,15 +27,14 @@ import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.helper.PreferenceHelper;
 
-import static de.smac.smaccloud.activity.OrganizationActivity.IS_FROM_DEMO;
-
 public class DemoActivity extends Activity implements View.OnClickListener
 {
     public EasyDialog dialog;
-    Button buttonLogin, buttonTryDemo;
-    TextView textViewTitle, textViewConfigureServer;
+    Button buttonLogin, buttonSignUp;
+    TextView textViewTitle, textViewSmacSoftwareLink;
     Activity activity;
     PreferenceHelper preManager;
+    MenuInflater inflater;
     private ImageView languageChange;
 
     @Override
@@ -40,20 +46,15 @@ public class DemoActivity extends Activity implements View.OnClickListener
         preManager = new PreferenceHelper(this);
         Helper.retainOrientation(DemoActivity.this);
         textViewTitle = (TextView) findViewById(R.id.demo_title);
-        textViewConfigureServer = (TextView) findViewById(R.id.txt_Configure_Server);
+        textViewSmacSoftwareLink = (TextView) findViewById(R.id.txt_smac_link);
         languageChange = (ImageView) findViewById(R.id.language_english);
         buttonLogin = (Button) findViewById(R.id.btn_login);
-        buttonTryDemo = (Button) findViewById(R.id.btn_try_demo);
-
-        textViewTitle.setTypeface(Helper.robotoBoldTypeface);
-        buttonLogin.setTypeface(Helper.robotoMediumTypeface);
-        buttonTryDemo.setTypeface(Helper.robotoMediumTypeface);
-        textViewConfigureServer.setTypeface(Helper.robotoBoldTypeface);
+        buttonSignUp = (Button) findViewById(R.id.btn_sign_up);
 
         buttonLogin.setOnClickListener(this);
-        buttonTryDemo.setOnClickListener(this);
+        buttonSignUp.setOnClickListener(this);
         languageChange.setOnClickListener(this);
-        textViewConfigureServer.setOnClickListener(this);
+        textViewSmacSoftwareLink.setOnClickListener(this);
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setTitle(getString(R.string.app_name));
@@ -76,26 +77,6 @@ public class DemoActivity extends Activity implements View.OnClickListener
 
     public void updateLanguage()
     {
-        /*if (PreferenceHelper.getSelectedLanguage(context).equals("") || PreferenceHelper.getSelectedLanguage(context).equals("en"))
-        {
-            //if (PreferenceHelper.getSelectedLanguage(context).equals("")){
-            PreferenceHelper.storeSelectedLanguage(context, "en");
-            Helper.setUpLanguage(context, PreferenceHelper.getSelectedLanguage(context));
-            languageChange.setImageResource(R.drawable.ic_flag_english);
-            buttonLogin.setText(getResources().getString(R.string.login));
-            buttonTryDemo.setText(getResources().getString(R.string.tra_demo));
-            //}
-
-        }
-        else if (PreferenceHelper.getSelectedLanguage(context).equals("") || PreferenceHelper.getSelectedLanguage(context).equals("de"))
-        {
-            PreferenceHelper.storeSelectedLanguage(context, "de");
-            Helper.setUpLanguage(context, PreferenceHelper.getSelectedLanguage(context));
-            languageChange.setImageResource(R.drawable.ic_flag_german);
-            buttonLogin.setText(getResources().getString(R.string.login));
-            buttonTryDemo.setText(getResources().getString(R.string.tra_demo));
-        }*/
-
         if (PreferenceHelper.getSelectedLanguage(context).equals("") || PreferenceHelper.getSelectedLanguage(context).equals("en"))
         {
             if (PreferenceHelper.getSelectedLanguage(context).equals(""))
@@ -111,8 +92,8 @@ public class DemoActivity extends Activity implements View.OnClickListener
             languageChange.setImageResource(R.drawable.ic_flag_german);
         }
         buttonLogin.setText(getResources().getString(R.string.login));
-        buttonTryDemo.setText(getResources().getString(R.string.tra_demo));
-        textViewConfigureServer.setText(getResources().getString(R.string.configure_url));
+        buttonSignUp.setText(getResources().getString(R.string.sign_up));
+        textViewSmacSoftwareLink.setText(getResources().getString(R.string.smac_link));
 
     }
 
@@ -122,20 +103,13 @@ public class DemoActivity extends Activity implements View.OnClickListener
         switch (view.getId())
         {
             case R.id.btn_login:
-                if (preManager.isFirstTimeConfigureServerLanuch())
-                {
-                    Intent i = new Intent(getApplicationContext(), LoginActivity.class);
-                    startActivity(i);
-                }
-                else
-                {
-                    Intent i = new Intent(getApplicationContext(), OrganizationActivity.class);
-                    startActivity(i);
-                }
+
+                Intent i = new Intent(getApplicationContext(), LoginActivity.class);
+                startActivity(i);
                 break;
 
-            case R.id.btn_try_demo:
-                Intent i1 = new Intent(getApplicationContext(), TryDemoActivity.class);
+            case R.id.btn_sign_up:
+                Intent i1 = new Intent(getApplicationContext(), SignUpActivity.class);
                 startActivity(i1);
                 break;
 
@@ -143,10 +117,11 @@ public class DemoActivity extends Activity implements View.OnClickListener
                 showDialogLikeTooltip();
                 break;
 
-            case R.id.txt_Configure_Server:
-                Intent configureServer = new Intent(getApplicationContext(), OrganizationActivity.class);
-                configureServer.putExtra(IS_FROM_DEMO, false);
-                startActivity(configureServer);
+            case R.id.txt_smac_link:
+                String url = "https://www.smacsoftwares.com";
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
                 break;
         }
     }
@@ -204,5 +179,38 @@ public class DemoActivity extends Activity implements View.OnClickListener
         super.onConfigurationChanged(newConfig);
         updateLanguage();
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_information:
+                String url = "https://www.smaccloud.com/help/";
+                Intent i = new Intent(Intent.ACTION_VIEW);
+                i.setData(Uri.parse(url));
+                startActivity(i);
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_activity_information, menu);
+        applyThemeColor();
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    public void applyThemeColor()
+    {
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_info, null);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, getResources().getColor(R.color.orange_color));
+    }
+
 
 }

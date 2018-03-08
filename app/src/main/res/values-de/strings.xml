@@ -7,19 +7,35 @@
     <string name="second_slide">Second Slide</string>
 
     <!--Demo Screen String-->
-    <string name="login">Anmeldung</string>
+    <string name="login">Anmelden</string>
+    <string name="sign_up">Sign Up</string>
     <string name="tra_demo">Versuche eine Demo</string>
-    <string name="configure_url">Configure URL</string>
+    <string name="smac_link">Powered by: SMAC Softwares &#38; Services e.K.</string>
+    <string name="disable_comment_title">Comment Disable</string>
+    <string name="disable_comment_message">Comment is disable in demo mode.</string>
+    <string name="disable_like_title">Like Disable</string>
+    <string name="disable_like_message"> Like is disable in demo mode.</string>
+    <string name="disable_sharing_title"> Sharing Disable</string>
+    <string name="disable_sharing_message">Sharing is disable in demo mode.</string>
+    <string name="access_denied_title">Access Denied</string>
+    <string name="access_denied_message">Access Denied in demo mode.</string>
+
 
     <!-- Organization Screen String-->
-    <string name="organization_name">Organisations URL</string>
-    <string name="Continue">fortsetzen</string>
+    <string name="organization_name">Organisations</string>
+    <string name="organization_url">Organization URL</string>
+    <string name="organization_url_info">Enter your organization URL from greeting email</string>
     <string name="invalid_organization">Ungültige Organisation</string>
+    <string name="Continue">Fortsetzen</string>
     <string name="enter_Organization_name">eintreten Organisations name</string>
 
     <!-- Try_Demo Screen String-->
     <string name="u_name">nennen</string>
+    <string name="address">Address</string>
+    <string name="contact">Contact No</string>
+    <string name="mobileNo">Mobile No</string>
     <string name="designation">Bezeichnung</string>
+    <string name="occupation">Occupation</string>
     <string name="Professional_field">Berufsfeld</string>
     <string name="company_size">Company Size</string>
     <string name="work_email_address">Arbeit E-Mail-Adresse</string>
@@ -32,16 +48,32 @@
     <string name="enter_company_type">Geben Sie die Art des Unternehmens</string>
     <string name="enter_employee_strength">Geben Sie Mitarbeiter Stärke</string>
     <string name="enter_email_address">E-Mail-Adresse</string>
-    <string name="invalid_email">Bitte geben Sie gültige E-Mail</string>
+    <string name="invalid_email">Falsche E-Mail-Adresse</string>
+
+    <string name="name_validation">Enter UserName</string>
+    <string name="emailid_validation">Enter Email Id</string>
+    <string name="address_validation">Enter Address</string>
+    <string name="contact_validation">Enter contactNo</string>
+    <string name="mobileno_validation">Enter MobileNo</string>
+    <string name="contactNo_validation">Enter contactNo</string>
+    <string name="oragnization_validation">Enter Organization</string>
+    <string name="password_validation">Enter password</string>
+    <string name="confirm_password_validation">Enter confirmPassword</string>
+    <string name="invalidMobileNo_validation">Mobile number should be 10 to 15 character long.</string>
+    <string name="password_spacial_character_validation">Password must be 8 characters long and at least one letter, one special character and one number.</string>
 
     <!--Login Screen-->
-    <string name="hint_email">E-Mail-Id</string>
-    <string name="hint_password">Kennwort</string>
-    <string name="forget_password">Passwort vergessen?</string>
+    <string name="hint_email">E-Mail-Adresse</string>
+    <string name="hint_password">Passwort</string>
+    <string name="hint_confirm_password">Confirm password</string>
+    <string name="forgot_password">Passwort vergessen?</string>
     <string name="please_select_first">Please Select First</string>
     <string name="enter_password">Enter Password</string>
     <string name="help_login">Need help logging in?</string>
     <string name="email_sent_successfully">E-Mail erfolgreich gesendet</string>
+    <string name="password_length_message">Please Enter at least 6 character in password</string>
+    <string name="recognizing_and_sending_mail">Recognizing and sending mail…</string>
+    <string name="authentication">Authentifizierung</string>
 
     <!--syncActivity Screen-->
     <string name="sync">Synchronisieren Sie Ihre Daten </string>
@@ -90,7 +122,8 @@
     <string name="version">Ausführung</string>
     <string name="version_no">Version</string>
     <string name="na">N/A</string>
-    <string name="copyright">Copyright @2017 SMAC Cloud.All Rechte Vorbehalten.</string>
+    <string name="copyright">CopyRight ©</string>
+    <string name="copyright1">SMAC Software &#38; Services e.K.All Rights Reserved.</string>
     <string name="plan">planen:</string>
     <string name="licence">Lizenz:</string>
     <string name="smac_title">SMAC Cloud-2017</string>
@@ -138,7 +171,7 @@
     <string name="settings">Einstellungen</string>
     <string name="logout">Logout</string>
     <string name="lable_sign_out">Melden Sie sich</string>
-    <string name="sign_out_message">Bist du sicher?</string>
+    <string name="sign_out_message">Sind Sie sicher?</string>
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="label_medias">Medien(s)</string>
@@ -147,30 +180,32 @@
     <string name="channel_name">Kanal</string>
     <string name="created_by">Created by</string>
     <string name="shared_by">Shared by:</string>
-    <string name="date">Date:</string>
+    <string name="date">Datum:</string>
     <string name="users">user(s)</string>
     <string name="label_delete_dialog">Warning</string>
     <string name="label_download_first_dialog">Bitte laden Sie zuerst ...</string>
     <string name="label_done">Geschehen</string>
+    <string name="try_again_downloading">Please try again for downloading</string>
 
     <!-- Share screen strings-->
     <string name="msg_re_login">Please re-login</string>
-    <string name="msg_enter_to_address">Bitte geben Sie an Adresse</string>
+    <string name="msg_enter_to_address">To recipent[s] missing</string>
     <string name="msg_enter_subject">Bitte geben Sie den Betreff ein</string>
-    <string name="msg_select_media_for_share">Bitte wähle mindestens ein Medium aus</string>
-    <string name="msg_invalid_email">Ungültige E-Mail-Adresse (n)</string>
+    <string name="msg_select_media_for_share">Please select file[s]</string>
+    <string name="msg_invalid_email">Ungültige E-Mail Adresse</string>
     <string name="msg_email_send">Email erfolgreich senden</string>
     <string name="title_send_via">Wie möchten Sie diese Mail senden?</string>
     <string name="text_send_as_url">Als URL senden</string>
     <string name="text_send_as_attachment">Als Anlage senden</string>
+    <string name="share_via">Share via</string>
 
-    <string name="msg_please_wait">Please wait..</string> <!-- Need to translate -->
+    <string name="msg_please_wait">Bitte warten...</string> <!-- Need to translate -->
     <string name="msg_please_check_your_connection">Bitte überprüfen Sie Ihre Verbindung</string>
     <string name="msg_network_connection_not_available">Netzwerkverbindung nicht verfügbar</string>
     <string name="msg_cannot_get_response_from_server">Kann keine Antwort vom Server bekommen</string>
     <string name="msg_please_check_your_email">Bitte überprüfen Sie Ihre E-Mail</string>
     <string name="msg_sure_want_to_leave">Sure wollen gehen?</string>
-    <string name="msg_invalid_response_from_server">Invalid response from server</string>
+    <string name="msg_invalid_response_from_server">Unknow error please contact your admin department.</string>
     <string name="msg_please_try_again_later">Please try again later</string>
     <string name="msg_cannot_complete_request">Cannot complete request.Please try again later</string>
     <string name="msg_downloading_already_in_progress">Downloading Already In Progress</string>
@@ -179,7 +214,7 @@
     <string name="msg_like_done_please_sync">Like done Please Sync for the latest Update</string>
     <string name="msg_like_by">Like by</string> <!-- Need to translate -->
     <string name="msg_comment_by">Comment by</string> <!-- Need to translate -->
-    <string name="msg_please_enter_comment">Please enter Comment</string>
+    <string name="msg_please_enter_comment">Leave a comment</string>
     <string name="msg_click_to_delete">click on Delete</string>
     <string name="msg_data_sync">Data sync</string>
     <string name="download_file_first">Bitte zuerst die Datei herunterladen !!!</string>
@@ -198,7 +233,7 @@
     <string name="retry">Wiederholen</string>
     <string name="skip">hüpfen</string>
     <string name="like">Like</string>
-    <string name="comment">kommentieren</string>
+    <string name="comment">Notiz</string>
     <string name="comments">kommentieren</string>
     <string name="leave_a_comment">Hinterlasse einen Kommentar</string>
     <string name="label_today">Today</string> <!-- Need to translate-->
@@ -208,10 +243,11 @@
     <string name="name">nennen</string>
     <string name="type">Art</string>
     <string name="open">öffnen</string>
+    <string name="play">Play</string>
     <string name="size">Size</string>
     <string name="available_on_device">Available on device</string>
     <string name="owner">Owner</string>
-    <string name="location">Location</string>
+    <string name="location">Ort</string>
     <string name="created">Created</string>
     <string name="modified">Modified</string>
     <string name="label_by">by</string>
@@ -221,9 +257,9 @@
     <string name="post">Post</string>
     <string name="username">Benutzername</string>
     <string name="delete">Löschen</string>
-    <string name="send">senden</string>
-    <string name="label_add">Add</string>
-    <string name="email">Email</string>
+    <string name="send">Senden</string>
+    <string name="label_add">Neue</string>
+    <string name="email">E-Mail-Adresse</string>
     <string name="autoSync">Automatische Synchronisation</string>
     <string name="sync_interval">Sync Interval</string>
     <string name="sync_time">Sync Time</string>
@@ -237,11 +273,11 @@
     <string name="menu_download_option_comment">kommentieren</string>
     <string name="menu_download_option_share">teilen</string>
     <string name="menu_download_option_Delete_From_device">Vom Gerät löschen</string>
-    <string name="menu_download_option_cancel">Stornieren</string>
-    <string name="label_save">sparen</string>
-    <string name="label_cancel">Stornieren</string>
+    <string name="menu_download_option_cancel">Abbrechen</string>
+    <string name="label_save">Speichern</string>
+    <string name="label_cancel">Abbrechen</string>
     <string name="label_popularity">Beliebtheit</string>
-    <string name="back">Back</string>
+    <string name="back">Zurück</string>
 
     <!--Recent string-->
     <string name="label_recent">Den letzten</string>
@@ -259,7 +295,7 @@
     <string name="label_sharing">Gemeinsame Nutzung</string>
     <string name="label_sharing1">Gemeinsame Nutzung</string>
     <string name="label_account">Konto</string>
-    <string name="label_login_setting">Anmeldung</string>
+    <string name="label_login_setting">Anmelden</string>
     <string name="label_email_body">Nachrichtentext</string>
     <string name="label_cc_address">Cc</string>
     <string name="label_bcc_address">Blockprüfzeichen</string>
@@ -267,7 +303,7 @@
     <string name="label_signature_msg">Ihr Abgelegt ist leer</string>
     <string name="label_pick_image">Pick Bild auswählen</string>
     <string name="label_updates">modernisieren</string>
-    <string name="label_synchronization">SYNCHRONISATION</string>
+    <string name="label_synchronization"> SYNCHRONIZATION</string>
     <string name="title_synchronization">synchronisieren</string>
     <string name="label_synchronize_now">Jetzt synchronisieren</string>
     <string name="sync_update_dialog">Sind Sie sicher, dass Sie die neuesten Daten synchronisieren möchten?</string>
@@ -277,10 +313,15 @@
     <string name="label_information">Informationen</string>
     <string name="label_storage">Lagerung</string>
     <string name="label_terms">Begriffe</string>
+    <string name="label_privacy_policy">Privacy Policy</string>
+    <string name="label_privacy_policy_description">The protection of your personal data is very important for us. You can therefore use the website of SMAC Software &#38; Services e.K. without having to disclose personal information. However, as is the case with all Internet sites, our web server will temporarily record the domain name or IP address of the user’s computer, client file requests, http response codes and the Internet page that has transferred you to us. However, this information will not be used for person-related analyses.
+Name, address and other personal data will only be required if you provide them voluntarily, for example when ordering our product or making individual inquiries. These data will not be disclosed to third parties or used for purposes other than those stated in the respective documents.
+</string>
+
     <string name="label_open_source_libraries">Open-Source-Bibliotheken</string>
     <string name="label_help">Hilfe</string>
     <string name="label_about_us">Über</string>
-    <string name="label_sign_out">Sign Out</string>
+    <string name="label_sign_out">Abmelden</string>
     <string name="label_from">From</string>
     <string name="label_to">zu</string>
     <string name="label_cc">CC</string>
@@ -312,6 +353,985 @@
     <string name="you_have_no_right">Sie haben nicht die richtigen Rechte</string>
     <string name="ok">OK</string>
 
+    <!--Terms&condition All String-->
+    <!--<string name="description">http://www.justcloud.com/terms#eligibility\n\nSMAC Cloud Terms and Conditions and License Agreement\n\nThese are the terms you agree to when you use SMAC Cloud.\n\nThis is a legal contract between you and SMAC Cloud and it is important that you read it carefully. If there is anything you do not understand in this Agreement, please contact us.</string>-->
+    <string name="title1">"General Information / Scope of validity"</string>
+    <string name="description1">"
+        (1) These general terms and conditions of trade are applicable to our agreements regarding the sale of software. In particular, the subject matter of these agreements is not the installation and maintenance of software or the supply of hardware, unless agreed otherwise.
+
+        (2) The following general terms and conditions of trade are applicable to all agreements between us and the client. In each case, the version applicable at the time of concluding the agreement is authoritative.
+
+        (3) Deviating, contradictory or supplementary general terms and conditions of trade shall not become a valid part of the agreement, even if we are aware of these, unless we expressly consent to their validity in writing."</string>
+
+    <string name="title2">"Conclusion of the agreement/Delivery"</string>
+    <string name="description2">"
+        (1) Our offers are subject to change without notice. The offer on our homepage is non-binding. We reserve the right to make changes. The agreement with the client shall be effected only by the declaration of acceptance by us (in electronic form or by email as well) or by the provision of services.
+
+        (2) With the order, the client declares his binding offer of agreement. We will immediately confirm receipt of the client’s order. The client must check to see that the software specifications meet his goals and requirements before the agreement is concluded. He is conversant with the functional characteristics and specifications of the software.
+
+        (3) We are entitled to accept the offer of agreement contained in the order within three working days after receipt. We are entitled to decline the order without providing any reasons.
+
+        (4) The client shall be immediately informed if the software is not available or only partially available.
+
+        (5) We shall make every effort to provide delivery within two weeks of acceptance of the order at the latest. We are entitled to deliver in phases.
+
+        (6) Delivery or service deadlines specified shall not be binding unless we provide written commitment for the same.
+
+        (7) The software may be obtained via downloads, e-mail or by physical delivery (on CD-ROMs). Usage instructions and documentation are available for download on the corresponding product page on the website."</string>
+
+    <string name="title3">"Retention of title/Utilization rights"</string>
+    <string name="description3">"
+        (1) We shall retain the title to the software until complete payment of the purchase price. The client is obligated to handle the software with the utmost care in the meantime.
+
+        (2) We are authorized to withdraw from the agreement and demand the return of the software if the client’s conduct is contrary to the terms of the agreement, especially in the case of delay in payment. The client may also be obligated to delete the software and provide proof of having done so.
+
+        (3) The software is legally protected. We are exclusively entitled to the copyright, patent rights, trademark rights and all other ancillary copyrights to the software. Any rights that a third party is entitled to have been procured by us.
+            The client is authorized to permanently transfer the software to a third party, in the absence of good cause, if the third party agrees to the validity of these general terms and conditions of trade. Thereupon, the client must transfer all copies of the software to the third party and delete his own copies. The client’s right to use the software expires with the transfer of the software to the third party. In addition, the client is obligated to provide us the full name and address of the third party without being asked.
+            Other acts of utilization and exploitation by the client are not permitted. In particular, there shall be no assignment whatsoever of additional copyright-protected utilization and exploitation rights to the software (such as leasing, hiring out, distribution etc.) and/or to the source code beyond the non-exclusive license."</string>
+
+    <string name="title4">"Price/Shipment/Delay"</string>
+    <string name="description4">"
+        (1) The price includes statutory turnover tax if due.
+
+        (2) The client can make payment by wire transfer or credit card.
+
+        (3) The client can offset only against undisputed claims or claims that have been established by declaratory judgment.
+
+        (4) Payments are in principle due upon delivery and at the most fourteen days after the date of invoice.
+
+        (5) Physical deliveries can be made only after shipment modalities have been agreed to in advance.
+
+        (6) In case of payment delays by the client, we shall be entitled to demand interest at the rate of 5 % p.a. over the base interest rate of the European Central Bank. We reserve the right to assert any further claims due to delay.
+
+        (7) Delivery and service deadlines shall be extended to the extent of the payment delay on the part of the client."</string>
+
+    <string name="title5">"Passage of risk"</string>
+    <string name="description5">"
+        (1) The risk of accidental loss and accidental deterioration of the software sold shall pass to the client upon delivery of the software.
+
+        (2) Default of acceptance on the part of the client shall be equivalent to delivery."
+    </string>
+
+    <string name="title6">"Warranty – Liability"</string>
+    <string name="description6">"
+        (1) The warranty rights of the customer are exclusively defined in the license agreement included in the software or – if a separate license agreement is concluded – this separate license agreement.
+
+        (2) The statutory liability covering damages other then the purchase and use of the software applies with the following stipulations: SMAC Software &#38; Services e.K.’S LIABILITY IS LIMITED TO DAMAGES ARISING FROM GROSS NEGLIGENCE, WILLFUL ACTS, OR THE CULPABLE VIOLATION OF THE BASIC OBLIGATIONS STEMMING FROM THIS AGREEMENT. IN THE EVENT THAT SMAC Software &#38; Services e.K.’S VIOLATION OF AN OBLIGATION ESSENTIAL TO THE AGREEMENT IS NOT DUE TO GROSS NEGLIGENCE OR IS UNINTENTIONAL, THEN SMAC Software &#38; Services e.K.’S LIABILITY WILL BE LIMITED TO TYPICAL DAMAGES OR TO SUCH TYPICAL DAMAGES THAT WERE REASONABLY FORSEEABLE AT THE TIME THE AGREEMENT WAS MADE.
+
+        (3) FURTHERMORE, SMAC Software &#38; Services e.K.  IS NOT LIABLE FOR ANY LOST WAGES OR OTHER IMPAIRMENT TO CUSTOMER ASSETS.
+
+        (4) Any liability for damages arising from SMAC Software &#38; Services e.K. ’s negligence is limited to typical, foreseeable contractual damages that are usually equal to the license fee paid.
+
+        (5) SMAC Software &#38; Services e.K.  assumes no responsibility or liability for software or systems that are not the subject of this contract."</string>
+
+    <string name="title7">"Data protection"</string>
+    <string name="description7">"
+        The client explicitly consents to the gathering, processing and use of personal data for the purpose of executing the order. The relevant statutory data protection regulations shall be complied with."</string>
+
+    <string name="title8">"Final provisions"</string>
+    <string name="description8">"
+        (1) Should a term be or become invalid, the remaining terms shall remain valid. The ineffective term shall be replaced by an effective term coming closest to the ineffective term in the economic sense.
+
+        (2) Amendments and supplements to these general terms and conditions of trade are effective only if confirmed in writing by us. This applies to the amendment and revocation of this written form requirement as well.
+
+        (3) German law shall apply exclusively to all legal relations between the client and us to the exclusion of the United Nations Convention on Contracts for the International Sale of Goods even if the client has his company headquarters abroad.
+
+        (4) The place of jurisdiction is Ludwigsburg, Germany."</string>
+
+
+    <!--OpenSource Libery All String-->
+    <string name="openSource_title1">"MaterialChipsInput"</string>
+    <string name="openSource_description1">"
+                                Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "{}"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright 2017 pchmn
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License."</string>
+
+    <string name="openSource_title2">AndroidPdfViewer</string>
+    <string name="openSource_description2">"
+                                Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "{}"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright {yyyy} {name of copyright owner}
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License."
+   </string>
+
+    <string name="openSource_title3">BetterSpinner</string>
+    <string name="openSource_description3">Copyright 2015 Wei Wang
+
+		Licensed under the Apache License, Version 2.0 (the "License");
+		you may not use this file except in compliance with the License.
+		You may obtain a copy of the License at
+
+		http://www.apache.org/licenses/LICENSE-2.0
+
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License.</string>
+
+    <string name="openSource_title4">IntroActivity</string>
+    <string name="openSource_description4">"
+                                Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.</string>
+
+    <string name="openSource_title5">RoundedImageView</string>
+    <string name="openSource_description5">"
+        Copyright (c) 2017, Vincent Mi
+        Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+                                 Apache License
+                           Version 2.0, January 2004
+                        http://www.apache.org/licenses/
+
+   TERMS AND CONDITIONS FOR USE, REPRODUCTION, AND DISTRIBUTION
+
+   1. Definitions.
+
+      "License" shall mean the terms and conditions for use, reproduction,
+      and distribution as defined by Sections 1 through 9 of this document.
+
+      "Licensor" shall mean the copyright owner or entity authorized by
+      the copyright owner that is granting the License.
+
+      "Legal Entity" shall mean the union of the acting entity and all
+      other entities that control, are controlled by, or are under common
+      control with that entity. For the purposes of this definition,
+      "control" means (i) the power, direct or indirect, to cause the
+      direction or management of such entity, whether by contract or
+      otherwise, or (ii) ownership of fifty percent (50%) or more of the
+      outstanding shares, or (iii) beneficial ownership of such entity.
+
+      "You" (or "Your") shall mean an individual or Legal Entity
+      exercising permissions granted by this License.
+
+      "Source" form shall mean the preferred form for making modifications,
+      including but not limited to software source code, documentation
+      source, and configuration files.
+
+      "Object" form shall mean any form resulting from mechanical
+      transformation or translation of a Source form, including but
+      not limited to compiled object code, generated documentation,
+      and conversions to other media types.
+
+      "Work" shall mean the work of authorship, whether in Source or
+      Object form, made available under the License, as indicated by a
+      copyright notice that is included in or attached to the work
+      (an example is provided in the Appendix below).
+
+      "Derivative Works" shall mean any work, whether in Source or Object
+      form, that is based on (or derived from) the Work and for which the
+      editorial revisions, annotations, elaborations, or other modifications
+      represent, as a whole, an original work of authorship. For the purposes
+      of this License, Derivative Works shall not include works that remain
+      separable from, or merely link (or bind by name) to the interfaces of,
+      the Work and Derivative Works thereof.
+
+      "Contribution" shall mean any work of authorship, including
+      the original version of the Work and any modifications or additions
+      to that Work or Derivative Works thereof, that is intentionally
+      submitted to Licensor for inclusion in the Work by the copyright owner
+      or by an individual or Legal Entity authorized to submit on behalf of
+      the copyright owner. For the purposes of this definition, "submitted"
+      means any form of electronic, verbal, or written communication sent
+      to the Licensor or its representatives, including but not limited to
+      communication on electronic mailing lists, source code control systems,
+      and issue tracking systems that are managed by, or on behalf of, the
+      Licensor for the purpose of discussing and improving the Work, but
+      excluding communication that is conspicuously marked or otherwise
+      designated in writing by the copyright owner as "Not a Contribution."
+
+      "Contributor" shall mean Licensor and any individual or Legal Entity
+      on behalf of whom a Contribution has been received by Licensor and
+      subsequently incorporated within the Work.
+
+   2. Grant of Copyright License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      copyright license to reproduce, prepare Derivative Works of,
+      publicly display, publicly perform, sublicense, and distribute the
+      Work and such Derivative Works in Source or Object form.
+
+   3. Grant of Patent License. Subject to the terms and conditions of
+      this License, each Contributor hereby grants to You a perpetual,
+      worldwide, non-exclusive, no-charge, royalty-free, irrevocable
+      (except as stated in this section) patent license to make, have made,
+      use, offer to sell, sell, import, and otherwise transfer the Work,
+      where such license applies only to those patent claims licensable
+      by such Contributor that are necessarily infringed by their
+      Contribution(s) alone or by combination of their Contribution(s)
+      with the Work to which such Contribution(s) was submitted. If You
+      institute patent litigation against any entity (including a
+      cross-claim or counterclaim in a lawsuit) alleging that the Work
+      or a Contribution incorporated within the Work constitutes direct
+      or contributory patent infringement, then any patent licenses
+      granted to You under this License for that Work shall terminate
+      as of the date such litigation is filed.
+
+   4. Redistribution. You may reproduce and distribute copies of the
+      Work or Derivative Works thereof in any medium, with or without
+      modifications, and in Source or Object form, provided that You
+      meet the following conditions:
+
+      (a) You must give any other recipients of the Work or
+          Derivative Works a copy of this License; and
+
+      (b) You must cause any modified files to carry prominent notices
+          stating that You changed the files; and
+
+      (c) You must retain, in the Source form of any Derivative Works
+          that You distribute, all copyright, patent, trademark, and
+          attribution notices from the Source form of the Work,
+          excluding those notices that do not pertain to any part of
+          the Derivative Works; and
+
+      (d) If the Work includes a "NOTICE" text file as part of its
+          distribution, then any Derivative Works that You distribute must
+          include a readable copy of the attribution notices contained
+          within such NOTICE file, excluding those notices that do not
+          pertain to any part of the Derivative Works, in at least one
+          of the following places: within a NOTICE text file distributed
+          as part of the Derivative Works; within the Source form or
+          documentation, if provided along with the Derivative Works; or,
+          within a display generated by the Derivative Works, if and
+          wherever such third-party notices normally appear. The contents
+          of the NOTICE file are for informational purposes only and
+          do not modify the License. You may add Your own attribution
+          notices within Derivative Works that You distribute, alongside
+          or as an addendum to the NOTICE text from the Work, provided
+          that such additional attribution notices cannot be construed
+          as modifying the License.
+
+      You may add Your own copyright statement to Your modifications and
+      may provide additional or different license terms and conditions
+      for use, reproduction, or distribution of Your modifications, or
+      for any such Derivative Works as a whole, provided Your use,
+      reproduction, and distribution of the Work otherwise complies with
+      the conditions stated in this License.
+
+   5. Submission of Contributions. Unless You explicitly state otherwise,
+      any Contribution intentionally submitted for inclusion in the Work
+      by You to the Licensor shall be under the terms and conditions of
+      this License, without any additional terms or conditions.
+      Notwithstanding the above, nothing herein shall supersede or modify
+      the terms of any separate license agreement you may have executed
+      with Licensor regarding such Contributions.
+
+   6. Trademarks. This License does not grant permission to use the trade
+      names, trademarks, service marks, or product names of the Licensor,
+      except as required for reasonable and customary use in describing the
+      origin of the Work and reproducing the content of the NOTICE file.
+
+   7. Disclaimer of Warranty. Unless required by applicable law or
+      agreed to in writing, Licensor provides the Work (and each
+      Contributor provides its Contributions) on an "AS IS" BASIS,
+      WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+      implied, including, without limitation, any warranties or conditions
+      of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
+      PARTICULAR PURPOSE. You are solely responsible for determining the
+      appropriateness of using or redistributing the Work and assume any
+      risks associated with Your exercise of permissions under this License.
+
+   8. Limitation of Liability. In no event and under no legal theory,
+      whether in tort (including negligence), contract, or otherwise,
+      unless required by applicable law (such as deliberate and grossly
+      negligent acts) or agreed to in writing, shall any Contributor be
+      liable to You for damages, including any direct, indirect, special,
+      incidental, or consequential damages of any character arising as a
+      result of this License or out of the use or inability to use the
+      Work (including but not limited to damages for loss of goodwill,
+      work stoppage, computer failure or malfunction, or any and all
+      other commercial damages or losses), even if such Contributor
+      has been advised of the possibility of such damages.
+
+   9. Accepting Warranty or Additional Liability. While redistributing
+      the Work or Derivative Works thereof, You may choose to offer,
+      and charge a fee for, acceptance of support, warranty, indemnity,
+      or other liability obligations and/or rights consistent with this
+      License. However, in accepting such obligations, You may act only
+      on Your own behalf and on Your sole responsibility, not on behalf
+      of any other Contributor, and only if You agree to indemnify,
+      defend, and hold each Contributor harmless for any liability
+      incurred by, or claims asserted against, such Contributor by reason
+      of your accepting any such warranty or additional liability.
+
+   END OF TERMS AND CONDITIONS
+
+   APPENDIX: How to apply the Apache License to your work.
+
+      To apply the Apache License to your work, attach the following
+      boilerplate notice, with the fields enclosed by brackets "[]"
+      replaced with your own identifying information. (Don't include
+      the brackets!)  The text should be enclosed in the appropriate
+      comment syntax for the file format. We also recommend that a
+      file or class name and description of purpose be included on the
+      same "printed page" as the copyright notice for easier
+      identification within third-party archives.
+
+   Copyright [yyyy] [name of copyright owner]
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License."</string>
+    <string name="openSource_title6">android-segmented-control</string>
+    <string name="openSource_description6">"
+        The MIT License (MIT)
+        Copyright (c) 2014 Le Van Hoang
+
+        Permission is hereby granted, free of charge, to any person obtaining a copy
+	of this software and associated documentation files (the "Software"), to deal
+	in the Software without restriction, including without limitation the rights
+	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+	copies of the Software, and to permit persons to whom the Software is
+	furnished to do so, subject to the following conditions:
+
+	The above copyright notice and this permission notice shall be included in all
+	copies or substantial portions of the Software.
+
+	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+	SOFTWARE."
+	</string>
+    <string name="openSource_title7">SwitchButton</string>
+    <string name="openSource_description7">"
+        The MIT License (MIT)
+
+    Copyright (c) 2016 https://github.com/zcweng/SwitchButton
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE."
+    </string>
+    <string name="openSource_title8"> EasyDialog-A lightweight, flexible tip dialog in Android</string>
+    <string name="openSource_description8">"
+	Copyright MichaelYe
+
+		Licensed under the Apache License, Version 2.0 (the "License");
+		you may not use this file except in compliance with the License.
+		You may obtain a copy of the License at
+
+			http://www.apache.org/licenses/LICENSE-2.0
+
+		Unless required by applicable law or agreed to in writing, software
+		distributed under the License is distributed on an "AS IS" BASIS,
+		WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+		See the License for the specific language governing permissions and
+		limitations under the License."</string>
+
     <!--Introduction slides screen String-->
     <string name="next">NEXT</string>
     <string name="skip1">SKIP</string>
@@ -320,22 +1340,38 @@
 
     <string name="slide_1_desc"> It is your private online storage drive, where you can upload, store, share, and access all your data.  Easily and securely share your files, photos and other data with anyone.</string>
 
-    <string name="slide_2_title">Global Access - Anytime, Anywhere</string>
-    <string name="slide_2_desc">Access your files from anywhere, on any device 24/7.</string>
+    <string name="slide_2_title">SMAC Cloud Sync</string>
+    <string name="slide_2_desc">"Sync all of your files, and all of your firm’s files, automatically to the cloud and across devices, so everyone has the most up-to-date information.</string>
 
-    <string name="slide_3_title"> File versioning</string>
-    <string name="slide_3_desc">Keep track of changes to files in your account and access older versions of files as needed.</string>
+    <string name="slide_3_title">Mobile apps</string>
+    <string name="slide_3_desc">Access, share, comment, like, request and view files on the go with SMAC Cloud apps for all iOS, Android and tablets.</string>
 
     <string name="slide_4_title">Safe  &#38; Sound</string>
     <string name="slide_4_desc"> Files are transferred securely using TLS (Transport Layer Security) and are stored in the cloud in an encrypted format using 256-bit AES.</string>
 
-    <string name="slide_5_title">Share - Anything with Anybody</string>
-    <string name="slide_5_desc">With SmacCloud you will be able to share any file of any size with anybody.</string>
+    <string name="slide_5_title">Global Access</string>
+    <string name="slide_5_desc">Access your files from anywhere, on any device 24/7 online or offline.</string>
 
-    <string name="slide_6_title">Share via Email</string>
-    <string name="slide_6_desc"> Share any files via email to anybody.</string>
+    <string name="slide_6_title">No complicated downloads</string>
+    <string name="slide_6_desc">Access SMAC Cloud from any web browser on any device and offer clients and others a simple way to access files with no software downloads, usernames or passwords required.</string>
+
+    <string name="slide_7_title">File versioning</string>
+    <string name="slide_7_desc">Keep track of changes to files in your account and access older versions of files as needed.</string>
+
+    <string name="slide_8_title">Offline access</string>
+    <string name="slide_8_desc">Securely download files to your device within your SMAC Cloud app for access to files even without an Internet connection.</string>
+
+    <string name="slide_9_title">Simple admin controls</string>
+    <string name="slide_9_desc">Know that security doesn’t have to be complicated — our robust security settings come in a user-friendly interface designed with you and your firm in mind.just login your admin console(see </string>
+
+    <string name="slide_10_title">Share - Anything with Anybody</string>
+    <string name="slide_10_desc">With SMAC Cloud you will be able to share any file of any size with anybody and share any files via email to anybody.</string>
 
     <array name="array_dot_active">
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
         <item>@color/white</item>
         <item>@color/white</item>
         <item>@color/white</item>
@@ -345,6 +1381,10 @@
     </array>
 
     <array name="array_dot_inactive">
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
+        <item>@color/grey</item>
         <item>@color/grey</item>
         <item>@color/grey</item>
         <item>@color/grey</item>

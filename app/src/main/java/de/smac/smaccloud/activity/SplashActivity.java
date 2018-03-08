@@ -6,8 +6,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -35,6 +38,7 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
     private static int SPLASH_TIME_OUT = 3000;
     ArrayList<LocalizationData> arrayListLocalization = new ArrayList<>();
     Activity activity;
+    ImageView img_app_icon;
     private Handler splashHandler;
     private Runnable splashRunnable;
     private LinearLayout parentLayout;
@@ -48,13 +52,27 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
         Helper.retainOrientation(SplashActivity.this);
         activity = this;
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
-        Helper.robotoBoldTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPathBold);
-        Helper.robotoRegularTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPath);
-        Helper.robotoMediumTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPathMedium);
-        Helper.robotoLightTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPathLight);
-        Helper.robotoBlackTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPathBlack);
 
-        Helper.setupTypeface(parentLayout, Helper.robotoBoldTypeface);
+        Helper.robotoRegularTypeface = Typeface.createFromAsset(this.getAssets(), Helper.fontPathRoboto);
+
+        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+
+        img_app_icon = (ImageView) findViewById(R.id.img_app_icon);
+
+        String iconPath = PreferenceHelper.getAppIcon(context);
+        if (iconPath.isEmpty())
+        {
+            img_app_icon.setImageResource(R.drawable.ic_logo);
+        }
+        else
+        {
+            Glide.with(context)
+                    .load(iconPath)
+                    .asBitmap()
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .into(img_app_icon);
+        }
+
         String lang = PreferenceHelper.getSelectedLanguage(SplashActivity.this);
         if (lang != null && !lang.isEmpty())
         {
@@ -82,9 +100,9 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
         {
             try
             {
-                Helper.IS_DIALOG_SHOW=false;
+                Helper.IS_DIALOG_SHOW = false;
                 postNetworkRequest(REQUEST_GETLOCALIZATION, DataProvider.ENDPOINT_GET_LOCALIZATION, DataProvider.Actions.ACTION_LOCALIZATION,
-                        RequestParameter.urlEncoded("LastSyncDate", PreferenceHelper.getLastSychDate(this)));
+                        RequestParameter.urlEncoded("LastSyncDate", PreferenceHelper.getLastSychDate(context)));
             }
             catch (Exception e)
             {
@@ -117,7 +135,7 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
     {
         super.onNetworkResponse(requestCode, status, response);
         Log.e("TEST>>", response);
-        Helper.IS_DIALOG_SHOW=true;
+        Helper.IS_DIALOG_SHOW = true;
         if (requestCode == REQUEST_GETLOCALIZATION)
         {
             if (status)
@@ -134,34 +152,40 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
                     else
                     {
 
-                        PreferenceHelper.saveLastSyncDate(this, jsonObjectMain.getString("Message"));
-                        JSONArray jsonArray = jsonObjectMain.getJSONArray("Payload");
-                        arrayListLocalization = new ArrayList<>();
-                        arrayListLocalization = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<LocalizationData>>()
+                        //PreferenceHelper.saveLastSyncDate(this, jsonObjectMain.getString("Message"));
+                        JSONObject userJson = jsonObjectMain.optJSONObject("Payload");
+                        PreferenceHelper.saveLastSyncDate(this, userJson.optString("LastSyncDate"));
+                        if (userJson.has("LocalizationList"))
                         {
-                        }.getType());
+                            JSONArray jsonArray = userJson.getJSONArray("LocalizationList");
+                            arrayListLocalization = new ArrayList<>();
+                            arrayListLocalization = new Gson().fromJson(jsonArray.toString(), new TypeToken<List<LocalizationData>>()
+                            {
 
-                        if (arrayListLocalization.size() > 0)
-                        {
-                            DataHelper.fillLocalizationTable(this, arrayListLocalization);
-                        }
-                        //Log.e("TEST>>"," get localization : " + DataHelper.getLocalizationMessageFromCode(this,"2101","en-en","3"));
-                        if (PreferenceHelper.hasUserContext(SplashActivity.this))
-                        {
-                            if (PreferenceHelper.getSyncStatus(SplashActivity.this))
-                                startDashboardActivity();
+                            }.getType());
+
+                            if (arrayListLocalization.size() > 0)
+                            {
+                                DataHelper.fillLocalizationTable(this, arrayListLocalization);
+                            }
+                            //Log.e("TEST>>"," get localization : " + DataHelper.getLocalizationMessageFromCode(this,"2101","en-en","3"));
+                            if (PreferenceHelper.hasUserContext(SplashActivity.this))
+                            {
+                                if (PreferenceHelper.getSyncStatus(SplashActivity.this))
+                                    startDashboardActivity();
+                                else
+                                    startSyncActivity();
+                            }
                             else
-                                startSyncActivity();
-                        }
-                        else
-                        {
-                            Intent i = new Intent(SplashActivity.this, IntroScreenActivity.class);
-                            startActivity(i);
-                            finish();
+                            {
+                                Intent i = new Intent(SplashActivity.this, IntroScreenActivity.class);
+                                startActivity(i);
+                                finish();
+                            }
+
                         }
 
                     }
-
                 }
                 catch (Exception e)
                 {
@@ -196,7 +220,7 @@ public class SplashActivity extends de.smac.smaccloud.base.Activity
     {
         super.onPause();
         flag = false;
-        Helper.IS_DIALOG_SHOW=true;
+        Helper.IS_DIALOG_SHOW = true;
     }
 
     @Override

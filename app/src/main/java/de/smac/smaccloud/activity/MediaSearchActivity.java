@@ -3,12 +3,21 @@ package de.smac.smaccloud.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -26,6 +35,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -64,21 +74,21 @@ import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Channel;
 import de.smac.smaccloud.model.Media;
 import de.smac.smaccloud.model.RecentItem;
+import de.smac.smaccloud.service.FCMMessagingService;
 import de.smac.smaccloud.widgets.CircularTextView;
 import de.smac.smaccloud.widgets.NonScrollListView;
 
 import static de.smac.smaccloud.base.Helper.selectedChannelsList;
 import static de.smac.smaccloud.base.Helper.selectedMediaTypeList;
 import static de.smac.smaccloud.base.NetworkService.KEY_AUTHORIZATION;
+import static de.smac.smaccloud.fragment.MediaFragment.EXTRA_CHANNEL;
+import static de.smac.smaccloud.fragment.MediaFragment.EXTRA_PARENT;
 
 public class MediaSearchActivity extends Activity implements View.OnClickListener, ShowdownloadProcessFragment.interfaceAsyncResponseDownloadProcess
 {
-    //public static ArrayList<Integer> selectedMediaTypeList;
-    //public static ArrayList<String> selectedChannelsList;
-
+    public static String lightBgColor;
     static MediaSearchAdapter searchAdapter;
     static EditText edt_search;
-
     static int selectedSortAttributeIndex;
     static CircularTextView txt_filter_total_items;
     public InterfaceStopDownload interfaceStopDownload;
@@ -87,6 +97,7 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
     TextView btnSort;
     TextView btnFilter;
     NonScrollListView list_search_result;
+    Activity activity;
 
     public static void updateSearchingList(Context context)
     {
@@ -225,7 +236,9 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        setTitle(getString(R.string.label_search));
+        //applyThemeColor();
+        this.activity = activity;
+        Helper.setupUI(MediaSearchActivity.this, findViewById(R.id.parentLayout), findViewById(R.id.parentLayout));
     }
 
     @Override
@@ -233,8 +246,6 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
     {
         super.initializeComponents();
         selectedSortAttributeIndex = 0;
-        //selectedMediaTypeList = new ArrayList<>();
-        //selectedChannelsList = new ArrayList<>();
 
         edt_search = (EditText) findViewById(R.id.edt_search);
         edt_search.setTypeface(robotoLightTypeface);
@@ -315,7 +326,31 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                         //Helper.showToastMessage(MediaSearchActivity.this, getString(R.string.download_file_first));
                         try
                         {
-                            downloadMediaFromURL(searchAdapter.resultArrayList.get(i));
+                            Intent intentMediaDetail = new Intent(getApplicationContext(), MediaDetailActivity.class);
+                            //startActivity(intentMediaDetail);
+                            Channel channel = new Channel();
+                            try
+                            {
+                                channel.id = DataHelper.getChannelIdFromMediaID(context, searchAdapter.resultArrayList.get(i).id);
+                                DataHelper.getChannel(context, channel);
+                            }
+                            catch (Exception ex)
+                            {
+                                ex.printStackTrace();
+                            }
+                            intentMediaDetail.putExtra("comefrom","search_media");
+                            intentMediaDetail.putExtra(EXTRA_CHANNEL, channel);
+                            intentMediaDetail.putExtra(MediaFragment.EXTRA_MEDIA, searchAdapter.resultArrayList.get(i));
+                            intentMediaDetail.putExtra(EXTRA_PARENT, searchAdapter.resultArrayList.get(i).parentId);
+                            // TODO: 10-Jan-17 Transmission Animation
+                            Pair<View, String> pair1 = Pair.create(view.findViewById(R.id.imageIcon), getString(R.string.text_transition_animation_media_image));
+                            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(MediaSearchActivity.this, pair1);
+                            startActivity(intentMediaDetail, optionsCompat.toBundle());
+                            /*Media mediaTemp = mediaFileList.get(i);
+                            mediaTemp.isDownloading = 1;
+                            mediaFileList.set(i,mediaTemp);
+                            searchAdapter.notifyDataSetChanged();*/
+                            //downloadMediaFromURL(searchAdapter.resultArrayList.get(i));
                         }
                         catch (Exception ex)
                         {
@@ -328,8 +363,18 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                     }
                 }
             });
-            Helper.setupUI(this, findViewById(R.id.parentLayout), findViewById(R.id.parentLayout));
+
             layoutDynamicFrame = (FrameLayout) findViewById(R.id.layoutDynamicFrame);
+            FCMMessagingService.themeChangeNotificationListener = new FCMMessagingService.ThemeChangeNotificationListener()
+            {
+                @Override
+                public void onThemeChangeNotificationReceived()
+                {
+                    applyThemeColor();
+                }
+            };
+
+
         }
         catch (Exception ex)
         {
@@ -341,7 +386,7 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
     }
 
     @Override
-    public void onClick(View v)
+    public void onClick(final View v)
     {
         switch (v.getId())
         {
@@ -358,6 +403,9 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent)
                     {
                         View view = super.getView(position, convertView, parent);
+
+                        //    tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.title_medium));
+                        Helper.setupTypeface(view, Helper.robotoRegularTypeface);
                         CheckedTextView checkedTextView = (CheckedTextView) view.findViewById(android.R.id.text1);
                         if (selectedSortAttributeIndex == position)
                             checkedTextView.setChecked(true);
@@ -417,6 +465,7 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
     {
         super.onResume();
         layoutDynamicFrame.setVisibility(View.GONE);
+        applyThemeColor();
     }
 
     @Override
@@ -571,9 +620,51 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
         layoutDynamicFrame.setVisibility(View.GONE);
     }
 
+    public void applyThemeColor()
+    {
+        updateParentThemeColor();
+        if (getSupportActionBar() != null)
+        {
+
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+            setTitle(getString(R.string.label_search));
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back_material_vector);
+            upArrow.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR2)
+            {
+                if (getActionBar() != null)
+                {
+
+                    getActionBar().setHomeAsUpIndicator(upArrow);
+                }
+            }
+            else
+            {
+                if (getSupportActionBar() != null)
+                {
+
+                    getSupportActionBar().setHomeAsUpIndicator(upArrow);
+                }
+            }
+            toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                btnSort.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(PreferenceHelper.getAppColor(context))));
+                btnFilter.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(PreferenceHelper.getAppColor(context))));
+            }
+            else
+            {
+                btnSort.setBackgroundColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+                btnFilter.setBackgroundColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            }
+        }
+
+    }
+
     public static class FilterDialog extends DialogFragment
     {
         View content;
+        LinearLayout parentLayout;
         NonScrollListView list_file_types;
         NonScrollListView list_channel_names;
 
@@ -586,6 +677,8 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
 
             list_file_types = (NonScrollListView) content.findViewById(R.id.list_file_types);
             list_channel_names = (NonScrollListView) content.findViewById(R.id.list_channel_names);
+            parentLayout = (LinearLayout) content.findViewById(R.id.parentLayout);
+            Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
 
             setupFileTypeList();
             setupChannelsList();
@@ -606,6 +699,8 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
         {
             Toolbar toolbar = (Toolbar) content.findViewById(R.id.navigationBar);
             toolbar.setNavigationIcon(R.drawable.ic_back_white);
+            toolbar.setBackgroundColor(Color.parseColor(PreferenceHelper.getAppBackColor(getContext())));
+            toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(getContext())));
             toolbar.setNavigationOnClickListener(new View.OnClickListener()
             {
                 @Override
@@ -615,7 +710,10 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                 }
             });
             toolbar.setTitle(getString(R.string.back));
+
+
         }
+
 
         public void setupFileTypeList()
         {
@@ -624,19 +722,19 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent)
                 {
-                    //View v = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_multiple_choice, null);
-                    //View v = super.getView(position, convertView, parent);
+
                     View v = LayoutInflater.from(getContext()).inflate(android.R.layout.select_dialog_multichoice, null);
                     TextView tv = (TextView) v.findViewById(android.R.id.text1);
-                    //tv.setTextColor(Color.WHITE);
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.title_medium));
-                    tv.setTypeface(MediaSearchActivity.robotoLightTypeface);
+                    Helper.setupTypeface(v, Helper.robotoRegularTypeface);
                     tv.setSingleLine(true);
                     tv.setEllipsize(TextUtils.TruncateAt.END);
-                    /*if (selectedMediaTypeList.contains(position))
-                        tv.setChecked(true);
-                    else
-                        tv.setChecked(false);*/
+                    lightBgColor = PreferenceHelper.getAppBackColor(getActivity());
+                    lightBgColor = lightBgColor.substring(1);
+                    String value = "#40" + lightBgColor;
+                    tv.setBackgroundColor(Color.parseColor(value));
+
+
                     return super.getView(position, v, parent);
                 }
             };
@@ -676,14 +774,19 @@ public class MediaSearchActivity extends Activity implements View.OnClickListene
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent)
                 {
-                    //View v = LayoutInflater.from(getContext()).inflate(android.R.layout.simple_list_item_multiple_choice, null);
+
                     View v = LayoutInflater.from(getContext()).inflate(android.R.layout.select_dialog_multichoice, null);
                     TextView tv = (TextView) v.findViewById(android.R.id.text1);
-                    //tv.setTextColor(Color.WHITE);
                     tv.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.title_small));
                     tv.setTypeface(MediaSearchActivity.robotoLightTypeface);
                     tv.setSingleLine(true);
+                    Helper.setupTypeface(v, Helper.robotoRegularTypeface);
                     tv.setEllipsize(TextUtils.TruncateAt.END);
+                    lightBgColor = PreferenceHelper.getAppBackColor(getActivity());
+                    lightBgColor = lightBgColor.substring(1);
+                    String value = "#40" + lightBgColor;
+                    tv.setBackgroundColor(Color.parseColor(value));
+
                     return super.getView(position, v, parent);
                 }
             };

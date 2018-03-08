@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:id="@+id/parentLayout"
-    android:padding="@dimen/padding_very_small"
-    android:layout_height="wrap_content"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/parentLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:padding="@dimen/padding_very_small">
 
     <TextView
+        android:id="@+id/txt_signOut_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/txt_signOut_title"
         android:layout_margin="@dimen/padding_small"
         android:gravity="center"
         android:text="@string/label_sign_out"
         android:textColor="@color/black"
-        android:textSize="@dimen/title_very_small" />
+        android:textSize="@dimen/title_very_small"
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -22,7 +23,7 @@
         android:gravity="center"
         android:text="@string/sign_out_message"
         android:textColor="@color/black"
-        android:textSize="@dimen/title_ultra_small" />
+        android:textSize="@dimen/title_ultra_small"/>
 
     <RelativeLayout
         android:id="@+id/btn_keep_download_files"
@@ -34,9 +35,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textSize="@dimen/title_ultra_small"
             android:text="@string/keep_downloaded_files"
-            android:textColor="@color/blue" />
+            android:textColor="@color/blue"
+            android:textSize="@dimen/title_ultra_small"/>
 
     </RelativeLayout>
 
@@ -44,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
         android:layout_marginTop="@dimen/padding_very_small"
-        android:background="@color/Gray57" />
+        android:background="@color/Gray57"/>
 
     <RelativeLayout
         android:id="@+id/btn_delete_download_files"
@@ -56,33 +57,33 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textSize="@dimen/title_ultra_small"
             android:text="@string/delete_downloaded_files"
-            android:textColor="@color/blue" />
+            android:textColor="@color/blue"
+            android:textSize="@dimen/title_ultra_small"/>
 
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.2dp"
-        android:visibility="gone"
         android:layout_marginTop="@dimen/padding_very_small"
-        android:background="@color/Gray57" />
+        android:background="@color/Gray57"
+        android:visibility="gone"/>
 
     <RelativeLayout
         android:id="@+id/btn_cancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:layout_marginTop="@dimen/padding_very_small">
+        android:layout_marginTop="@dimen/padding_very_small"
+        android:visibility="gone">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:textSize="@dimen/title_ultra_small"
             android:text="@string/label_cancel"
-            android:textColor="@color/blue" />
+            android:textColor="@color/blue"
+            android:textSize="@dimen/title_ultra_small"/>
 
     </RelativeLayout>
 

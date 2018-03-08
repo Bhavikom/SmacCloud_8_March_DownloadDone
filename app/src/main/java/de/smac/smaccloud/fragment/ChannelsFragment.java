@@ -2,6 +2,10 @@ package de.smac.smaccloud.fragment;
 
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
@@ -25,6 +29,7 @@ import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Fragment;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.data.DataHelper;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Channel;
 
 /**
@@ -124,7 +129,7 @@ public class ChannelsFragment extends Fragment
             @Override
             public void onNotificationIconValueChanged()
             {
-                updateNotificationIcon();
+                applyThemeColor();
             }
         };
     }
@@ -181,57 +186,11 @@ public class ChannelsFragment extends Fragment
         super.onCreateOptionsMenu(menu, inflater);
         //inflater.inflate(R.menu.menu_media_all_download, menu);
         inflater.inflate(R.menu.menu_fragment_channels, menu);
-
         mMenu = menu;
-        updateNotificationIcon();
+        applyThemeColor();
         // Do something that differs the Activity's menu here
         //super.onCreateOptionsMenu(menu, inflater);
     }
-
-    public void updateNotificationIcon()
-    {
-        if (mMenu != null && mMenu.findItem(R.id.action_notifications) != null)
-        {
-            MenuItem menuItemNotification = mMenu.findItem(R.id.action_notifications);
-            menuItemNotification.setIcon(Helper.buildCounterDrawable(context, DataHelper.getAnnouncementCount(context), R.drawable.ic_notify));
-        }
-        /*if (mMenu != null && mMenu.findItem(R.id.action_notifications) != null)
-        {
-            mMenu.findItem(R.id.action_notifications).setActionView(R.layout.notifications_counter_menuitem_layout);
-            mMenu.findItem(R.id.action_notifications).expandActionView();
-
-            RelativeLayout badgeLayout = (RelativeLayout) mMenu.findItem(R.id.action_notifications).getActionView();
-            CircularTextView mCounter = (CircularTextView) badgeLayout.findViewById(R.id.txtCount);
-            mCounter.setText(String.valueOf(DataHelper.getAnnouncementCount(context)));
-        }*/
-    }
-
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.download_All:
-               // notifySimple("hiiiiiiiiiiiiiii");
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }*/
-
-    /*@Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if (activity.getSupportActionBar() != null)
-        {
-            activity.getSupportActionBar().setTitle(R.string.label_channels);
-        }
-        if (activity instanceof DashboardActivity)
-        {
-            ((DashboardActivity) (activity)).navigationDashboard.getMenu().findItem(R.id.menuChannels).setCheckable(true).setChecked(true);
-        }
-    }*/
 
     @Override
     public void onConfigurationChanged(Configuration newConfig)
@@ -267,6 +226,47 @@ public class ChannelsFragment extends Fragment
         }
     }
 
+    public void applyThemeColor()
+    {
+        activity.updateParentThemeColor();
+        if (activity instanceof DashboardActivity)
+        {
+            ((DashboardActivity) activity).applyTheme();
+        }
+        activity.updateParentThemeColor();
+
+        if (mMenu != null && mMenu.findItem(R.id.action_notifications) != null)
+        {
+            MenuItem menuItemNotification = mMenu.findItem(R.id.action_notifications);
+            Drawable icon = context.getResources().getDrawable(R.drawable.ic_notify);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                icon.setTint(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            }
+            else
+            {
+                icon.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            }
+            menuItemNotification.setIcon(Helper.buildCounterDrawable(context, DataHelper.getAnnouncementCount(context), icon));
+        }
+        if (mMenu != null && mMenu.findItem(R.id.action_search) != null)
+        {
+            MenuItem menuItemSearch = mMenu.findItem(R.id.action_search);
+            Drawable icon = context.getResources().getDrawable(R.drawable.ic_search);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                icon.setTint(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            }
+            else
+            {
+                icon.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            }
+            menuItemSearch.setIcon(icon);
+        }
+
+        recyclerViewChannels.getAdapter().notifyDataSetChanged();
+    }
+
     @Override
     public void onResume()
     {
@@ -279,6 +279,6 @@ public class ChannelsFragment extends Fragment
         {
             ((DashboardActivity) (activity)).navigationDashboard.getMenu().findItem(R.id.menuChannels).setCheckable(true).setChecked(true);
         }
-        updateNotificationIcon();
+        applyThemeColor();
     }
 }

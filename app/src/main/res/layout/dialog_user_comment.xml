@@ -68,7 +68,7 @@
             android:singleLine="true" />
 
         <Button
-            android:id="@+id/btnsubmit"
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@null"

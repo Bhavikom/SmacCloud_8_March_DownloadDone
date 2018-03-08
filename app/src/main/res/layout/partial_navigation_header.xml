@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout android:id="@+id/parentLayout1"
+             xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="196dp"
              android:background="@color/black"
@@ -19,7 +20,7 @@
             android:layout_marginBottom="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
-            android:textColor="@color/orange_logo_color"
+            android:textColor="@color/white"
             android:textStyle="bold"/>
 
     </RelativeLayout>

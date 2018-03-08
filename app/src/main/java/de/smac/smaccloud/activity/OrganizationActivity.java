@@ -5,12 +5,15 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.BottomSheetDialog;
+import android.support.design.widget.Snackbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import org.json.JSONException;
@@ -39,6 +42,7 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
     String validUrl;
     Boolean isFromDemo = false;
     Bundle bundle;
+    ImageView btnInfo;
 
 
     @Override
@@ -50,13 +54,17 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
         Helper.retainOrientation(OrganizationActivity.this);
         btnContinue = (Button) findViewById(R.id.btn_continue);
         editOrganization = (EditText) findViewById(R.id.edit_organization);
+        btnInfo = (ImageView) findViewById(R.id.img_info);
         //editOrganization.setText("http://138.201.245.106:3101/");
-        editOrganization.setText("http://46.4.49.27:2010/");
+        //editOrganization.setText("http://46.4.49.27:2010/");
+        //editOrganization.setText("https://smaccloud.smacsoftwares.de:2020/");
+        editOrganization.setText("http://smac-local.sambt.xyz:2020/User");
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
 
         Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
-        btnContinue.setTypeface(Helper.robotoMediumTypeface);
+        //btnContinue.setTypeface(Helper.robotoMediumTypeface);
         btnContinue.setOnClickListener(this);
+        btnInfo.setOnClickListener(this);
 
         if (getSupportActionBar() != null)
         {
@@ -126,8 +134,9 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
 
                     }
                     else
+                    {
                         Helper.showMessage(OrganizationActivity.this, false, getString(R.string.msg_please_check_your_connection));
-
+                    }
                 }
                 else
                 {
@@ -145,6 +154,11 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
                             });
                     alertDialog.show();
                 }
+                break;
+            case R.id.img_info:
+                final BottomSheetDialog btmSheetSortDialog = new BottomSheetDialog(context);
+                btmSheetSortDialog.setContentView(R.layout.activity_bottom_sheet_behavior);
+                btmSheetSortDialog.show();
                 break;
 
         }
@@ -185,8 +199,8 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
                         DataProvider.ENDPOINT_LOGOUT = DataProvider.SERVICE_PATH + "Logout";
                         DataProvider.ENDPOINT_ABOUTUS = DataProvider.SERVICE_PATH + "AboutUs";
                         DataProvider.ENDPOINT_UPDATE_TOKEN = DataProvider.SERVICE_PATH + "Update/Token";
-
                         prefManager.setFirstTimeConfigureServer(true);
+
 
                         if (bundle != null && bundle.containsKey(IS_FROM_DEMO))
                         {
@@ -211,6 +225,7 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
                 notifySimple(getString(R.string.msg_cannot_complete_request));
             }
         }
+
     }
 
     @Override
@@ -241,6 +256,7 @@ public class OrganizationActivity extends Activity implements View.OnClickListen
                 return super.onOptionsItemSelected(item);
         }
     }
+
     public void launchDemoScreen()
     {
         Intent i = new Intent(OrganizationActivity.this, DemoActivity.class);

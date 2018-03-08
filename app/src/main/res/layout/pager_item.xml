@@ -10,7 +10,6 @@
         android:id="@+id/imageFullScreen"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/intro_background1"
         android:transitionName="@string/text_transition_animation_media_image"/>
 
 

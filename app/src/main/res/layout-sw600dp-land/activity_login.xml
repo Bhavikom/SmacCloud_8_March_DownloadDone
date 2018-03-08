@@ -54,6 +54,33 @@
             android:layout_marginRight="@dimen/padding_very_small"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/img_organization_info"
+                    android:tint="@color/black"
+                    android:src="@drawable/ic_info"/>
+
+                <EditText
+                    android:id="@+id/editOrganization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_5dp"
+                    android:background="@null"
+                    android:hint="@string/organization_name"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.2dp"
+                android:background="@color/black"/>
             <android.support.design.widget.TextInputLayout
                 android:id="@+id/textInputEmail"
                 style="@style/EditTextWhiteHint"
@@ -137,11 +164,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/padding_extra_large"
-                android:background="@drawable/orange_border_background"
-                android:text="@string/forget_password"
+                android:background="@null"
+                android:text="@string/forgot_password"
                 android:textAllCaps="false"
-                android:textColor="@android:color/white"
-                android:textSize="@dimen/title_ultra_small" />
+                android:textColor="@color/GrayLight1"
+                android:textSize="@dimen/title_ultra_small"/>
 
             <!-- <LinearLayout
                  android:layout_width="match_parent"

@@ -17,14 +17,14 @@
             android:layout_width="@dimen/hundred_fifty_dp"
             android:layout_height="@dimen/hundred_fifty_dp"
             android:layout_gravity="center"
-            android:src="@drawable/ic_logo" />
+            android:src="@drawable/ic_no_complicated_downloads" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/slide_6_title"
             android:layout_marginTop="@dimen/padding_5dp"
-            android:textColor="@android:color/holo_orange_dark"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/title_medium"
             android:textStyle="bold"/>
 
@@ -36,7 +36,7 @@
             android:paddingRight="@dimen/padding_small"
             android:text="@string/slide_6_desc"
             android:textAlignment="center"
-            android:textColor="@android:color/white"
+            android:textColor="@android:color/black"
             android:textSize="@dimen/title_very_small" />
 
     </LinearLayout>

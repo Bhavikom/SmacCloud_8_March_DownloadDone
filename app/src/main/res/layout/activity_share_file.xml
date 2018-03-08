@@ -157,19 +157,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="@dimen/title_small"/>
 
-                    <com.libaml.android.view.chip.ChipLayout
-                        android:id="@+id/textEmailCc"
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:background="@null"
-                        android:ems="10"
-                        android:inputType="textEmailAddress"
-                        android:textSize="@dimen/title_very_small"
-                        custom:chipDrawable_="@drawable/rounded_chip_drawable"
-                        custom:deleteIcon_="@android:drawable/presence_offline"
-                        custom:labelPosition_="left"
-                        custom:textColor_="@android:color/black"/>
+
                 </LinearLayout>
 
                 <View
@@ -197,19 +185,7 @@
                         android:textAppearance="?android:attr/textAppearanceMedium"
                         android:textSize="@dimen/title_small"/>
 
-                    <com.libaml.android.view.chip.ChipLayout
-                        android:id="@+id/textEmailBcc"
-                        android:layout_width="0dip"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="7"
-                        android:background="@null"
-                        android:ems="10"
-                        android:inputType="textEmailAddress"
-                        android:textSize="@dimen/title_very_small"
-                        custom:chipDrawable_="@drawable/rounded_chip_drawable"
-                        custom:deleteIcon_="@android:drawable/presence_offline"
-                        custom:labelPosition_="left"
-                        custom:textColor_="@android:color/black"/>
+
                 </LinearLayout>
 
 

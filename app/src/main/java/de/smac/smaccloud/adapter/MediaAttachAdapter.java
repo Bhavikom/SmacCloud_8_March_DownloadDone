@@ -101,6 +101,9 @@ public class MediaAttachAdapter extends RecyclerView.Adapter<MediaAttachAdapter.
         final Media media = mediaList.get(position);
         holder.labelName.setText(media.name);
         boolean isTabletSize = activity.getResources().getBoolean(R.bool.isTablet);
+        holder.imgViewNext.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(activity)));
+        holder.imageAdd.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(activity)));
+        Helper.setupTypeface(holder.parentLayout, Helper.robotoRegularTypeface);
         if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
             if (isTabletSize)
@@ -469,7 +472,7 @@ public class MediaAttachAdapter extends RecyclerView.Adapter<MediaAttachAdapter.
                 return true;
             }
         });
-        holder.labelName.setTypeface(Helper.robotoMediumTypeface);
+        //  holder.labelName.setTypeface(Helper.robotoMediumTypeface);
 
     }
 
@@ -546,7 +549,7 @@ public class MediaAttachAdapter extends RecyclerView.Adapter<MediaAttachAdapter.
                         dialog.setMessage(activity.getString(R.string.menu_download_option_download));
                         //dialog.show();
                         media1.isDownloading = 1;
-                        DownloadFileFromURL downloadContent = new DownloadFileFromURL(activity, media1, interfaceResponse);
+                        DownloadFileFromURL downloadContent = new DownloadFileFromURL(activity, media1,"", interfaceResponse);
                         downloadContent.execute(response.optString("Payload"));
 
                     }
@@ -576,13 +579,23 @@ public class MediaAttachAdapter extends RecyclerView.Adapter<MediaAttachAdapter.
 
     }
 
-    @Override
+    /*@Override
     public void processFinish(String output)
     {
         if (dialog != null && dialog.isShowing())
             dialog.dismiss();
         notifyDataSetChanged();
 
+
+    }*/
+
+    @Override
+    public void processFinish(String output, Media media, int pos) {
+
+    }
+
+    @Override
+    public void statusOfDownload(Media media, int pos) {
 
     }
 

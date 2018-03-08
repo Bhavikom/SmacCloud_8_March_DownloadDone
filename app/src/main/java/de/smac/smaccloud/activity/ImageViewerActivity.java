@@ -1,8 +1,12 @@
 package de.smac.smaccloud.activity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -210,7 +214,23 @@ public class ImageViewerActivity extends Activity implements View.OnClickListene
             case R.id.btn_like:
                 if (prefManager.isDemoLogin())
                 {
-                    Helper.demoUserDialog(context);
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(getString(R.string.disable_like_title));
+                    builder.setMessage(getString(R.string.disable_like_message));
+                    builder.setPositiveButton(getString(R.string.ok),
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
+                   // Helper.demoUserDialog(context);
                 }
                 else
                 {
@@ -226,7 +246,7 @@ public class ImageViewerActivity extends Activity implements View.OnClickListene
                             postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
                                     RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelId(context, media.id))),
                                     RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
-                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)));
+                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
                         }
                         else
                         {
@@ -294,7 +314,7 @@ public class ImageViewerActivity extends Activity implements View.OnClickListene
                 RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelIdFromMediaID(this, media.id))),
                 RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
                 RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)),
-                RequestParameter.urlEncoded("Comment", commentText));
+                RequestParameter.urlEncoded("Comment", commentText), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
     }
 
     @Override
@@ -487,6 +507,10 @@ public class ImageViewerActivity extends Activity implements View.OnClickListene
             View itemView = LayoutInflater.from(mContext).inflate(R.layout.pager_item, container, false);
             final TouchImageView imageView = (TouchImageView) itemView.findViewById(R.id.imageFullScreen);
             mFolder = new File("" + getFilesDir() + File.separator + arrayList.get(position).id);
+            if (getSupportActionBar() != null)
+            {
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+            }
 
             /*final Uri imageUri = Uri.parse(arrayList.get(position).icon);
             ImageLoader imageLoader = ImageLoader.getInstance();

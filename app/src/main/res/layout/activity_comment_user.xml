@@ -42,7 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="@color/grey3"
+        android:background="@color/gray1"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/padding_small">
@@ -63,7 +63,7 @@
             android:scrollbarStyle="insideOverlay"/>
 
         <ImageView
-            android:id="@+id/btnsubmit"
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"

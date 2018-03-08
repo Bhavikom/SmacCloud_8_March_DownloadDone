@@ -59,6 +59,30 @@
 
 
             </RelativeLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/padding_extra_large"
+                android:layout_gravity="bottom|center_vertical"
+                android:layout_marginBottom="@dimen/thirty_five_dp"
+                android:background="@color/dialog_color"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:id="@+id/txtLastOpenTime"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="@dimen/padding_very_small"
+                    android:gravity="end|center_vertical"
+                    android:maxLines="1"
+                    android:text="@string/label_save"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/title_ultra_small"/>
+
+            </LinearLayout>
+
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -74,24 +98,11 @@
                     android:id="@+id/txtChannelName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
                     android:ellipsize="end"
                     android:gravity="start|center_vertical"
                     android:maxLines="1"
                     android:textColor="@color/white"
                     android:textSize="@dimen/title_ultra_small"/>
-
-                <TextView
-                    android:id="@+id/txtLastOpenTime"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="0.3"
-                    android:gravity="end|center_vertical"
-                    android:maxLines="1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/title_ultra_small"/>
-
 
             </LinearLayout>
 

@@ -3,14 +3,16 @@
       xmlns:smaccloud="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_save"
+        android:title="@string/label_save"
+        android:visible="true"
+        smaccloud:showAsAction="ifRoom"/>
+
+    <item
         android:id="@+id/action_reset"
         android:title="@string/label_reset"
         android:visible="true"
         smaccloud:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/action_save"
-        android:title="@string/label_save"
-        android:visible="true"
-        smaccloud:showAsAction="ifRoom"/>
+
 </menu>

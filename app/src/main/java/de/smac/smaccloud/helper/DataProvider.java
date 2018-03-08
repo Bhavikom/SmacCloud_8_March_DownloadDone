@@ -8,15 +8,10 @@ import java.util.Random;
 import de.smac.smaccloud.service.SMACCloudApplication;
 
 public class DataProvider
-
 {
-    public static final String SERVICE_PROTOCOL = "http://";
-    public static String SERVICE_HOST = (!PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()).isEmpty() ? PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()) : SERVICE_PROTOCOL + "46.4.49.27:2010//");
-    //public static final String SERVICE_HOST = SERVICE_PROTOCOL + "truckerservices.ssoft.in:8092/";
-    /*public static final String SERVICE_HOST = SERVICE_PROTOCOL + "salescloud.ssoft.in:8082/";*/
-    //public static final String SERVICE_HOST = SERVICE_PROTOCOL + "salescloud.dharminfotech.com:8082/";
-    //public static final String SERVICE_HOST = SERVICE_PROTOCOL + "smaccloud.azurewebsites.net/";
-    /*public static final String SERVICE_PATH = SERVICE_HOST + "SalesCloudService.svc/json/";*/
+    public static final String SERVICE_PROTOCOL = "https://";
+    //public static String SERVICE_HOST = (!PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()).isEmpty() ? PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()) : SERVICE_PROTOCOL + "smac-local.sambt.xyz:2020/");
+    public static String SERVICE_HOST = (!PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()).isEmpty() ? PreferenceHelper.getServiceWeburl(SMACCloudApplication.getInstance()) : SERVICE_PROTOCOL + "smaccloud.smacsoftwares.de:2020/");
     public static String SERVICE_PATH = SERVICE_HOST + "";
     //public static final String SERVICE_PATH = SERVICE_HOST + "SmacCloudService/";
     //public static final String SERVICE_PATH = SERVICE_HOST + "SmacCloud/";
@@ -31,6 +26,9 @@ public class DataProvider
     public static String ENDPOINT_LOGOUT = SERVICE_PATH + "Logout";
     public static String ENDPOINT_ABOUTUS = SERVICE_PATH + "AboutUs";
     public static String ENDPOINT_UPDATE_TOKEN = SERVICE_PATH + "Update/Token";
+    public static String ENDPOINT_SIGNUP_URL = SERVICE_PATH + "StoreDetail";
+    /*public static String SIGNUP_SERVICE_URL ="http://smaccloud.smacsoftwares.de:2020/StoreDetail";*/
+
 
 
     /**
@@ -72,6 +70,7 @@ public class DataProvider
     public static class Actions
     {
         public static final String AUTHENTICATE_USER = "AUTHENTICATE_USER";
+        public static final String GET_ORG_URL = "GET_ORG_URL";
         public static final String DEMO_USER = "CREATE_DEMO_USER";
         public static final String SERVICE_HELTH = "SERVICE_HELTH";
         public static final String FORGOT_PASSWORD = "FORGOT_PASSWORD";
@@ -87,8 +86,9 @@ public class DataProvider
         public static final String MEDIA_COMMENT = "MEDIA_COMMENT";
         public static final String SEND_MESSAGE = "SEND_MESSAGE";
         public static final String ABOUTUS = "ABOUTUS";
-
         public static final String ACTION_LOCALIZATION = "GET_LOCALIZATIONDATA";
+        public static final String GET_SETTINGS = "GET_SETTINGS";
+        public static final String CHECK_ORGNIZATION = "CHECK_ORG";
     }
 
     public static class Messages

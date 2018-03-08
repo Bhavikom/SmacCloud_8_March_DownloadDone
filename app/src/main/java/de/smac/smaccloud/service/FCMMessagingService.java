@@ -11,12 +11,12 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.internal.zzagr;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 import com.google.gson.Gson;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ import de.smac.smaccloud.model.Announcement;
 import de.smac.smaccloud.model.UserComment;
 import de.smac.smaccloud.model.UserLike;
 
+import static com.google.android.gms.internal.zzahn.runOnUiThread;
 import static de.smac.smaccloud.base.Activity.notificationIconValueChangeListener;
 
 public class FCMMessagingService extends FirebaseMessagingService
@@ -50,16 +51,19 @@ public class FCMMessagingService extends FirebaseMessagingService
     public static final int ACTION_TYPE_MEDIA_COMMENT = 1804;
     public static final int ACTION_TYPE_CONTENT_UPDATED = 1805;
     public static final int ACTION_TYPE_MEDIA_LIKE = 1806;
+    public static final int ACTION_TYPE_THEME_CHANGE = 1807;
 
-    public static final String PUSH_TYPE__ADD_LIKE = "ADD_LIKE";
+    public static final String PUSH_TYPE_ADD_LIKE = "ADD_LIKE";
     public static final String PUSH_TYPE_SYNC = "SYNC";
     public static final String PUSH_TYPE_FORCE_SYNC = "FORCE_SYNC";
     public static final String PUSH_TYPE_ADD_COMMENT = "ADD_COMMENT";
+    public static final String PUSH_TYPE_THEME_CHANGE = "THEME_CHANGE";
 
     public static final String KEY_NOTIFICATION_DATA = "NotificationData";
     private static final String NOTIFICATION_DELETED_ACTION = "NOTIFICATION_DELETED";
     public static FCMPushReceiveListener fcmPushReceiveListener;
     public static CommentPushReceiveListener commentPushReceiveListener;
+    public static ThemeChangeNotificationListener themeChangeNotificationListener;
 
     String TAG = "SMAC CLOUD";
     Context context;
@@ -79,24 +83,13 @@ public class FCMMessagingService extends FirebaseMessagingService
     public void onMessageReceived(final RemoteMessage remoteMessage)
     {
         context = this;
-        // [START_EXCLUDE]
-        // There are two types of messages data messages and notification messages. Data messages are handled
-        // here in onMessageReceived whether the app is in the foreground or background. Data messages are the type
-        // traditionally used with GCM. Notification messages are only received here in onMessageReceived when the app
-        // is in the foreground. When the app is in the background an automatically generated notification is displayed.
-        // When the user taps on the notification they are returned to the app. Messages containing both notification
-        // and data payloads are treated as notification messages. The Firebase console always sends notification
-        // messages. For more see: https://firebase.google.com/docs/cloud-messaging/concept-options
-        // [END_EXCLUDE]
 
-        // TODO(developer): Handle FCM messages here.
-        // Not getting messages here? See why this may be: https://goo.gl/39bRNJ
         Log.d(TAG, "From: " + remoteMessage.getFrom());
 
         // Check if message contains a data payload.
         if (PreferenceHelper.hasUserContext(context) && remoteMessage.getData().size() > 0)
         {
-            zzagr.runOnUiThread(new Runnable()
+            runOnUiThread(new Runnable()
             {
                 @Override
                 public void run()
@@ -203,7 +196,7 @@ public class FCMMessagingService extends FirebaseMessagingService
                                     UserLike newUserLike = new UserLike();
                                     UserLike.parseFromJson(new JSONObject(remoteMessage.getData().get(KEY_DATA_DATA_CONTENT)), newUserLike);
 
-                                    announcement.type = PUSH_TYPE__ADD_LIKE;
+                                    announcement.type = PUSH_TYPE_ADD_LIKE;
                                     announcement.userId = newUserLike.userId;
                                     announcement.associatedId = newUserLike.associatedId;
 
@@ -222,6 +215,46 @@ public class FCMMessagingService extends FirebaseMessagingService
                                 }
                             }
                             break;
+
+                        case ACTION_TYPE_THEME_CHANGE:
+                            // TODO: 1/19/2018 Manage theme change here
+                            announcement.type = PUSH_TYPE_THEME_CHANGE;
+                            announcement.userId = -1;
+                            announcement.associatedId = -1;
+                            if (remoteMessage.getData().containsKey(KEY_DATA_DATA_CONTENT))
+                            {
+                                try
+                                {
+                                    JSONObject jsonThemeData = new JSONObject(remoteMessage.getData().get(KEY_DATA_DATA_CONTENT));
+                                    JSONObject jsonTheme = jsonThemeData.getJSONObject("Result");
+                                    if (jsonTheme.has("Icon"))
+                                    {
+                                        PreferenceHelper.storeAppIcon(context, jsonTheme.optString("Icon"));
+                                    }
+                                    if (jsonTheme.has("AppColor"))
+                                    {
+                                        PreferenceHelper.storeAppColor(context, jsonTheme.optString("AppColor"));
+                                    }
+                                    if (jsonTheme.has("AppBackColor"))
+                                    {
+                                        PreferenceHelper.storeAppBackColor(context, jsonTheme.optString("AppBackColor"));
+                                    }
+                                    if (jsonTheme.has("AppFontColor"))
+                                    {
+                                        PreferenceHelper.storeAppFontColor(context, jsonTheme.optString("AppFontColor"));
+                                    }
+                                    if (jsonTheme.has("AppFont"))
+                                    {
+                                        PreferenceHelper.storeAppFontName(context, jsonTheme.optString("AppFont"));
+                                    }
+                                }
+                                catch (JSONException jsonEx)
+                                {
+                                    jsonEx.printStackTrace();
+                                }
+                            }
+                            break;
+
                         default:
                             announcement.type = "";
                             break;
@@ -231,6 +264,10 @@ public class FCMMessagingService extends FirebaseMessagingService
                     if (notificationIconValueChangeListener != null)
                     {
                         notificationIconValueChangeListener.onNotificationIconValueChanged();
+                    }
+                    if (themeChangeNotificationListener != null)
+                    {
+                        themeChangeNotificationListener.onThemeChangeNotificationReceived();
                     }
                 }
             });
@@ -284,5 +321,10 @@ public class FCMMessagingService extends FirebaseMessagingService
     public interface CommentPushReceiveListener
     {
         public void onCommentPushReceived();
+    }
+
+    public interface ThemeChangeNotificationListener
+    {
+        public void onThemeChangeNotificationReceived();
     }
 }

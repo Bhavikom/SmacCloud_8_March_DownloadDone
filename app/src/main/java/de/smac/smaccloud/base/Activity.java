@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.IBinder;
@@ -65,10 +66,11 @@ public class Activity extends AppCompatActivity
     protected Context context;
     protected NetworkService.NetworkBinder networkBinder;
     protected FragmentManager fragmentManager;
+    String value;
+    String lightBgColor;
     private Intent networkServiceIntent;
     private ServiceConnection networkConnection;
     private NetworkService.RequestCompleteCallback networkCallback;
-
     private ArrayList<UserLike> arrayListUserLikes;
     private ArrayList<UserComment> arrayListUserComments;
     private JSONArray jsonArrayUserLikes;
@@ -78,7 +80,7 @@ public class Activity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        robotoLightTypeface = Typeface.createFromAsset(getAssets(), "RobotoLight.ttf");
+        robotoLightTypeface = Typeface.createFromAsset(getAssets(), "fonts/roboto.regular.ttf");
 
         fragmentManager = getSupportFragmentManager();
         context = this;
@@ -110,7 +112,6 @@ public class Activity extends AppCompatActivity
                 actionBar.setHomeButtonEnabled(true);
                 actionBar.setDisplayShowHomeEnabled(true);
                 actionBar.setDisplayHomeAsUpEnabled(true);
-
             }
         }
     }
@@ -130,6 +131,24 @@ public class Activity extends AppCompatActivity
         initializeComponents();
         bindEvents();
         refreshLayoutTypeface();
+        updateParentThemeColor();
+        /*FCMMessagingService.themeChangeNotificationListener = new FCMMessagingService.ThemeChangeNotificationListener()
+        {
+            @Override
+            public void onThemeChangeNotificationReceived()
+            {
+                updateParentThemeColor();
+            }
+        };*/
+
+
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        updateParentThemeColor();
     }
 
     protected void initializeComponents()
@@ -180,6 +199,7 @@ public class Activity extends AppCompatActivity
                 }
             }
         };
+
     }
 
     protected void bindEvents()
@@ -222,6 +242,47 @@ public class Activity extends AppCompatActivity
         if (addToBackStack)
             transaction.addToBackStack(fragment.getClass().getSimpleName());
         transaction.commit();
+    }
+
+    public void updateParentThemeColor()
+    {
+        if (parentLayout != null)
+        {
+
+            lightBgColor = PreferenceHelper.getAppBackColor(context);
+            if (lightBgColor != null && lightBgColor.length() > 0)
+            {
+                lightBgColor = lightBgColor.substring(1, lightBgColor.length());
+                String value = "#40" + lightBgColor;
+                parentLayout.setBackgroundColor(Color.parseColor(value));
+            }
+            else
+            {
+                lightBgColor = "#000000";
+                lightBgColor = lightBgColor.substring(1, lightBgColor.length());
+                String value = "#40" + lightBgColor;
+                parentLayout.setBackgroundColor(Color.parseColor(value));
+            }
+
+        }
+        else if (findViewById(android.R.id.content) != null)
+        {
+            lightBgColor = PreferenceHelper.getAppBackColor(context);
+            if (lightBgColor != null && lightBgColor.length() > 0)
+            {
+                lightBgColor = lightBgColor.substring(1, lightBgColor.length());
+                String value = "#40" + lightBgColor;
+                findViewById(android.R.id.content).setBackgroundColor(Color.parseColor(value));
+            }
+            else
+            {
+                lightBgColor = "#000000";
+                lightBgColor = lightBgColor.substring(1, lightBgColor.length());
+                String value = "#40" + lightBgColor;
+                findViewById(android.R.id.content).setBackgroundColor(Color.parseColor(value));
+            }
+
+        }
     }
 
     protected void onNetworkReady()

@@ -1,53 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/parentLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/theme_overcast_background"
-    android:orientation="vertical">
+<LinearLayout android:id="@+id/parentLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
-    <info.hoang8f.android.segmented.SegmentedGroup xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/segmentTab"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:weightSum="2"
-        android:gravity="center_vertical"
-        android:layout_marginLeft="@dimen/padding_very_small"
-        android:layout_marginRight="@dimen/padding_very_small"
-        android:layout_marginTop="@dimen/padding_small"
-        android:orientation="horizontal"
-        android:padding="@dimen/padding_4dp"
-        segmentedgroup:sc_border_width="@dimen/padding_1dp"
-        segmentedgroup:sc_corner_radius="5dp">
+    <info.hoang8f.android.segmented.SegmentedGroup android:id="@+id/segmentTab"
+                                                   xmlns:segmentedgroup="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="wrap_content"
+                                                   android:layout_gravity="center"
+                                                   android:layout_marginLeft="@dimen/padding_very_small"
+                                                   android:layout_marginRight="@dimen/padding_very_small"
+                                                   android:layout_marginTop="@dimen/padding_small"
+                                                   android:gravity="center_vertical"
+                                                   android:orientation="horizontal"
+                                                   android:padding="@dimen/padding_4dp"
+                                                   android:weightSum="2"
+                                                   segmentedgroup:sc_border_width="@dimen/padding_1dp"
+                                                   segmentedgroup:sc_corner_radius="5dp">
 
         <RadioButton
-
-            android:paddingTop="@dimen/padding_5dp"
-            android:paddingBottom="@dimen/padding_5dp"
-            android:lines="1"
             android:id="@+id/rdoRecent"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:button="@null"
             android:checked="true"
             android:gravity="center"
-            android:button="@null"
+            android:lines="1"
+            android:paddingBottom="@dimen/padding_5dp"
+            android:paddingTop="@dimen/padding_5dp"
             android:text="@string/label_recent"
-            android:textSize="@dimen/title_very_small" />
+            android:textSize="@dimen/title_very_small"/>
 
         <RadioButton
-            android:paddingTop="@dimen/padding_5dp"
-            android:paddingBottom="@dimen/padding_5dp"
-            android:lines="1"
-            android:gravity="center"
             android:id="@+id/rdoMostVisited"
-            android:button="@null"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1"
+            android:button="@null"
+            android:gravity="center"
+            android:lines="1"
+            android:paddingBottom="@dimen/padding_5dp"
+            android:paddingTop="@dimen/padding_5dp"
             android:text="@string/label_most_visited"
-            android:textSize="@dimen/title_very_small" />
+            android:textSize="@dimen/title_very_small"/>
     </info.hoang8f.android.segmented.SegmentedGroup>
 
     <android.support.v7.widget.RecyclerView
@@ -55,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_small"
-        android:layout_marginRight="@dimen/padding_small" />
+        android:layout_marginRight="@dimen/padding_small"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerMostVisited"
@@ -63,6 +61,6 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/padding_small"
         android:layout_marginRight="@dimen/padding_small"
-        android:visibility="gone" />
+        android:visibility="gone"/>
 
 </LinearLayout>

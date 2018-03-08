@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/action_done"
-        android:title="@string/label_done"
+        android:title="@string/label_save"
         smaccloud:showAsAction="ifRoom"/>
     <item
         android:id="@+id/action_reset"

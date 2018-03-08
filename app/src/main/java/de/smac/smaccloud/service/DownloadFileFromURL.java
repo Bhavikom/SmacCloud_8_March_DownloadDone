@@ -28,13 +28,16 @@ public class DownloadFileFromURL extends AsyncTask<String, String, String>
     public interfaceAsyncResponse interfaceResponse = null;
     Context context;
     Media media;
-    Boolean isSuccess = false;
 
-    public DownloadFileFromURL(Context context, Media media, interfaceAsyncResponse delegate)
+    Boolean isSuccess = false;
+    String position;
+
+    public DownloadFileFromURL(Context context, Media media, String pos, interfaceAsyncResponse delegate)
     {
         this.context = context;
         this.media = media;
         this.interfaceResponse = delegate;
+        this.position = pos;
     }
 
     @Override
@@ -47,7 +50,10 @@ public class DownloadFileFromURL extends AsyncTask<String, String, String>
     @Override
     protected String doInBackground(String... params)
     {
-        int count;
+        int statusOfdownload = 0;
+        int count = 0;
+        OutputStream output;
+        InputStream input;
         try
         {
             URL url = new URL(params[0]);
@@ -62,38 +68,64 @@ public class DownloadFileFromURL extends AsyncTask<String, String, String>
             conection.addRequestProperty(NetworkService.KEY_AUTHORIZATION, token);
             conection.connect();
 
-            InputStream input = null;
-
-
+            int lenghtOfFile = conection.getContentLength();
+            
             input = new BufferedInputStream(conection.getInputStream());
 
             File mFolder = new File("" + context.getFilesDir());
             if (!mFolder.exists())
                 mFolder.mkdirs();
-            OutputStream output = new FileOutputStream(context.getFilesDir() + File.separator + media.id);
+             output = new FileOutputStream(context.getFilesDir() + File.separator + media.id);
 
-            byte[] data = new byte[(int) (media.size + 2)];
-            int totalBytes = 0;
+            byte data[] = new byte[1024];
+            long total = 0;
             while ((count = input.read(data)) != -1)
             {
-                totalBytes += count;
+                if(Helper.mediaToCancel != null) {
+                    if (Helper.mediaToCancel.id == media.id) {
+                        Helper.mediaToCancel = null;
+                        Log.e(" 4444444 "," download is canceled : "+position);
+                        break;
+                    }
+                }
+                total += count;
+                statusOfdownload = (int) ((total * 100) / lenghtOfFile);
                 output.write(data, 0, count);
+
+                //Log.e(" length of file "," percentage of download : "+lenghtOfFile + " : "+count);
+
+                //int percentage = (int) ((totalBytes * 100) / lenghtOfFile);
+
+                //Log.e(" percentage "," percentage of download : "+statusOfdownload);
+
+                media.progress = statusOfdownload;
+                media.isDownloading = 1;
+                interfaceResponse.statusOfDownload(media,Integer.parseInt(position));
+
+                //output.write(data, 0, count);
             }
-            if (totalBytes == media.size)
+            if (total == media.size)
             {
                 isSuccess = true;
                 media.isDownloading = 0;
-                Log.e("Downloaded Bytes", String.valueOf(totalBytes));
+                media.isDownloaded = 1;
+                Log.e("Downloaded Bytes", String.valueOf(total));
+                if (output != null)
+                {
+                    output.flush();
+                    output.close();
+                }
+                if (input != null)
+                {
+                    input.close();
+                }
             }
-            // flushing output
-            output.flush();
-            // closing streams
-            output.close();
-            input.close();
+
 
         }
         catch (Exception e)
         {
+            Log.e(" in catch  "," download is stopped : "+e.toString());
             e.printStackTrace();
             media.isDownloading = 0;
             isSuccess = false;
@@ -110,20 +142,31 @@ public class DownloadFileFromURL extends AsyncTask<String, String, String>
 
             media.isDownloaded = 1;
             media.isDownloading = 0;
-            DataHelper.updateMedia(context, media);
-            interfaceResponse.processFinish(s);
+            media.progress = 100;
+            //DataHelper.updateMedia(context, media);
+            interfaceResponse.processFinish(s,media,Integer.parseInt(position));
         }
         else
         {
             media.isDownloaded = 0;
             media.isDownloading = 0;
-            DataHelper.updateMedia(context, media);
-            interfaceResponse.processFinish("fail");
+            media.progress = 0;
+            //DataHelper.updateMedia(context, media);
+            interfaceResponse.processFinish("fail",media,Integer.parseInt(position));
         }
     }
+    public void cancelDownload(Media mediaReceived, String pos){
+        Log.e(" 33333333 "," download is canceled : "+pos);
+        Helper.mediaToCancel = mediaReceived;
+        /*if(media.id == mediaReceived.id && pos==position){
+            cancel(true);
 
+        }*/
+
+    }
     public interface interfaceAsyncResponse
     {
-        void processFinish(String output);
+        void processFinish(String output,Media media, int pos);
+        void statusOfDownload(Media media, int pos);
     }
 }

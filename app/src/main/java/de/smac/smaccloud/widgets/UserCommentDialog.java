@@ -70,7 +70,7 @@ public class UserCommentDialog extends AlertDialog
         listComments.setLayoutManager(layoutManager);
         LinearLayout.LayoutParams linearLayout = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, Helper.getDeviceHeight(activity) / 2);
         listComments.setLayoutParams(linearLayout);
-        btn_send = (Button) content.findViewById(R.id.btnsubmit);
+        btn_send = (Button) content.findViewById(R.id.btnSend);
         edtMediaComment = (EditText) content.findViewById(R.id.edtMediaComment);
         imgBack = (ImageView) content.findViewById(R.id.img_back);
 
@@ -105,6 +105,7 @@ public class UserCommentDialog extends AlertDialog
                     if (prefManager.isDemoLogin())
                     {
                         Helper.demoUserDialog(activity);
+
                     }
                     else
                     {

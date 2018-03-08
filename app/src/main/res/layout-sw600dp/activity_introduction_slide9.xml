@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/parentLayout"
+    android:background="@drawable/intro_background">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+
+        <ImageView
+            android:layout_width="@dimen/two_hundred"
+            android:layout_height="@dimen/two_hundred"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_simple_admin" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slide_9_title"
+            android:layout_marginTop="@dimen/padding_5dp"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/title_medium"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/padding_extra_large"
+            android:paddingLeft="@dimen/padding_small"
+            android:paddingRight="@dimen/padding_small"
+            android:id="@+id/txt_admin_link"
+            android:textColorLink="@color/blue"
+            android:text="@string/slide_9_desc"
+            android:textAlignment="center"
+            android:textColor="@android:color/black"
+            android:textSize="@dimen/title_very_small" />
+
+    </LinearLayout>
+
+
+</RelativeLayout>

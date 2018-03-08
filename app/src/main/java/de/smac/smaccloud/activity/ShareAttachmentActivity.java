@@ -1,6 +1,10 @@
 package de.smac.smaccloud.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
@@ -15,6 +19,7 @@ import de.smac.smaccloud.adapter.ChannelAttachAdapter;
 import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Helper;
 import de.smac.smaccloud.data.DataHelper;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Channel;
 import de.smac.smaccloud.model.Media;
 
@@ -35,8 +40,12 @@ public class ShareAttachmentActivity extends Activity
         if (getSupportActionBar() != null)
         {
             getSupportActionBar().setTitle(getString(R.string.channels));
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back_material_vector);
+            upArrow.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
         }
-
+        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
         selectedAttachmentList = getIntent().getExtras().getParcelableArrayList(ShareActivity.KEY_SELECTED_MEDIA);
 
         recyclerChannels = (RecyclerView) findViewById(R.id.recyclerChannels);
@@ -61,9 +70,11 @@ public class ShareAttachmentActivity extends Activity
     {
         switch (item.getItemId())
         {
+
             case android.R.id.home:
                 onBackPressed();
                 return true;
+
             default:
                 return super.onOptionsItemSelected(item);
         }

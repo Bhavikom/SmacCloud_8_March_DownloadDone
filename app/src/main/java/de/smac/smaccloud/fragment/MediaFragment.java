@@ -1,15 +1,23 @@
+
 package de.smac.smaccloud.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.content.LocalBroadcastManager;
@@ -21,7 +29,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
@@ -36,7 +43,6 @@ import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-
 
 import de.smac.smaccloud.R;
 import de.smac.smaccloud.activity.MediaDetailActivity;
@@ -56,6 +62,7 @@ import de.smac.smaccloud.model.User;
 import de.smac.smaccloud.model.UserComment;
 import de.smac.smaccloud.model.UserLike;
 import de.smac.smaccloud.service.DownloadFileFromURL;
+import de.smac.smaccloud.service.FCMMessagingService;
 import de.smac.smaccloud.service.SMACCloudApplication;
 import de.smac.smaccloud.widgets.UserCommentDialog;
 
@@ -64,13 +71,11 @@ import static de.smac.smaccloud.activity.MediaActivity.REQUEST_COMMENT;
 import static de.smac.smaccloud.activity.MediaActivity.REQUEST_LIKE;
 import static de.smac.smaccloud.base.Helper.LOCALIZATION_TYPE_ERROR_CODE;
 
-import android.os.Handler;
-
 
 /**
  * Show arrayListMedia data
  */
-public class MediaFragment extends Fragment implements DownloadFileFromURL.interfaceAsyncResponse, MediaAdapter.OnItemClickOfAdapter, ShowdownloadProcessFragment.interfaceAsyncResponseDownloadProcess
+public class MediaFragment extends Fragment implements DownloadFileFromURL.interfaceAsyncResponse, MediaAdapter.OnItemClickOfAdapter
 {
 
     public static final String EXTRA_CHANNEL = "extra_channel";
@@ -97,7 +102,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
     UserCommentDialog commentDialog;
     boolean isTabletSize;
     Handler handler;
-    private BroadcastReceiver broadcastReceiverToHandleDownload;
+    //private BroadcastReceiver broadcastReceiverToHandleDownload;
     private Media media1;
     private RecyclerView recyclerView;
     private MediaAdapter mediaAdapter;
@@ -108,7 +113,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
     private boolean isGrid = false;
     private int parentId = -1;
     private BroadcastReceiver receiver;
-
+    View rootView;
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -118,7 +123,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
         interfaceResponse = this;
         handler = new Handler();
 
-        broadcastReceiverToHandleDownload = new BroadcastReceiver()
+        /*broadcastReceiverToHandleDownload = new BroadcastReceiver()
         {
             @Override
             public void onReceive(Context context, final Intent intent)
@@ -126,7 +131,6 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                 final Intent intentlocal = intent;
                 if (intent.getAction().equals(Helper.DOWNLOAD_ACTION))
                 {
-                    //Log.e(""," get string receiver : "+intent.getStringArrayExtra("media_object"));
                     final Media mediaReceived = intentlocal.getParcelableExtra("media_object");
                     final String position = intentlocal.getStringExtra("position");
                     handler.postDelayed(new Runnable()
@@ -156,14 +160,14 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                     }, 0);
                 }
             }
-        };
+        };*/
     }
 
     @Override
     public void onStart()
     {
         super.onStart();
-        LocalBroadcastManager.getInstance(getActivity()).registerReceiver((broadcastReceiverToHandleDownload),
+        /*LocalBroadcastManager.getInstance(getActivity()).registerReceiver((broadcastReceiverToHandleDownload),
                 new IntentFilter(Helper.DOWNLOAD_ACTION)
         );
         try
@@ -194,7 +198,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
         catch (Exception ex)
         {
             ex.printStackTrace();
-        }
+        }*/
     }
 
     public boolean checkMediaId(Media tempMedia)
@@ -211,14 +215,15 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
     public void onStop()
     {
         super.onStop();
-        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastReceiverToHandleDownload);
+        //LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(broadcastReceiverToHandleDownload);
         //context.unregisterReceiver(receiver);
     }
 
     @Override
     public void onDestroy()
     {
-        try
+        super.onDestroy();
+        /*try
         {
             context.unregisterReceiver(receiver);
         }
@@ -227,21 +232,30 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
             iaex.printStackTrace();
         }
         super.onDestroy();
-        mediaAdapter.onPauseIsCalled();
+        mediaAdapter.onPauseIsCalled();*/
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState)
     {
-        return inflater.inflate(R.layout.fragment_media, parent, false);
+        if(rootView == null)
+        {
+            rootView = inflater.inflate(R.layout.fragment_media, parent, false);
+        }
+        else
+        {
+            if(rootView.getParent() != null)
+                ((ViewGroup)rootView.getParent()).removeView(rootView);
+        }
+        return rootView;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mediaAdapter.notifyDataSetChanged();
+        //mediaAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -336,7 +350,22 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                                 // rate
                                 if (prefManager.isDemoLogin())
                                 {
-                                    Helper.demoUserDialog(context);
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                                    builder.setTitle(getString(R.string.disable_like_title));
+                                    builder.setMessage(getString(R.string.disable_like_message));
+                                    builder.setPositiveButton(getString(R.string.ok),
+                                            new DialogInterface.OnClickListener()
+                                            {
+                                                public void onClick(DialogInterface dialog, int which)
+                                                {
+                                                    dialog.dismiss();
+                                                }
+                                            });
+
+                                    AlertDialog dialog = builder.create();
+
+                                    dialog.show();
+                                    // Helper.demoUserDialog(context);
                                 }
                                 else
                                 {
@@ -352,7 +381,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                                             postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
                                                     RequestParameter.urlEncoded("ChannelId", String.valueOf(channel.id)),
                                                     RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
-                                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media1.id)));
+                                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media1.id)), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
                                         }
                                         else
                                         {
@@ -481,10 +510,41 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
         mediaAdapter = new MediaAdapter(activity, arrayListMedia, this, recyclerView);
         mediaAdapter.setGrid(isGrid);
         recyclerView.setAdapter(mediaAdapter);
+        //applyThemeColor();
         updateMediaList();
 
         user = new User();
         user.id = PreferenceHelper.getUserContext(context);
+        applyThemeColor();
+
+        FCMMessagingService.themeChangeNotificationListener = new FCMMessagingService.ThemeChangeNotificationListener()
+        {
+            @Override
+            public void onThemeChangeNotificationReceived()
+            {
+                applyThemeColor();
+            }
+        };
+    }
+
+
+
+    public void applyThemeColor()
+    {
+        activity.updateParentThemeColor();
+        if (activity.getSupportActionBar() != null)
+        {
+            activity.getSupportActionBar().setTitle(channel.name);
+            activity.getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back_material_vector);
+            upArrow.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            activity.getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            if (toolbar != null)
+            {
+                toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+            }
+        }
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -507,7 +567,6 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
         }
         else
         {
-            // Landscape Mode
             if (Helper.isTablet(activity))
             {
                 GridLayoutManager layoutManager = new GridLayoutManager(context, 3);
@@ -536,12 +595,16 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                 DataHelper.getMediaListFromChannelId(context, parentId, arrayListMedia);
                 Log.e("", " arrayListMedia size : " + arrayListMedia.size());
             }
-            if(((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.size() > 0){
-                for (int i=0;i<((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.size();i++){
-                    for (int j=0;j<arrayListMedia.size();j++){
-                        if(((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i).isDownloading ==1 &&
-                                ((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i).id == arrayListMedia.get(j).id){
-                            arrayListMedia.set(j,((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i));
+            if (((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.size() > 0)
+            {
+                for (int i = 0; i < ((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.size(); i++)
+                {
+                    for (int j = 0; j < arrayListMedia.size(); j++)
+                    {
+                        if (((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i).isDownloading == 1 &&
+                                ((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i).id == arrayListMedia.get(j).id)
+                        {
+                            arrayListMedia.set(j, ((SMACCloudApplication) activity.getApplication()).arrayListMediaTemp.get(i));
                         }
                     }
                 }
@@ -557,6 +620,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
     @Override
     public void onResume()
     {
+        super.onResume();
         try
         {
             if (activity.getSupportActionBar() != null)
@@ -567,12 +631,6 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                 }
                 else
                 {
-                    /*Bundle arguments = getArguments();
-                    if (arguments != null && arguments.containsKey(EXTRA_MEDIA))
-                    {
-                        Media tempMediaItem = arguments.getParcelable(EXTRA_MEDIA);
-                        activity.getSupportActionBar().setTitle(tempMediaItem.name);
-                    }*/
                     activity.getSupportActionBar().setTitle(mediaItem.name);
                 }
             }
@@ -581,16 +639,18 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
         {
             ex.printStackTrace();
         }
-        super.onResume();
+        applyThemeColor();
     }
 
 
     @Override
-    public void processFinish(String output)
-    {
-        if (mediaAdapter.dialog != null && mediaAdapter.dialog.isShowing())
-            mediaAdapter.dialog.dismiss();
-        mediaAdapter.notifyDataSetChanged();
+    public void processFinish(String output, Media media, int pos) {
+
+    }
+
+    @Override
+    public void statusOfDownload(Media media, int pos) {
+
     }
 
     public void callCommentService(String commentText)
@@ -599,9 +659,8 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                 RequestParameter.urlEncoded("ChannelId", String.valueOf(channel.id)),
                 RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
                 RequestParameter.urlEncoded("MediaId", String.valueOf(media1.id)),
-                RequestParameter.urlEncoded("Comment", commentText));
+                RequestParameter.urlEncoded("Comment", commentText), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
     }
-
     @Override
     protected void onNetworkResponse(int requestCode, boolean status, String response)
     {
@@ -694,13 +753,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                         }
                         else if (responseJson.has("Message") && !responseJson.isNull("Message") && !responseJson.optString("Message").equalsIgnoreCase("null"))
                         {
-                            /*if (responseJson.optString("Message").equalsIgnoreCase(DataProvider.Messages.USERLIKE_OBJECT_IS_EMPTY))
-                            {
-                                userComment.isSynced = 1;
-                                userComment.associatedId = arrayListMedia.id;
-                                userComment.userId = PreferenceHelper.getUserContext(context);
-                                DataHelper.addUserLikes(context, userLike);
-                            }*/
+
                         }
                         if (commentDialog != null && commentDialog.isShowing())
                             commentDialog.dismiss();
@@ -732,6 +785,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
             mediaDetails.putExtra(EXTRA_MEDIA, media1);
             mediaDetails.putExtra(EXTRA_VIEW, isGrid);
             mediaDetails.putExtra(EXTRA_PARENT, parentId);
+            mediaDetails.putExtra("POSITION", itemPos);
             // TODO: 10-Jan-17 Transmission Animation
             Pair<View, String> pair1 = Pair.create(recyclerView.findViewHolderForLayoutPosition(itemPos).itemView.findViewById(R.id.imageIcon), getString(R.string.text_transition_animation_media_image));
             Pair<View, String> pair2 = Pair.create(recyclerView.findViewHolderForLayoutPosition(itemPos).itemView.findViewById(R.id.labelName), getString(R.string.text_transition_animation_media_title));
@@ -759,7 +813,23 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
             // rate
             if (prefManager.isDemoLogin())
             {
-                Helper.demoUserDialog(context);
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(getString(R.string.disable_like_title));
+                builder.setMessage(getString(R.string.disable_like_message));
+                builder.setPositiveButton(getString(R.string.ok),
+                        new DialogInterface.OnClickListener()
+                        {
+                            public void onClick(DialogInterface dialog, int which)
+                            {
+                                dialog.dismiss();
+                            }
+                        });
+
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+
+                //Helper.demoUserDialog(context);
             }
             else
             {
@@ -775,7 +845,7 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                         postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
                                 RequestParameter.urlEncoded("ChannelId", String.valueOf(channel.id)),
                                 RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
-                                RequestParameter.urlEncoded("MediaId", String.valueOf(media1.id)));
+                                RequestParameter.urlEncoded("MediaId", String.valueOf(media1.id)), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
                     }
                     else
                     {
@@ -826,9 +896,8 @@ public class MediaFragment extends Fragment implements DownloadFileFromURL.inter
                 mediaAdapter.notifyDataSetChanged();
             }
         }
-        else
-        {
-        }
+
 
     }
+
 }

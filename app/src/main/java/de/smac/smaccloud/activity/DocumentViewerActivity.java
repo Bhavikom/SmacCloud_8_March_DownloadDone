@@ -1,7 +1,11 @@
 package de.smac.smaccloud.activity;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.util.Pair;
@@ -79,6 +83,10 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
         prefManager = new PreferenceHelper(context);
         setContentView(R.layout.activity_documentviewer);
         Helper.retainOrientation(DocumentViewerActivity.this);
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+        }
 
     }
 
@@ -106,6 +114,14 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
         btn_done = (LinearLayout) findViewById(R.id.btn_done);
         linearLayout = (LinearLayout) findViewById(R.id.linear_pdf_parent);
 
+        img_like = (ImageView) findViewById(R.id.img_like);
+        img_comment = (ImageView) findViewById(R.id.img_comment);
+        img_attach = (ImageView) findViewById(R.id.img_attach);
+        img_info = (ImageView) findViewById(R.id.img_info);
+
+        // img_like.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+      /*  img_attach.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        img_comment.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));*/
 
         parentLayout = (RelativeLayout) findViewById(R.id.parentLayout);
         Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
@@ -115,12 +131,6 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
         btn_attach.setOnClickListener(this);
         btn_info.setOnClickListener(this);
         btn_done.setOnClickListener(this);
-
-
-        img_like = (ImageView) findViewById(R.id.img_like);
-        img_comment = (ImageView) findViewById(R.id.img_comment);
-        img_attach = (ImageView) findViewById(R.id.img_attach);
-        img_info = (ImageView) findViewById(R.id.img_info);
 
         checkLike = DataHelper.checkLike(context, media.id, PreferenceHelper.getUserContext(context));
         if (checkLike)
@@ -189,7 +199,22 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
             case R.id.btn_like:
                 if (prefManager.isDemoLogin())
                 {
-                    Helper.demoUserDialog(context);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(getString(R.string.disable_like_title));
+                    builder.setMessage(getString(R.string.disable_like_message));
+                    builder.setPositiveButton(getString(R.string.ok),
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
+                    // Helper.demoUserDialog(context);
                 }
                 else
                 {
@@ -205,7 +230,7 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
                             postNetworkRequest(REQUEST_LIKE, DataProvider.ENDPOINT_FILE, DataProvider.Actions.MEDIA_LIKE,
                                     RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelId(context, media.id))),
                                     RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
-                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)));
+                                    RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
                         }
                         else
                         {
@@ -273,7 +298,7 @@ public class DocumentViewerActivity extends Activity implements View.OnClickList
                 RequestParameter.urlEncoded("ChannelId", String.valueOf(DataHelper.getChannelIdFromMediaID(this, media.id))),
                 RequestParameter.urlEncoded("UserId", String.valueOf(PreferenceHelper.getUserContext(context))),
                 RequestParameter.urlEncoded("MediaId", String.valueOf(media.id)),
-                RequestParameter.urlEncoded("Comment", commentText));
+                RequestParameter.urlEncoded("Comment", commentText), RequestParameter.urlEncoded("Org_Id", String.valueOf(PreferenceHelper.getOrganizationId(context))));
     }
 
     @Override

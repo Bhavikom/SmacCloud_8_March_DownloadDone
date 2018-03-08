@@ -64,7 +64,7 @@
                     android:background="@drawable/edittext_white_border_line"
                     android:drawablePadding="@dimen/padding_1dp"
                     android:gravity="left"
-                    android:hint="@string/designation"
+                    android:hint="@string/occupation"
                     android:textSize="@dimen/title_small"/>
 
                 <com.weiwangcn.betterspinner.library.material.MaterialBetterSpinner
@@ -125,7 +125,7 @@
                         android:layout_marginTop="@dimen/padding_extra_large"
                         android:drawableLeft="@drawable/ic_mandatory"
                         android:drawablePadding="@dimen/padding_1dp"
-                        android:hint="@string/select_country"
+                        android:text="@string/select_country"
                         android:textSize="@dimen/title_small"/>
 
                 </LinearLayout>
@@ -152,7 +152,7 @@
                         android:layout_marginLeft="@dimen/padding_5dp"
                         android:text="@string/newsLetters"
                         android:textColor="@color/button_orange_color"
-                        android:textSize="@dimen/title_large"/>
+                        android:textSize="@dimen/title_medium"/>
 
 
                     <com.suke.widget.SwitchButton

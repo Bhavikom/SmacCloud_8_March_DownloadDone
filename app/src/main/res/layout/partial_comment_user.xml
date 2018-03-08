@@ -59,7 +59,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/padding_very_small"
                     android:text="User Name"
-                    android:textSize="@dimen/title_small"
+                    android:textSize="@dimen/title_medium"
                     android:textStyle="bold"/>
 
                 <TextView

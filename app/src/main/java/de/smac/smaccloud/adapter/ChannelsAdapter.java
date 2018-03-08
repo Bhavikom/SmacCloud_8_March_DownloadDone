@@ -180,13 +180,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
                 }
 
             }
-
-            holder.labelName.setTypeface(Helper.robotoBoldTypeface);
-            holder.txt_created_on.setTypeface(Helper.robotoBoldTypeface);
-            holder.txt_number_of_media.setTypeface(Helper.robotoBoldTypeface);
-            holder.txt_share_with.setTypeface(Helper.robotoBoldTypeface);
-
-
+            Helper.setupTypeface(holder.parentLayout, Helper.robotoRegularTypeface);
         }
     }
 
@@ -217,6 +211,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
 
     class ChannelHolder extends RecyclerView.ViewHolder
     {
+        View parentLayout;
         RoundedImageView imageIcon;
         TextView labelName;
         ImageView compoundButtonDetail;
@@ -229,7 +224,7 @@ public class ChannelsAdapter extends RecyclerView.Adapter<ChannelsAdapter.Channe
         {
             super(itemView);
             itemView.setId(R.id.itemView);
-
+            parentLayout = itemView;
             progressBarTemp = (ProgressBar) itemView.findViewById(R.id.progressTemp);
             imageIcon = (RoundedImageView) itemView.findViewById(R.id.imageIcon);
             labelName = (TextView) itemView.findViewById(R.id.labelName);

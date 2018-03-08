@@ -1,6 +1,7 @@
 package de.smac.smaccloud.activity;
 
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -25,7 +26,7 @@ import de.smac.smaccloud.helper.DataProvider;
 import static de.smac.smaccloud.base.Helper.LOCALIZATION_TYPE_ERROR_CODE;
 
 /**
- * Call at forgot password
+ * Call at forgot strPassword
  */
 
 public class ForgotPasswordActivity extends Activity
@@ -34,6 +35,7 @@ public class ForgotPasswordActivity extends Activity
     private static final int REQUEST_FORGOT_PASSWORD = 4303;
     private static final String KEY_TEXT_VALUE = "textValue";
     TextView textViewForgotPassword, textViewForgotTitle;
+    ProgressDialog progressDialog;
     private EditText editEmail;
     private LinearLayout parentLayout;
     private Button btnSubmit;
@@ -46,10 +48,9 @@ public class ForgotPasswordActivity extends Activity
         Helper.retainOrientation(ForgotPasswordActivity.this);
         if (getSupportActionBar() != null)
         {
-            getSupportActionBar().setTitle(getString(R.string.forget_password));
+            getSupportActionBar().setTitle(getString(R.string.forgot_password));
         }
         Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
-        textViewForgotTitle.setTypeface(Helper.robotoBoldTypeface);
         if (savedInstanceState != null)
         {
             CharSequence savedText = savedInstanceState.getCharSequence(KEY_TEXT_VALUE);
@@ -93,6 +94,13 @@ public class ForgotPasswordActivity extends Activity
                     if (Helper.isNetworkAvailable(context))
                     {
                         Helper.hideSoftKeyboard(ForgotPasswordActivity.this);
+                        Helper.IS_DIALOG_SHOW = false;
+                        progressDialog = new ProgressDialog(ForgotPasswordActivity.this);
+                        progressDialog.setMessage(getString(R.string.recognizing_and_sending_mail));
+                        progressDialog.setCancelable(false);
+                        progressDialog.setIndeterminate(true);
+                        progressDialog.show();
+
                         postNetworkRequest(REQUEST_FORGOT_PASSWORD, DataProvider.ENDPOINT_USER, DataProvider.Actions.FORGOT_PASSWORD,
                                 RequestParameter.urlEncoded("Email", email));
                     }
@@ -112,7 +120,6 @@ public class ForgotPasswordActivity extends Activity
         switch (item.getItemId())
         {
             case android.R.id.home:
-                // app icon in action bar clicked; goto parent activity.
                 onBackPressed();
                 return true;
             default:
@@ -124,6 +131,7 @@ public class ForgotPasswordActivity extends Activity
     protected void onNetworkResponse(int requestCode, boolean status, String response)
     {
         super.onNetworkResponse(requestCode, status, response);
+        Helper.IS_DIALOG_SHOW = true;
         if (requestCode == REQUEST_FORGOT_PASSWORD)
         {
             if (status)
@@ -139,7 +147,7 @@ public class ForgotPasswordActivity extends Activity
                         else
                         {
                             // TODO: 16-Jun-17 Custom message
-                            notifySimple("Email address is not available in database");
+                            notifySimple(getString(R.string.change_password_database_message));
                         }
                     }
                     else
@@ -147,20 +155,38 @@ public class ForgotPasswordActivity extends Activity
                         editEmail.setText("");
                         notifySimple(getString(R.string.msg_please_check_your_email));
                     }
+                    if (progressDialog != null)
+                    {
+                        progressDialog.dismiss();
+                    }
                 }
                 catch (JSONException e)
                 {
+                    if (progressDialog != null)
+                    {
+                        progressDialog.dismiss();
+                    }
                     notifySimple(getString(R.string.msg_invalid_response_from_server));
                 }
             }
             else
             {
+                if (progressDialog != null)
+                {
+                    progressDialog.dismiss();
+
+                }
                 notifySimple(getString(R.string.msg_please_try_again_later));
             }
 
         }
         else
         {
+            if (progressDialog != null)
+            {
+                progressDialog.dismiss();
+
+            }
             notifySimple(getString(R.string.msg_cannot_complete_request));
         }
     }

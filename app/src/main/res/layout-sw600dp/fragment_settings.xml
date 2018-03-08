@@ -1,10 +1,10 @@
 <LinearLayout android:id="@+id/parentLayout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/light_gray"
-    android:orientation="vertical">
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+    <!--android:background="@color/light_gray"-->
 
     <!--<include layout="@layout/partial_toolbar" />-->
     <ScrollView
@@ -27,7 +27,8 @@
                 android:paddingTop="@dimen/padding_very_small"
                 android:text="@string/label_account"
                 android:textColor="@color/Gray57"
-                android:textSize="@dimen/title_ultra_small"/>
+                android:textSize="@dimen/title_ultra_small"
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -114,7 +115,8 @@
                 android:paddingTop="@dimen/padding_very_small"
                 android:text="@string/label_sharing1"
                 android:textColor="@color/Gray57"
-                android:textSize="@dimen/title_ultra_small"/>
+                android:textSize="@dimen/title_ultra_small"
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -269,7 +271,8 @@
                 android:paddingTop="@dimen/padding_very_small"
                 android:text="@string/label_synchronization"
                 android:textColor="@color/Gray57"
-                android:textSize="@dimen/title_ultra_small"/>
+                android:textSize="@dimen/title_ultra_small"
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -349,7 +352,7 @@
                         android:layout_marginLeft="@dimen/padding_small"
                         android:layout_marginRight="@dimen/padding_small"
                         android:padding="@dimen/padding_5dp"
-                        app:sb_checked="false" />
+                        app:sb_checked="false"/>
 
 
                 </LinearLayout>
@@ -365,7 +368,8 @@
                 android:paddingTop="@dimen/padding_very_small"
                 android:text="@string/label_information"
                 android:textColor="@color/Gray57"
-                android:textSize="@dimen/title_ultra_small"/>
+                android:textSize="@dimen/title_ultra_small"
+                android:textStyle="bold"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -442,11 +446,13 @@
                         android:layout_alignStart="@+id/imageView"
                         android:src="@drawable/ic_next"/>
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.2dp"
                     android:layout_marginLeft="@dimen/padding_medium"
                     android:background="@color/Gray57"/>
+
                 <RelativeLayout
                     android:id="@+id/buttonTerms"
                     android:layout_width="match_parent"
@@ -472,11 +478,47 @@
                         android:layout_marginRight="@dimen/padding_4dp"
                         android:src="@drawable/ic_next"/>
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.2dp"
                     android:layout_marginLeft="@dimen/padding_medium"
                     android:background="@color/Gray57"/>
+
+                <RelativeLayout
+                    android:id="@+id/buttonPrivacy"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:orientation="horizontal"
+                    android:paddingBottom="@dimen/padding_2dp"
+                    android:paddingTop="@dimen/padding_4dp">
+
+                    <TextView
+                        android:id="@+id/txt_privacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:text="@string/label_privacy_policy"
+                        android:textColor="@color/black_color"
+                        android:textSize="@dimen/title_ultra_small"/>
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/padding_4dp"
+                        android:src="@drawable/ic_next"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.2dp"
+                    android:layout_marginLeft="@dimen/padding_medium"
+                    android:background="@color/Gray57"/>
+
+
+
                 <RelativeLayout
                     android:id="@+id/button_openSource_Libraries"
                     android:layout_width="match_parent"
@@ -502,6 +544,7 @@
                         android:layout_marginRight="@dimen/padding_4dp"
                         android:src="@drawable/ic_next"/>
                 </RelativeLayout>
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="0.2dp"
@@ -535,9 +578,8 @@
                 </RelativeLayout>
 
 
-
-
             </LinearLayout>
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -598,7 +640,6 @@
 
 
             </LinearLayout>
-
 
 
         </LinearLayout>

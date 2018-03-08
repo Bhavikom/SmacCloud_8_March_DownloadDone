@@ -12,6 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/padding_small"
         android:gravity="center"
+        android:textStyle="bold"
         android:text="@string/label_sign_out"
         android:textColor="@color/black"
         android:textSize="@dimen/title_very_small" />

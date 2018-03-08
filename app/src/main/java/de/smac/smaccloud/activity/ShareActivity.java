@@ -10,12 +10,16 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -43,7 +47,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.google.gson.Gson;
-import com.libaml.android.view.chip.ChipLayout;
 import com.pchmn.materialchips.ChipsInput;
 import com.pchmn.materialchips.model.ChipInterface;
 import com.pchmn.materialchips.views.ChipsInputEditText;
@@ -79,7 +82,6 @@ public class ShareActivity extends Activity implements View.OnClickListener
     public static final int REQUEST_CODE_MEDIA_ATTACHMENT = 1101;
     public static final int REQUEST_CODE_SIGNATURE_EDIT = 1102;
     public static final int SEND_TYPE_LINK = 0;
-    public static final int SEND_TYPE_ATTACHMENT = 1;
     public static final String KEY_SELECTED_MEDIA = "SelectedMedia";
     public static ArrayList<Media> selectedAttachmentList;
     public LinearLayout parentLayout;
@@ -90,8 +92,9 @@ public class ShareActivity extends Activity implements View.OnClickListener
     User user;
     LinearLayout linearAttachList;
     TextView txtAttachment;
+    ChipsInputEditText chipsInputEditText;
+    RecyclerView chipRecyclerView;
     ImageView imageViewAttach, imageViewSignature, imageViewEditSignature;
-    //private ChipLayout textEmailTo, textEmailCC, textEmailBCC;
     private ChipsInput chips_input_email_to;
     private EditText textSubject, textEmailBody, textEmailFrom, textSignature;
 
@@ -104,7 +107,7 @@ public class ShareActivity extends Activity implements View.OnClickListener
 
         media = this.getIntent().getParcelableExtra(MediaFragment.EXTRA_MEDIA);
         channel = this.getIntent().getParcelableExtra(MediaFragment.EXTRA_CHANNEL);
-        setTitle(getString(R.string.share));
+        setTitle(getString(R.string.share_via) + " ".concat(getString(R.string.app_name)));
         user = new User();
         user.id = PreferenceHelper.getUserContext(context);
         try
@@ -121,9 +124,29 @@ public class ShareActivity extends Activity implements View.OnClickListener
         linearAttachList.addView(addSelectedMedia(media));
         selectedAttachmentList.add(media);
         updateAttachmentLabel();
-        txtAttachment.setTypeface(Helper.robotoBoldTypeface);
-        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
-        Helper.setupUI(ShareActivity.this, parentLayout, parentLayout);
+
+        chipRecyclerView = (RecyclerView) chips_input_email_to.findViewById(R.id.chips_recycler);
+        chipsInputEditText = (ChipsInputEditText) chipRecyclerView.getChildAt(chipRecyclerView.getChildCount() - 1);
+        chipRecyclerView.addOnChildAttachStateChangeListener(new RecyclerView.OnChildAttachStateChangeListener()
+        {
+            @Override
+            public void onChildViewAttachedToWindow(View view)
+            {
+
+                if (chipsInputEditText != null)
+                {
+                    Helper.setupTypeface(chipsInputEditText, Helper.robotoRegularTypeface);
+                }
+            }
+
+            @Override
+            public void onChildViewDetachedFromWindow(View view)
+            {
+
+            }
+        });
+
+
     }
 
     @Override
@@ -131,6 +154,7 @@ public class ShareActivity extends Activity implements View.OnClickListener
     {
         inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_activity_share_file, menu);
+        applyThemeColor();
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -140,7 +164,6 @@ public class ShareActivity extends Activity implements View.OnClickListener
         switch (item.getItemId())
         {
             case R.id.action_delete:
-                notifySimple(getString(R.string.msg_click_to_delete));
                 break;
 
             case android.R.id.home:
@@ -149,7 +172,7 @@ public class ShareActivity extends Activity implements View.OnClickListener
 
             case R.id.action_send:
                 List<String> enteredEmails = new ArrayList<>();
-                RecyclerView chipRecyclerView = (RecyclerView) chips_input_email_to.findViewById(R.id.chips_recycler);
+                chipRecyclerView = (RecyclerView) chips_input_email_to.findViewById(R.id.chips_recycler);
                 ChipsInputEditText chipsInputEditText = (ChipsInputEditText) chipRecyclerView.getChildAt(chipRecyclerView.getChildCount() - 1);
                 for (ChipInterface chipInterface : chips_input_email_to.getSelectedChipList())
                 {
@@ -170,10 +193,6 @@ public class ShareActivity extends Activity implements View.OnClickListener
                         break;
                     }
                 }
-
-                boolean isValidEmail = Helper.checkEmailAddresses(enteredEmails);
-
-                /* Check all attach media is download */
                 boolean isAttachMediaDownloaded = true;
                 for (int i = 0; i < selectedAttachmentList.size(); i++)
                 {
@@ -183,18 +202,11 @@ public class ShareActivity extends Activity implements View.OnClickListener
                         break;
                     }
                 }
-                /* End of check all attach media is download */
-
                 Helper.hideSoftKeyboard(this);
                 if (user.id == -1)
                 {
                     Helper.showMessage(this, false, getString(R.string.msg_re_login));
                 }
-                /*else if (textEmailTo.getText().isEmpty())
-                {
-                    Helper.showMessage(this, false, getString(R.string.msg_enter_to_address));
-                    textEmailTo.requestFocus();
-                }*/
                 else if (enteredEmails.isEmpty())
                 {
                     Helper.showMessage(this, false, getString(R.string.msg_enter_to_address));
@@ -219,54 +231,26 @@ public class ShareActivity extends Activity implements View.OnClickListener
                 }
                 else if (prefManager.isDemoLogin())
                 {
-                    Helper.demoUserDialog(context);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                    builder.setTitle(getString(R.string.disable_sharing_title));
+                    builder.setMessage(getString(R.string.disable_sharing_message));
+                    builder.setPositiveButton(getString(R.string.ok),
+                            new DialogInterface.OnClickListener()
+                            {
+                                public void onClick(DialogInterface dialog, int which)
+                                {
+                                    dialog.dismiss();
+                                }
+                            });
+
+                    AlertDialog dialog = builder.create();
+
+                    dialog.show();
                 }
                 else
                 {
 
                     sendMail(SEND_TYPE_LINK);
-                   /* if (Helper.getTotalMediaSize(selectedAttachmentList) / 1048576 < 26)
-                    {
-                        final BottomSheetDialog dialog = new BottomSheetDialog(context);
-                        View bottomSheetDialogView = View.inflate(context, R.layout.dialog_email_send_via_options, null);
-                        TextView btn_send_via_url = (TextView) bottomSheetDialogView.findViewById(R.id.btn_send_via_url);
-                        btn_send_via_url.setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                sendMail(SEND_TYPE_LINK);
-                                dialog.dismiss();
-                            }
-                        });
-                        TextView btn_send_via_attachment = (TextView) bottomSheetDialogView.findViewById(R.id.btn_send_via_attachment);
-                        btn_send_via_attachment.setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                sendMail(SEND_TYPE_ATTACHMENT);
-                                dialog.dismiss();
-                            }
-                        });
-                        TextView btn_cancel = (TextView) bottomSheetDialogView.findViewById(R.id.btn_cancel);
-                        btn_cancel.setOnClickListener(new View.OnClickListener()
-                        {
-                            @Override
-                            public void onClick(View v)
-                            {
-                                dialog.dismiss();
-                            }
-                        });
-                        dialog.setTitle(R.string.title_send_via);
-                        dialog.setContentView(bottomSheetDialogView);
-                        dialog.setCancelable(true);
-                        dialog.show();
-                        dialog.getWindow().findViewById(R.id.design_bottom_sheet).setBackgroundResource(android.R.color.transparent);
-                    }
-                    else
-
-                */
                 }
                 break;
         }
@@ -279,97 +263,8 @@ public class ShareActivity extends Activity implements View.OnClickListener
         super.initializeComponents();
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
         linearAttachList = (LinearLayout) findViewById(R.id.child_attachment_list);
-        /*textEmailTo = (ChipLayout) findViewById(R.id.textEmailTo);
-        textEmailTo.addLayoutTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                if (!TextUtils.isEmpty(s))
-                {
-                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
-                    if (ch.equalsIgnoreCase(" "))
-                    {
-                        if (generateChip(textEmailTo))
-                            textEmailTo.performClick();
-                    }
-                }
-            }
-        });
-
-        textEmailCC = (ChipLayout) findViewById(R.id.textEmailCc);
-        textEmailCC.addLayoutTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                if (!TextUtils.isEmpty(s))
-                {
-                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
-                    if (ch.equalsIgnoreCase(" "))
-                    {
-                        if (generateChip(textEmailCC))
-                            textEmailCC.performClick();
-                    }
-                }
-            }
-        });
-        textEmailBCC = (ChipLayout) findViewById(R.id.textEmailBcc);
-        textEmailBCC.addLayoutTextChangedListener(new TextWatcher()
-        {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after)
-            {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count)
-            {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s)
-            {
-                if (!TextUtils.isEmpty(s))
-                {
-                    String ch = s.subSequence(s.length() - 1, s.length()).toString();
-                    if (ch.equalsIgnoreCase(" "))
-                    {
-                        if (generateChip(textEmailBCC))
-                            textEmailBCC.performClick();
-                    }
-                }
-            }
-        });*/
-
-        /* New lib */
         chips_input_email_to = (ChipsInput) findViewById(R.id.chips_input_email_to);
+
         chips_input_email_to.addChipsListener(new ChipsInput.ChipsListener()
         {
             @Override
@@ -409,11 +304,10 @@ public class ShareActivity extends Activity implements View.OnClickListener
 
 
         imageViewAttach = (ImageView) findViewById(R.id.img_attach);
+        imageViewAttach.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
         imageViewSignature = (ImageView) findViewById(R.id.img_signature);
         imageViewEditSignature = (ImageView) findViewById(R.id.img_edit_signature);
 
-        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
-        //textEmailTo.requestFocus();
 
         LinearLayout.LayoutParams linearLayout = new LinearLayout.LayoutParams(Helper.getDeviceWidth(this) / 7, Helper.getDeviceHeight(this) / 7);
         linearLayout.gravity = Gravity.RIGHT;
@@ -439,6 +333,33 @@ public class ShareActivity extends Activity implements View.OnClickListener
         imageViewAttach.setOnClickListener(this);
         imageViewEditSignature.setOnClickListener(this);
         textEmailFrom.setEnabled(false);
+        applyThemeColor();
+    }
+
+    public void applyThemeColor()
+    {
+        updateParentThemeColor();
+        Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoRegularTypeface);
+        Helper.setupUI(ShareActivity.this, parentLayout, parentLayout);
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setBackgroundDrawable(new ColorDrawable(Color.parseColor(PreferenceHelper.getAppBackColor(context))));
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_back_material_vector);
+            upArrow.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)), PorterDuff.Mode.SRC_ATOP);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+            toolbar.setTitleTextColor(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        }
+        Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
+        Drawable drawable = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_send_white, null);
+        drawable = DrawableCompat.wrap(drawable);
+        DrawableCompat.setTint(drawable, Color.parseColor(PreferenceHelper.getAppColor(context)));
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        applyThemeColor();
     }
 
     public void setImage(String path)
@@ -507,6 +428,7 @@ public class ShareActivity extends Activity implements View.OnClickListener
     public void showLeaveMessage()
     {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
+
         builder.setMessage(R.string.msg_sure_want_to_leave);
         builder.setCancelable(true);
         builder.setPositiveButton(R.string.label_yes, new DialogInterface.OnClickListener()
@@ -663,6 +585,8 @@ public class ShareActivity extends Activity implements View.OnClickListener
         final ImageView img_media = (ImageView) singleItemView.findViewById(R.id.img_media);
         TextView txt_name = (TextView) singleItemView.findViewById(R.id.txt_name);
         ImageView img_close = (ImageView) singleItemView.findViewById(R.id.img_close);
+        img_close.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(context)));
+        Helper.setupTypeface(singleItemView, Helper.robotoRegularTypeface);
         final ProgressBar progressBar = (ProgressBar) singleItemView.findViewById(R.id.progressTemp);
 
         txt_name.setText(media.name);
@@ -754,11 +678,7 @@ public class ShareActivity extends Activity implements View.OnClickListener
             objJsonPayload.putOpt("IsAttach", shareType);
             // For To Address
             JSONArray jsonArrayToAddress = new JSONArray();
-            /*if (textEmailTo.getText() != null)
-            {
-                for (int i = 0; i < textEmailTo.getText().size(); i++)
-                    jsonArrayToAddress.put(new JSONObject().put("Email", textEmailTo.getText().get(i)));
-            }*/
+
             if (chips_input_email_to.getSelectedChipList() != null)
             {
                 for (int i = 0; i < chips_input_email_to.getSelectedChipList().size(); i++)
@@ -794,7 +714,6 @@ public class ShareActivity extends Activity implements View.OnClickListener
             {
                 JSONObject objMedia = new JSONObject();
                 objMedia.put("Id", media.id);
-                //objMedia.put("ChannelId", DataHelper.getChannelIdFromMediaID(this, media.id));
                 objMedia.put("ChannelId", DataHelper.getChannelId(this, media.id));
                 objMedia.put("ParentId", media.parentId);
                 objMedia.put("VersionId", media.currentVersionId);
@@ -805,11 +724,9 @@ public class ShareActivity extends Activity implements View.OnClickListener
 
 
             // TODO: 29-Jun-17 Pass IsAttach value dynamic
-            // IsAttach 0 = URL
-            // IsAttach 1 = Attach File
             postNetworkRequest(REQUEST_CODE_SHARE, DataProvider.ENDPOINT_SHARE, DataProvider.Actions.SEND_MESSAGE,
                     RequestParameter.urlEncoded("UserId", String.valueOf(user.id)), RequestParameter.urlEncoded("Subject", textSubject.getText().toString()),
-                    RequestParameter.urlEncoded("Body", textEmailBody.getText().toString()), RequestParameter.urlEncoded("Signature", textSignature.getText().toString()),
+                    RequestParameter.urlEncoded("Body", textEmailBody.getText().toString()), RequestParameter.urlEncoded("Signature", textSignature.getText().toString()), RequestParameter.urlEncoded("Org_Id", PreferenceHelper.getOrganizationId(context)),
                     RequestParameter.urlEncoded("IsAttach", String.valueOf(shareType)), RequestParameter.jsonArray("ToAddress", jsonArrayToAddress),
                     RequestParameter.jsonArray("CCAddress", jsonArrayCCAddress), RequestParameter.jsonArray("BCCAddress", jsonArrayBCCAddress),
                     RequestParameter.jsonObject("AttachmentList", jsonObjectAttachmentList));
@@ -856,19 +773,5 @@ public class ShareActivity extends Activity implements View.OnClickListener
                 notifySimple(getString(R.string.msg_cannot_complete_request));
             }
         }
-    }
-
-    public boolean generateChip(ChipLayout chipLayout)
-    {
-        List<String> tempList = chipLayout.getText();
-        if (Helper.checkEmailAddresses(tempList))
-        {
-            List<String> newData = new ArrayList<>();
-            for (String str : tempList)
-                newData.add(str.trim());
-            chipLayout.setText(newData);
-            return true;
-        }
-        return false;
     }
 }

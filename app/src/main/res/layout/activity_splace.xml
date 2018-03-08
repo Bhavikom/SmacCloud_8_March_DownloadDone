@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <ImageView
+            android:id="@+id/img_app_icon"
             android:layout_width="@dimen/three_hundred_twenty"
             android:layout_height="@dimen/three_hundred_twenty"
             android:layout_gravity="center"

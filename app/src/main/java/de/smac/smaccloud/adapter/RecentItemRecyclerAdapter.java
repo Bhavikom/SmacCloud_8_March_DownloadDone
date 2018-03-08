@@ -65,9 +65,9 @@ public class RecentItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
         RecentItem recentItem = recentItems.get(position);
 
 
-        recentItemHolder.txtFileName.setTypeface(Helper.robotoBoldTypeface);
+       /* recentItemHolder.txtFileName.setTypeface(Helper.robotoBoldTypeface);
         recentItemHolder.txtChannelName.setTypeface(Helper.robotoRegularTypeface);
-        recentItemHolder.txtLastOpenTime.setTypeface(Helper.robotoRegularTypeface);
+        recentItemHolder.txtLastOpenTime.setTypeface(Helper.robotoRegularTypeface);*/
 
         try
         {
@@ -81,39 +81,11 @@ public class RecentItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             DataHelper.getMedia(context, media);
             recentItemHolder.txtFileName.setText(media.name);
 
-            //SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss a", Locale.US);
-
-            // Converting timestamp into x ago format
             CharSequence timeAgo = DateUtils.getRelativeTimeSpanString(
                     //dateFormat.parse(recentItem.visitTimestamp).getTime(),
                     Long.parseLong(recentItem.visitTimestamp),
                     System.currentTimeMillis(), DateUtils.SECOND_IN_MILLIS);
             recentItemHolder.txtLastOpenTime.setText(timeAgo);
-           /* boolean isTabletSize = context.getResources().getBoolean(R.bool.isTablet);
-            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                if (isTabletSize)
-                {
-                    recentItemHolder.imgIcon.setLayoutParams(new LinearLayout.LayoutParams(Helper.getDeviceWidth((Activity) context) / 9, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    
-                }
-                else
-                {
-                    recentItemHolder.imgIcon.setLayoutParams(new LinearLayout.LayoutParams(Helper.getDeviceWidth((Activity) context) / 7, ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
-            }
-            else
-            {
-                if (isTabletSize)
-                {
-                    recentItemHolder.imgIcon.setLayoutParams(new LinearLayout.LayoutParams(Helper.getDeviceWidth((Activity) context) / 12, ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
-                else
-                {
-                    recentItemHolder.imgIcon.setLayoutParams(new LinearLayout.LayoutParams(Helper.getDeviceWidth((Activity) context) / 7, ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
-            }*/
-
-
             final Uri imageUri = Uri.parse(context.getFilesDir() + File.separator + media.id);
             {
                 Glide.with(context)
@@ -198,6 +170,7 @@ public class RecentItemRecyclerAdapter extends RecyclerView.Adapter<RecyclerView
             txtChannelName = (TextView) itemView.findViewById(R.id.txtChannelName);
             txtFileName = (TextView) itemView.findViewById(R.id.txtFileName);
             txtLastOpenTime = (TextView) itemView.findViewById(R.id.txtLastOpenTime);
+            Helper.setupTypeface(parentLayout, Helper.robotoRegularTypeface);
         }
     }
 }

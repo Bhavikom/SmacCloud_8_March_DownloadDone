@@ -3,7 +3,7 @@ package de.smac.smaccloud.adapter;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
@@ -27,6 +27,7 @@ import de.smac.smaccloud.activity.MediaActivity;
 import de.smac.smaccloud.activity.MediaAttachmentActivity;
 import de.smac.smaccloud.base.Activity;
 import de.smac.smaccloud.base.Helper;
+import de.smac.smaccloud.helper.PreferenceHelper;
 import de.smac.smaccloud.model.Channel;
 import de.smac.smaccloud.widgets.SquareImageView;
 
@@ -59,8 +60,9 @@ public class ChannelAttachAdapter extends RecyclerView.Adapter<ChannelAttachAdap
     {
         Channel channel = channels.get(position);
         holder.labelName.setText(channel.name);
-        holder.labelName.setTypeface(activity.robotoLightTypeface, Typeface.BOLD);
         boolean isTabletSize = activity.getResources().getBoolean(R.bool.isTablet);
+        holder.imageViewNext.setColorFilter(Color.parseColor(PreferenceHelper.getAppColor(activity)));
+        Helper.setupTypeface(holder.parentLayout, Helper.robotoRegularTypeface);
         if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
         {
             if (isTabletSize)
@@ -151,7 +153,7 @@ public class ChannelAttachAdapter extends RecyclerView.Adapter<ChannelAttachAdap
 
             }
         });
-        holder.labelName.setTypeface(Helper.robotoRegularTypeface);
+        //   holder.labelName.setTypeface(Helper.robotoRegularTypeface);
 
     }
 

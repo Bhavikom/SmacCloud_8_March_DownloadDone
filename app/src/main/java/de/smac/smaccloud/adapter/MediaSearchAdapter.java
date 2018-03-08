@@ -164,18 +164,12 @@ public class MediaSearchAdapter extends BaseAdapter implements Filterable
             }
         }
 
-        /*File mFolder = new File("" + activity.getFilesDir() + File.separator + currentListData.id);
-        if (mFolder.exists())
-        {
-            Glide.with(activity).load(mFolder).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(mViewHolder.imageIcon);
-            mViewHolder.imageIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        }
-        else*/
         {
             Uri imageUri = Uri.parse(currentListData.icon);
             Glide.with(activity).load(imageUri).fitCenter().diskCacheStrategy(DiskCacheStrategy.ALL).into(mViewHolder.imageIcon);
             mViewHolder.imageIcon.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
+        Helper.setupTypeface(mViewHolder.parentLayout, Helper.robotoRegularTypeface);
 
         return convertView;
     }
@@ -185,18 +179,15 @@ public class MediaSearchAdapter extends BaseAdapter implements Filterable
     {
         SquareImageView imageIcon;
         TextView txt_media_name;
+        LinearLayout parentLayout;
 
-        //TextView textView;
 
         public MyViewHolder(View convertView)
         {
             imageIcon = (SquareImageView) convertView.findViewById(R.id.imageIcon);
             txt_media_name = (TextView) convertView.findViewById(R.id.txt_media_name);
-            /*textView = (TextView) convertView.findViewById(android.R.id.text1);
-            textView.setTypeface(Activity.robotoLightTypeface);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, context.getResources().getDimension(R.dimen.title_very_small));
-            textView.setSingleLine(true);
-            textView.setEllipsize(TextUtils.TruncateAt.END);*/
+            parentLayout = (LinearLayout) convertView.findViewById(R.id.parentLayout1);
+
         }
     }
 }

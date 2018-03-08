@@ -35,17 +35,35 @@ public class LocalDatabase extends SQLiteOpenHelper
         return new LocalDatabase(context, preference);
     }
 
-    public static SQLiteDatabase getWritable(Context context)
-    {
-        if (forUserId != PreferenceHelper.getUserContext(context) || _database == null)
+    public static SQLiteDatabase getWritable(Context context) {
+        UserPreference userPreference = new UserPreference();
+        userPreference.userId = PreferenceHelper.getUserContext(context);
+        DataHelper.getUserPreference(context, userPreference);
+
+        if (_database == null) {
             _database = LocalDatabase.newInstance(context);
+        } else if (!userPreference.databaseName.equalsIgnoreCase(_database.getDatabaseName())) {
+            _database = LocalDatabase.newInstance(context);
+        }
+
+        /*if (forUserId != PreferenceHelper.getUserContext(context) || _database == null){
+
+        }*/
         return _database.getWritableDatabase();
     }
 
-    public static SQLiteDatabase getReadable(Context context)
-    {
-        if (forUserId != PreferenceHelper.getUserContext(context) || _database == null)
+    public static SQLiteDatabase getReadable(Context context) {
+        UserPreference userPreference = new UserPreference();
+        userPreference.userId = PreferenceHelper.getUserContext(context);
+        DataHelper.getUserPreference(context, userPreference);
+
+        if (_database == null) {
             _database = LocalDatabase.newInstance(context);
+        } else if (!userPreference.databaseName.equalsIgnoreCase(_database.getDatabaseName())) {
+            _database = LocalDatabase.newInstance(context);
+        }
+        /*if (forUserId != PreferenceHelper.getUserContext(context) || _database == null)
+            _database = LocalDatabase.newInstance(context);*/
         return _database.getReadableDatabase();
     }
 

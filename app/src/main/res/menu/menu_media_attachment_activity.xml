@@ -6,6 +6,6 @@
         android:id="@+id/action_add"
         android:title="@string/label_add"
         android:visible="true"
-        smaccloud:showAsAction="ifRoom"/>
+        smaccloud:showAsAction="always"/>
 
 </menu>

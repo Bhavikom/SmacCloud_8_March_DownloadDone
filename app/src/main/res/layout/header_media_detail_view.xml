@@ -39,7 +39,7 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/btn_open"
+                android:id="@+id/linear_download"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/padding_very_small"

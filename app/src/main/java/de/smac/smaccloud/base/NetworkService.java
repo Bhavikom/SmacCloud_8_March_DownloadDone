@@ -180,6 +180,7 @@ public class NetworkService extends Service
                                 catch (Exception ex)
                                 {
                                     request = null;
+                                    activity.notifySimple(getString(R.string.try_again_downloading));
                                     callback.onRequestComplete(requestCode, true, networkResponse.getResponse());
                                     ex.printStackTrace();
                                 }

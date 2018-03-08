@@ -7,8 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
+import android.text.Spannable;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,12 +33,17 @@ import de.smac.smaccloud.helper.PreferenceHelper;
 public class IntroScreenActivity extends Activity
 {
     RelativeLayout relativeLayout;
+    Spanned Text;
+    private boolean isLastPageSwiped;
+    private int counterPageScroll;
     private ViewPager viewPager;
     private MyViewPagerAdapter myViewPagerAdapter;
     private LinearLayout dotsLayout;
     private TextView[] dots;
     private int[] layouts;
     private Button btnSkip, btnNext;
+    private int pagePosition;
+    private PreferenceHelper prefManager;
     //	viewpager change listener
     ViewPager.OnPageChangeListener viewPagerPageChangeListener = new ViewPager.OnPageChangeListener()
     {
@@ -44,13 +52,10 @@ public class IntroScreenActivity extends Activity
         public void onPageSelected(int position)
         {
             addBottomDots(position);
-
+            pagePosition = position;
             // changing the next button text 'NEXT' / 'GOT IT'
             if (position == layouts.length - 1)
             {
-                // last page. make button text to GOT IT
-                // btnNext.setText(getString(R.string.start));
-
                 btnSkip.setVisibility(View.GONE);
                 btnNext.setVisibility(View.VISIBLE);
             }
@@ -61,21 +66,50 @@ public class IntroScreenActivity extends Activity
                 btnSkip.setVisibility(View.VISIBLE);
                 btnNext.setVisibility(View.GONE);
             }
+
+            if (pagePosition == 8)
+            {
+                View slide9View = viewPager.getChildAt(2);
+                TextView txt_admin_link;
+                if (slide9View != null)
+                {
+                    txt_admin_link = (TextView) slide9View.findViewById(R.id.txt_admin_link);
+                }
+                else
+                {
+                    slide9View = viewPager.getChildAt(1);
+                    txt_admin_link = (TextView) slide9View.findViewById(R.id.txt_admin_link);
+                }
+                if (txt_admin_link != null)
+                {
+                    Text = Html.fromHtml(getString(R.string.slide_9_desc) +
+                            "<a href='https://smaccloud.smacsoftwares.de:2020/SMACAdmin/app/#/login/EN/'> https://smaccloud.smacsoftwares.de:2020</a>" + (")"));
+
+                    txt_admin_link.setMovementMethod(LinkMovementMethod.getInstance());
+                    txt_admin_link.setText(Text);
+                }
+            }
         }
 
         @Override
-        public void onPageScrolled(int arg0, float arg1, int arg2)
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels)
         {
 
         }
 
         @Override
-        public void onPageScrollStateChanged(int arg0)
+        public void onPageScrollStateChanged(int state)
         {
+            if (state == ViewPager.SCROLL_STATE_DRAGGING)
+            {
+                if (pagePosition == layouts.length - 1)
+                {
+                    launchHomeScreen();
+                }
+            }
 
         }
     };
-    private PreferenceHelper prefManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -116,15 +150,23 @@ public class IntroScreenActivity extends Activity
                 R.layout.activity_introduction_slide4,
                 R.layout.activity_introduction_slide5,
                 R.layout.activity_introduction_slide6,
+                R.layout.activity_introduction_slide7,
+                R.layout.activity_introduction_slide8,
+                R.layout.activity_introduction_slide9,
+                R.layout.activity_introduction_slide10,
 
         };
-        Helper.setupTypeface(relativeLayout, Helper.robotoBoldTypeface);
+
+
+        Helper.setupTypeface(relativeLayout, Helper.robotoRegularTypeface);
 
         // adding bottom dots
         addBottomDots(0);
 
         // making notification bar transparent
         changeStatusBarColor();
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
 
         myViewPagerAdapter = new MyViewPagerAdapter();
         viewPager.setAdapter(myViewPagerAdapter);

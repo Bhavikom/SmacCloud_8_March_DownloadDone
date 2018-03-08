@@ -8,6 +8,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -134,10 +135,6 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         else
             commentHolder.divider_view.setVisibility(View.VISIBLE);
 
-        commentHolder.labelUserName.setTypeface(Helper.robotoBoldTypeface);
-        commentHolder.labelComment.setTypeface(Helper.robotoRegularTypeface);
-        commentHolder.labelInsertDate.setTypeface(Helper.robotoLightTypeface);
-
 
         boolean isMyMessage = false; // flag to decide that its my messege or not
         if (String.valueOf(PreferenceHelper.getUserContext(activity)).equalsIgnoreCase(String.valueOf(userComment.userId)))
@@ -171,6 +168,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             LinearLayout.LayoutParams layoutParams =
                     (LinearLayout.LayoutParams) holder.linearChild.getLayoutParams();
             layoutParams.gravity = Gravity.RIGHT;
+            Helper.setupTypeface(holder.reletiveparentLayout,Helper.robotoRegularTypeface);
 
 
             // layoutParams.width=100;
@@ -193,6 +191,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.labelComment.setLayoutParams(layoutParams);
             holder.labelUserName.setLayoutParams(layoutParams);
             holder.labelInsertDate.setLayoutParams(layoutParams);
+
         }
         else
         {
@@ -225,7 +224,9 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             holder.labelComment.setLayoutParams(layoutParams);
             holder.labelUserName.setLayoutParams(layoutParams);
             holder.labelInsertDate.setLayoutParams(layoutParams);
+
         }
+
     }
 
 
@@ -236,6 +237,7 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         View divider_view;
         TextView labelUserName, labelInsertDate, labelComment;
         LinearLayout linearParent;
+        RelativeLayout reletiveparentLayout;
         ImageView imgUserRight, imgUserLeft;
 
         public CommentHolder(View itemView)
@@ -251,6 +253,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             labelComment = (TextView) itemView.findViewById(R.id.labelComment);
             linearParent = (LinearLayout) itemView.findViewById(R.id.parentLayout);
             linearChild = (LinearLayout) itemView.findViewById(R.id.linearContentBackground);
+            reletiveparentLayout = (RelativeLayout) itemView.findViewById(R.id.reletiveparentLayout);
+
         }
     }
 

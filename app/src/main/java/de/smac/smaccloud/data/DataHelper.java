@@ -273,13 +273,13 @@ public class DataHelper
         userPreferenceValues.put(USER_PREFERENCE_NAME, USER_PREFERENCE_NAME_DATABASE_NAME);
         userPreferenceValues.put(USER_PREFERENCE_VALUE, preference.databaseName);
         userPreferenceValues.put(USER_PREFERENCE_USER_ID, preference.userId);
-        long databaseNameRecordId = db.insert(TABLE_USER_PREFERENCE, null, userPreferenceValues);
+        long databaseNameRecordId = db.replace(TABLE_USER_PREFERENCE, null, userPreferenceValues);
 
         userPreferenceValues = new ContentValues();
         userPreferenceValues.put(USER_PREFERENCE_NAME, USER_PREFERENCE_NAME_LAST_SYNC_DATE);
         userPreferenceValues.put(USER_PREFERENCE_VALUE, preference.lastSyncDate);
         userPreferenceValues.put(USER_PREFERENCE_USER_ID, preference.userId);
-        long lastSyncDateRecordId = db.insert(TABLE_USER_PREFERENCE, null, userPreferenceValues);
+        long lastSyncDateRecordId = db.replace(TABLE_USER_PREFERENCE, null, userPreferenceValues);
 
         return (databaseNameRecordId > 0 && lastSyncDateRecordId > 0);
     }
@@ -375,9 +375,10 @@ public class DataHelper
     public static int getUsersByChannelId(Context context, int channelId)
     {
         int users = 0;
-        String qry = "select count(" + CHANNEL_USER_USER_ID + ") from " + TABLE_CHANNEL_USER + " where " + CHANNEL_USER_CHANNEL_ID + " = " + channelId;// + " and " + CHANNEL_USER_ID + "!=0 group by ChannelId";
+        String qry = "select count(" + CHANNEL_USER_USER_ID + ") from " + TABLE_CHANNEL_USER + " where " + CHANNEL_USER_CHANNEL_ID + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(channelId)};
         SQLiteDatabase db = LocalDatabase.getWritable(context);
-        Cursor cursor = db.rawQuery(qry, null);
+        Cursor cursor = db.rawQuery(qry, whereArgs);
         if (cursor != null)
         {
             if (cursor.moveToFirst())
@@ -411,7 +412,7 @@ public class DataHelper
         if (user.deleteDate != null)
             userValues.put(USER_DELETE_DATE, Helper.getDateFormate().format(user.deleteDate));
 
-        long addUserCount = db.insert(TABLE_USER, null, userValues);
+        long addUserCount = db.replace(TABLE_USER, null, userValues);
         return (addUserCount > 0);
     }
 
@@ -438,7 +439,7 @@ public class DataHelper
 
         String whereClause = USER_ID + " = ? AND " + USER_EMAIL + " = ?";
         String[] whereArgs = new String[]{String.valueOf(user.id), user.email};
-        long addUserCount = db.insertWithOnConflict(TABLE_USER, null, userValues, SQLiteDatabase.CONFLICT_REPLACE);
+        long addUserCount = db.replace(TABLE_USER, null, userValues); //, SQLiteDatabase.CONFLICT_REPLACE);
         return (addUserCount > 0);
     }
 
@@ -553,7 +554,7 @@ public class DataHelper
             channelValues.put(CHANNEL_UPDATE_DATE, Helper.getDateFormate().format(channel.updateDate));
         if (channel.deleteDate != null)
             channelValues.put(CHANNEL_DELETE_DATE, Helper.getDateFormate().format(channel.deleteDate));
-        long addChannelCount = db.insert(TABLE_CHANNEL, null, channelValues);
+        long addChannelCount = db.replace(TABLE_CHANNEL, null, channelValues);
         return (addChannelCount > 0);
     }
 
@@ -661,7 +662,7 @@ public class DataHelper
             channelFilesValues.put(CHANNEL_FILE_UPDATE_DATE, Helper.getDateFormate().format(channelFiles.updateDate));
         if (channelFiles.deleteDate != null)
             channelFilesValues.put(CHANNEL_FILE_DELETE_DATE, Helper.getDateFormate().format(channelFiles.deleteDate));
-        long addChannelFilesCount = db.insert(TABLE_CHANNEL_FILE, null, channelFilesValues);
+        long addChannelFilesCount = db.replace(TABLE_CHANNEL_FILE, null, channelFilesValues);
         return (addChannelFilesCount > 0);
     }
 
@@ -770,7 +771,7 @@ public class DataHelper
             channelUserValues.put(CHANNEL_USER_UPDATE_DATE, Helper.getDateFormate().format(channelUser.updateDate));
         if (channelUser.deleteDate != null)
             channelUserValues.put(CHANNEL_USER_DELETE_DATE, Helper.getDateFormate().format(channelUser.deleteDate));
-        long addChannelUsersCount = db.insert(TABLE_CHANNEL_USER, null, channelUserValues);
+        long addChannelUsersCount = db.replace(TABLE_CHANNEL_USER, null, channelUserValues);
         return (addChannelUsersCount > 0);
     }
 
@@ -856,9 +857,9 @@ public class DataHelper
     {
         int size = 0;
         SQLiteDatabase db = LocalDatabase.getReadable(context);
-        //String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE (" + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + channelId + ") OR " + MEDIA_PARENT_ID + " IN (SELECT " + MEDIA_ID + " FROM " + TABLE_MEDIA + " WHERE " + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + channelId + ")))";
-        String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE (" + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + channelId + "))";
-        Cursor cur = db.rawQuery(qry, null);
+
+        String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE (" + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = ?))";
+        Cursor cur = db.rawQuery(qry, new String[]{String.valueOf(channelId)});
         if (cur != null && cur.moveToFirst())
         {
             do
@@ -893,12 +894,11 @@ public class DataHelper
     {
         SQLiteDatabase db = LocalDatabase.getReadable(context);
         int size = 0;
-        //String qry = "SELECT COUNT(*) FROM " + TABLE_MEDIA + " WHERE (" + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + parentId + ") OR " + MEDIA_PARENT_ID + " IN (SELECT " + MEDIA_ID + " FROM " + TABLE_MEDIA + " WHERE " + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + parentId + "))) AND " + MEDIA_TYPE + " <> \'folder\'";
-        //String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE (" + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + parentId + ") OR " + MEDIA_PARENT_ID + " IN (SELECT " + MEDIA_ID + " FROM " + TABLE_MEDIA + " WHERE " + MEDIA_ID + " IN (SELECT " + CHANNEL_FILE_FILE_ID + " FROM " + TABLE_CHANNEL_FILE + " WHERE " + CHANNEL_FILE_CHANNEL_ID + " = " + parentId + ")))";
-        String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE " + MEDIA_PARENT_ID + " = " + parentId;
+        String qry = "SELECT * FROM " + TABLE_MEDIA + " WHERE " + MEDIA_PARENT_ID + " = ?";
+        String[] whereArgs = new String[]{String.valueOf(parentId)};
 
-        Cursor cur = db.rawQuery(qry, null);
-        //Cursor cur = db.rawQuery("SELECT COUNT(a." + CHANNEL_FILE_FILE_ID + ") FROM " + TABLE_CHANNEL_FILE + " as a where a." + CHANNEL_FILE_FILE_ID + " = (SELECT b." + MEDIA_ID + " from " + TABLE_MEDIA + " as b WHERE b." + MEDIA_ID + " = a." + CHANNEL_FILE_FILE_ID + " AND b." + MEDIA_TYPE + " <> \'folder\') AND a." + CHANNEL_FILE_CHANNEL_ID + "=" + channelId, null);
+        Cursor cur = db.rawQuery(qry, whereArgs);
+
         if (cur != null && cur.moveToFirst())
         {
             do
@@ -974,7 +974,7 @@ public class DataHelper
             mediaValues.put(MEDIA_UPDATE_DATE, Helper.getDateFormate().format(media.updateDate));
         if (media.deleteDate != null)
             mediaValues.put(MEDIA_DELETE_DATE, Helper.getDateFormate().format(media.deleteDate));
-        long addMediaCount = db.insert(TABLE_MEDIA, null, mediaValues);
+        long addMediaCount = db.replace(TABLE_MEDIA, null, mediaValues);
         return (addMediaCount > 0);
     }
 
@@ -1100,7 +1100,7 @@ public class DataHelper
     {
         int parentId = -1;
         SQLiteDatabase db = LocalDatabase.getWritable(context);
-        Cursor cur = db.rawQuery("SELECT " + MEDIA_PARENT_ID + "  FROM " + TABLE_MEDIA + " where " + MEDIA_ID + "= " + id, null);
+        Cursor cur = db.rawQuery("SELECT " + MEDIA_PARENT_ID + "  FROM " + TABLE_MEDIA + " where " + MEDIA_ID + "= ?", new String[]{String.valueOf(id)});
 
         if (cur != null && cur.moveToFirst())
         {
@@ -1210,7 +1210,7 @@ public class DataHelper
             mediaversionValues.put(MEDIA_VERSION_UPDATE_DATE, Helper.getDateFormate().format(mediaVersion.updateDate));
         if (mediaVersion.deleteDate != null)
             mediaversionValues.put(MEDIA_VERSION_DELETE_DATE, Helper.getDateFormate().format(mediaVersion.deleteDate));
-        long addMediaVersionCount = db.insert(TABLE_MEDIA_VERSION, null, mediaversionValues);
+        long addMediaVersionCount = db.replace(TABLE_MEDIA_VERSION, null, mediaversionValues);
         return (addMediaVersionCount > 0);
     }
 
@@ -1233,7 +1233,8 @@ public class DataHelper
             mediaversionValues.put(MEDIA_VERSION_DELETE_DATE, Helper.getDateFormate().format(mediaVersion.deleteDate));
         String whereClause = MEDIA_VERSION_ID + " = ? ";
         String[] whereArgs = new String[]{String.valueOf(mediaVersion.id)};
-        long updateMediaVersionCount = db.insertWithOnConflict(TABLE_MEDIA_VERSION, null, mediaversionValues, SQLiteDatabase.CONFLICT_REPLACE);
+        //long updateMediaVersionCount = db.insertWithOnConflict(TABLE_MEDIA_VERSION, null, mediaversionValues, SQLiteDatabase.CONFLICT_REPLACE);
+        long updateMediaVersionCount = db.replace(TABLE_MEDIA_VERSION, null, mediaversionValues);
         return (updateMediaVersionCount > 0);
     }
 
@@ -1448,7 +1449,7 @@ public class DataHelper
             userCommentsValues.put(COMMENT_UPDATE_DATE, Helper.getDateFormate().format(userComment.updateDate));
         if (userComment.deleteDate != null)
             userCommentsValues.put(COMMENT_DELETE_DATE, Helper.getDateFormate().format(userComment.deleteDate));
-        long addUserCommentsCount = db.insert(TABLE_COMMENT, null, userCommentsValues);
+        long addUserCommentsCount = db.replace(TABLE_COMMENT, null, userCommentsValues);
         return (addUserCommentsCount > 0);
     }
 
@@ -1546,7 +1547,7 @@ public class DataHelper
             userLikeValues.put(LIKE_UPDATE_DATE, Helper.getDateFormate().format(userLike.updateDate));
         if (userLike.deleteDate != null)
             userLikeValues.put(LIKE_DELETE_DATE, Helper.getDateFormate().format(userLike.deleteDate));
-        long addUseLikeCount = db.insert(TABLE_LIKE, null, userLikeValues);
+        long addUseLikeCount = db.replace(TABLE_LIKE, null, userLikeValues);
         return (addUseLikeCount > 0);
     }
 
@@ -1726,15 +1727,17 @@ public class DataHelper
 
     public static void getMediaListFromChannelId(Context context, int parentId, ArrayList<Media> mediaList) throws ParseException
     {
+        Cursor medialistcursor = null;
         try
         {
             SQLiteDatabase db = LocalDatabase.getReadable(context);
-            Cursor medialistcursor = db.rawQuery("SELECT M.*, CASE WHEN LikeCount IS NULL THEN 0 ELSE LikeCount END as Likes, CASE WHEN CommentCount IS NULL THEN 0 ELSE CommentCount END as Comments\n" +
-                    "FROM (SELECT * FROM " + TABLE_MEDIA + " as MI WHERE MI.parentId =" + parentId + " ) as M\n" +
+            medialistcursor = db.rawQuery("SELECT M.*, CASE WHEN LikeCount IS NULL THEN 0 ELSE LikeCount END as Likes, CASE WHEN CommentCount IS NULL THEN 0 ELSE CommentCount END as Comments\n" +
+                    "FROM (SELECT * FROM " + TABLE_MEDIA + " as MI WHERE MI.parentId = ? ) as M\n" +
                     "LEFT OUTER JOIN (SELECT Count(*) as LikeCount, associatedId FROM 'Likes' GROUP BY associatedId) as UL\n" +
                     "ON M.id = UL.associatedId\n" +
                     "LEFT OUTER JOIN (SELECT Count(*) as CommentCount, fileId FROM 'Comments' GROUP BY fileId) as UC\n" +
-                    "ON M.id = UC.fileId", null);
+                    "ON M.id = UC.fileId", new String[]{String.valueOf(parentId)});
+
             {
                 if (medialistcursor != null && medialistcursor.moveToFirst())
                 {
@@ -1800,13 +1803,18 @@ public class DataHelper
                     }
                     while ((medialistcursor.moveToNext()));
                 }
-                if (medialistcursor != null)
-                    medialistcursor.close();
+               /* if (medialistcursor != null)
+                    medialistcursor.close();*/
             }
         }
         catch (Exception e)
         {
             Log.e(" ######## ", " exception while fetching : " + e.toString());
+        }
+        finally
+        {
+            if (medialistcursor != null)
+                medialistcursor.close();
         }
 
 
@@ -1816,7 +1824,7 @@ public class DataHelper
     {
         int parentId = -1;
         SQLiteDatabase db = LocalDatabase.getWritable(context);
-        Cursor cur = db.rawQuery("SELECT " + CHANNEL_FILE_CHANNEL_ID + "  FROM " + TABLE_CHANNEL_FILE + " where " + MEDIA_VERSION_FILE_ID + "= " + id, null);
+        Cursor cur = db.rawQuery("SELECT " + CHANNEL_FILE_CHANNEL_ID + "  FROM " + TABLE_CHANNEL_FILE + " where " + MEDIA_VERSION_FILE_ID + "= ?", new String[]{String.valueOf(id)});
 
         if (cur != null && cur.moveToFirst())
         {
@@ -1911,7 +1919,7 @@ public class DataHelper
         boolean flag = false;
         SQLiteDatabase db = LocalDatabase.getReadable(context);
         Cursor c;
-        c = db.rawQuery("select * from " + TABLE_LIKE + " where " + LIKE_USER_ID + " = " + userId + " AND " + LIKE_ASSOCIATED_ID + " = " + associatedId, null);
+        c = db.rawQuery("select * from " + TABLE_LIKE + " where " + LIKE_USER_ID + " = ? AND " + LIKE_ASSOCIATED_ID + " = ?", new String[]{String.valueOf(userId), String.valueOf(associatedId)});
         if (c != null && c.moveToFirst())
         {
             flag = true;
@@ -1932,7 +1940,7 @@ public class DataHelper
         int parentId = 0;
         Cursor c;
         SQLiteDatabase db = LocalDatabase.getReadable(context);
-        c = db.rawQuery("select * from " + TABLE_MEDIA + " where " + MEDIA_ID + " = " + mediaId, null);
+        c = db.rawQuery("select * from " + TABLE_MEDIA + " where " + MEDIA_ID + " = ?", new String[]{String.valueOf(mediaId)});
         if (c != null && c.moveToFirst())
         {
             c.moveToFirst();
@@ -1940,7 +1948,8 @@ public class DataHelper
             mediaId = c.getInt(c.getColumnIndex(MEDIA_ID));
             if (parentId == -1)
             {
-                c = db.rawQuery("select * from  " + TABLE_CHANNEL_FILE + " where " + CHANNEL_FILE_FILE_ID + " = " + mediaId, null);
+                c.close();
+                c = db.rawQuery("select * from  " + TABLE_CHANNEL_FILE + " where " + CHANNEL_FILE_FILE_ID + " = ?", new String[]{String.valueOf(mediaId)});
                 if (c != null && c.moveToFirst())
                 {
                     c.moveToFirst();
@@ -1982,6 +1991,7 @@ public class DataHelper
                 }
                 catch (Exception ex)
                 {
+                    ex.printStackTrace();
                 }
             }
             while (userLikeCursor.moveToNext());
@@ -2023,7 +2033,8 @@ public class DataHelper
     public static void insertRecentItem(Context context, int fileId, int userId)
     {
         SQLiteDatabase db = LocalDatabase.getWritable(context);
-        Cursor checkRecentItem = db.rawQuery("SELECT " + RECENT_ID + " FROM  " + TABLE_RECENT + " WHERE " + RECENT_ID + "=" + fileId + " AND " + RECENT_USER_ID + "=" + userId, null);
+        //c = db.rawQuery("select * from " + TABLE_LIKE + " where " + LIKE_USER_ID + " = ? AND " + LIKE_ASSOCIATED_ID + " = ?", new String[]{String.valueOf(associatedId), String.valueOf(userId)});
+        Cursor checkRecentItem = db.rawQuery("SELECT " + RECENT_ID + " FROM  " + TABLE_RECENT + " WHERE " + RECENT_ID + " = ? AND " + RECENT_USER_ID + "= ?", new String[]{String.valueOf(fileId), String.valueOf(userId)});
         if (checkRecentItem != null)
         {
             if (checkRecentItem.getCount() == 0)
@@ -2034,11 +2045,11 @@ public class DataHelper
                 //recentItemValues.put(RECENT_VISIT_TIMESTAMP, Helper.parseDate(dateFormat.toPattern(), new Date()));
                 recentItemValues.put(RECENT_VISIT_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
                 recentItemValues.put(RECENT_USER_ID, userId);
-                db.insert(TABLE_RECENT, null, recentItemValues);
+                db.replace(TABLE_RECENT, null, recentItemValues);
             }
             else
             {
-                Cursor totalVisitCursor = db.rawQuery("SELECT " + RECENT_VISIT + " FROM " + TABLE_RECENT + " WHERE " + RECENT_ID + "=" + fileId + " AND " + RECENT_USER_ID + "=" + userId, null);
+                Cursor totalVisitCursor = db.rawQuery("SELECT " + RECENT_VISIT + " FROM " + TABLE_RECENT + " WHERE " + RECENT_ID + " = ? AND " + RECENT_USER_ID + " = ?", new String[]{String.valueOf(fileId), String.valueOf(userId)});
                 if (totalVisitCursor != null && totalVisitCursor.moveToFirst())
                 {
                     int totalVisit = totalVisitCursor.getInt(totalVisitCursor.getColumnIndex(RECENT_VISIT));
@@ -2049,8 +2060,10 @@ public class DataHelper
                     recentItemValues.put(RECENT_VISIT_TIMESTAMP, String.valueOf(System.currentTimeMillis()));
 
                     db.update(TABLE_RECENT, recentItemValues, RECENT_ID + "=? AND " + RECENT_USER_ID + "=?", new String[]{String.valueOf(fileId), String.valueOf(userId)});
-                    totalVisitCursor.close();
+
                 }
+                if (totalVisitCursor != null)
+                    totalVisitCursor.close();
             }
             checkRecentItem.close();
         }
@@ -2129,7 +2142,7 @@ public class DataHelper
                 contentValues.put(LOCALIZATION_IS_DELETED, arrayList.get(i).getIsDeleted());
                 contentValues.put(LOCALIZATION_ID, arrayList.get(i).getLocalizationId());
 
-                long addLocalizationCount = db.insert(TABLE_LOCALIZATION, null, contentValues);
+                long addLocalizationCount = db.replace(TABLE_LOCALIZATION, null, contentValues);
                 //Log.e(" add value ", " add localization count : " + addLocalizationCount);
 
             }
@@ -2142,12 +2155,13 @@ public class DataHelper
 
     public static String getLocalizationMessageFromCode(Context context, String code, String type)
     {
+        Cursor cursor = null;
         try
         {
             String message = "";
             String lang = Locale.getDefault().getLanguage() + "-" + Locale.getDefault().getLanguage();
             SQLiteDatabase db = CommonDatabase.getReadable(context);
-            Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_LOCALIZATION + " WHERE " + LOCALIZATION_CODE + " = ? AND " + LOCALIZATION_LANGUAGE + " = ? AND " + LOCALIZATION_TYPE + " = ? ", new String[]{String.valueOf(code), String.valueOf(lang), String.valueOf(type)});
+            cursor = db.rawQuery("SELECT * FROM " + TABLE_LOCALIZATION + " WHERE " + LOCALIZATION_CODE + " = ? AND " + LOCALIZATION_LANGUAGE + " = ? AND " + LOCALIZATION_TYPE + " = ? ", new String[]{String.valueOf(code), String.valueOf(lang), String.valueOf(type)});
             if (cursor != null && cursor.moveToFirst())
             {
                 message = cursor.getString(cursor.getColumnIndex(LOCALIZATION_MESSAGE));
@@ -2161,6 +2175,8 @@ public class DataHelper
         catch (Exception e)
         {
             Log.e("", " exception while fetching : " + e.toString());
+            if (cursor != null)
+                cursor.close();
             return "";
         }
 
@@ -2169,10 +2185,11 @@ public class DataHelper
     public static ArrayList<String> getLocalizationCountry(Context context, String lang, String type)
     {
         ArrayList<String> countryList = new ArrayList<>();
+        Cursor cursor = null;
         try
         {
             SQLiteDatabase db = CommonDatabase.getReadable(context);
-            Cursor cursor = db.rawQuery("SELECT " + LOCALIZATION_MESSAGE + " FROM " + TABLE_LOCALIZATION + " WHERE " + LOCALIZATION_LANGUAGE + " LIKE(?) AND " + LOCALIZATION_TYPE + " = ? ", new String[]{String.valueOf(lang), String.valueOf(type)});
+            cursor = db.rawQuery("SELECT " + LOCALIZATION_MESSAGE + " FROM " + TABLE_LOCALIZATION + " WHERE " + LOCALIZATION_LANGUAGE + " LIKE(?) AND " + LOCALIZATION_TYPE + " = ? ", new String[]{String.valueOf(lang), String.valueOf(type)});
             if (cursor != null && cursor.moveToFirst())
             {
                 do
@@ -2181,13 +2198,14 @@ public class DataHelper
                 }
                 while (cursor.moveToNext());
             }
-            if (cursor != null)
-                cursor.close();
         }
         catch (Exception e)
         {
             Log.e("", " exception while fetching : " + e.toString());
+
         }
+        if (cursor != null)
+            cursor.close();
         return countryList;
     }
 
@@ -2262,14 +2280,14 @@ public class DataHelper
 
         if (!announcement.type.equalsIgnoreCase(FCMMessagingService.PUSH_TYPE_SYNC))
         {
-            return db.insert(TABLE_ANNOUNCEMENT, null, announcementValues) > 0;
+            return db.replace(TABLE_ANNOUNCEMENT, null, announcementValues) > 0;
         }
         else
         {
             int id = getSyncAnnouncementId(context);
             if (id == -1)
             {
-                return db.insert(TABLE_ANNOUNCEMENT, null, announcementValues) > 0;
+                return db.replace(TABLE_ANNOUNCEMENT, null, announcementValues) > 0;
             }
             else
             {
@@ -2313,6 +2331,7 @@ public class DataHelper
         return cnt;
     }
 
+
     public static int getSyncAnnouncementId(Context context)
     {
         int id = -1;
@@ -2321,8 +2340,9 @@ public class DataHelper
         if (announcementCursor != null && announcementCursor.moveToFirst())
         {
             id = announcementCursor.getInt(announcementCursor.getColumnIndex(DataHelper.ANNOUNCEMENT_ID));
-            announcementCursor.close();
         }
+        if (announcementCursor != null)
+            announcementCursor.close();
         return id;
     }
 

@@ -8,7 +8,7 @@
     <color name="accent_color">@android:color/white</color>
     <color name="primary_color">#1995AD</color>
     <color name="primary_dark_color">@color/black</color>
-    <color name="dialog_color">#ECF0F1</color>
+    <color name="dialog_color">#90ECF0F1</color>
 
 
     <color name="gray">#212121</color>
@@ -22,7 +22,7 @@
     <color name="transparent">#00000000</color>
     <color name="download_button_color">#6F3623</color>
     <color name="old_icon_theme_color">#3e54b3</color>
-    <color name="orange_logo_color">#ed6618</color>
+    <color name="orange_logo_color">#FF950F</color>
     <color name="orange_logo_trans_color">#B3ed6618</color>
     <color name="theme_black_background">#171616</color>
     <color name="theme_overcast_background">#F1F1F2</color>
@@ -101,6 +101,9 @@
     <color name="darkOrange">#cc2303</color>
     <color name="red">#A51317</color>
     <color name="indigo_color">#2202FD</color>
+    <color name="sender_bubble_Color">#007EF7</color>
+    <color name="receiver_bubble_Color">#DFDEE5</color>
+
 
 
     <color name="grey_light">#EFEFF4</color>
@@ -109,9 +112,10 @@
     <color name="ivorya4">#EAE8EB</color>
     <color name="table_textColor">#48BFBF</color>
     <color name="transparent_black_color">#99000000</color>
-    <color name="orange_color">#F29001</color>
+    <!--<color name="orange_color">#F29001</color>-->
+    <color name="orange_color">#F76126</color>
     <color name="background_color">#F0F0F4</color>
-    <color name="button_orange_color">#FF950F</color>
+    <color name="button_orange_color">#F76126</color>
     <color name="orange_color_light">#F4D07F</color>
     <color name="recent_tab_color">#F4D07F</color>
 

@@ -59,8 +59,8 @@ public class SyncActivity extends Activity
     public static final int REQUEST_SYNC = 4302;
     public String lastSyncDate;
     public TextView textViewTitle;
-    public TextView textViewSubTitle, textViewDownloadfileContain;
-    public LinearLayout parentLayout,linearInformation;
+    public TextView textViewSubTitle, textViewDownloadFileContain;
+    public LinearLayout parentLayout, linearInformation;
     public boolean isFullDownload = false;
     public int batteryStatus = 20;
     public ImageView imageViewSync, imageViewDownloadDemand, imageViewAutoDownload;
@@ -101,7 +101,7 @@ public class SyncActivity extends Activity
         parentLayout = (LinearLayout) findViewById(R.id.parentLayout);
         linearInformation = (LinearLayout) findViewById(R.id.linear_info);
         textViewTitle = (TextView) findViewById(R.id.textViewTitle);
-        textViewDownloadfileContain = (TextView) findViewById(R.id.txt_download_file_contain);
+        textViewDownloadFileContain = (TextView) findViewById(R.id.txt_download_file_contain);
         textViewSubTitle = (TextView) findViewById(R.id.textViewSubTitle);
         textViewAutoDownload = (TextView) findViewById(R.id.txt_download_on_tap);
         textViewAutoDownloadTitle = (TextView) findViewById(R.id.txt_auto_download_info_title);
@@ -115,8 +115,7 @@ public class SyncActivity extends Activity
         toggleButtonDownload = (SwitchButton) findViewById(R.id.toggleAutoDownload);
         buttonDownload = (Button) findViewById(R.id.btnDownload);
         mediaSize = PreferenceHelper.getMediaSize(context);
-        /*mediaSize=String.valueOf(PreferenceHelper.getMediaSize(context));*/
-        textViewDownloadfileContain.setText(getString(R.string.label_auto_download).concat(" ").concat(Helper.bytesConvertsToMb(mediaSize, context)));
+        textViewDownloadFileContain.setText(getString(R.string.label_auto_download).concat(" ").concat(Helper.bytesConvertsToMb(mediaSize, context)));
 
         intentfilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
 
@@ -139,10 +138,10 @@ public class SyncActivity extends Activity
                     progressDialog.show();
                     frameLayoutMiddle.setVisibility(View.GONE);
                     linearInformation.setVisibility(View.GONE);
-                    
+
                     postNetworkRequest(REQUEST_SYNC, DataProvider.ENDPOINT_SYNC, DataProvider.Actions.SYNC,
                             RequestParameter.jsonArray("UserLikes", jsonArrayUserLikes), RequestParameter.jsonArray("UserComments", jsonArrayUserComments),
-                            RequestParameter.urlEncoded("UserId", String.valueOf(userPreference.userId)), RequestParameter.urlEncoded("LastSyncDate", lastSyncDate));
+                            RequestParameter.urlEncoded("UserId", String.valueOf(userPreference.userId)), RequestParameter.urlEncoded("Org_Id", PreferenceHelper.getOrganizationId(context)), RequestParameter.urlEncoded("LastSyncDate", lastSyncDate));
 
                 }
                 else
@@ -204,28 +203,6 @@ public class SyncActivity extends Activity
                 actionBar.setDisplayShowHomeEnabled(false);
                 actionBar.setDisplayHomeAsUpEnabled(false);
 
-                /* Set custom actionbar title*/
-                /*TextView txtActionBarTitle = new TextView(getApplicationContext());
-                // Calculate ActionBar height
-                TypedValue tv = new TypedValue();
-                if (getTheme().resolveAttribute(android.R.attr.actionBarSize, tv, true))
-                {
-                    int actionBarHeight = TypedValue.complexToDimensionPixelSize(tv.data, getResources().getDisplayMetrics());
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, actionBarHeight);
-                    txtActionBarTitle.setLayoutParams(layoutParams);
-                }
-                else
-                {
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    txtActionBarTitle.setLayoutParams(layoutParams);
-                }
-
-                txtActionBarTitle.setText(getString(R.string.app_name));
-                txtActionBarTitle.setTextColor(Color.WHITE);
-                txtActionBarTitle.setGravity(Gravity.CENTER);
-                txtActionBarTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.title_large));
-                actionBar.setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-                actionBar.setCustomView(txtActionBarTitle);*/
             }
             UserPreference userPreference = new UserPreference();
             user = new User();
@@ -276,15 +253,7 @@ public class SyncActivity extends Activity
         });
 
         Helper.setupTypeface(findViewById(R.id.parentLayout), Helper.robotoLightTypeface);
-        textViewTitle.setTypeface(Helper.robotoBoldTypeface);
-        textViewSubTitle.setTypeface(Helper.robotoMediumTypeface);
-        textViewAutoDownload.setTypeface(Helper.robotoRegularTypeface);
-        textViewDownloadfileContain.setTypeface(Helper.robotoRegularTypeface);
-        textViewDownloadOnDemandTitle.setTypeface(Helper.robotoBoldTypeface);
-        textViewDownloadOnDemandInfo.setTypeface(Helper.robotoLightTypeface);
-        textViewAutoDownloadTitle.setTypeface(Helper.robotoBoldTypeface);
-        textViewAutoDownloadInfo.setTypeface(Helper.robotoLightTypeface);
-        buttonDownload.setTypeface(Helper.robotoMediumTypeface);
+
 
 
     }
@@ -295,7 +264,6 @@ public class SyncActivity extends Activity
         View view = activity.getLayoutInflater().inflate(R.layout.activity_download_on_demand, null);
         view.setLayoutParams(new RelativeLayout.LayoutParams(Helper.getDeviceWidth(activity) / 3, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView txtDownloadOnDownload = (TextView) view.findViewById(R.id.txt_download_on_demand);
-        txtDownloadOnDownload.setTypeface(Helper.robotoBlackTypeface);
 
         dialog.setLayout(view)
                 .setGravity(EasyDialog.GRAVITY_BOTTOM)
@@ -313,7 +281,6 @@ public class SyncActivity extends Activity
         View view = activity.getLayoutInflater().inflate(R.layout.activity_auto_download, null);
         view.setLayoutParams(new RelativeLayout.LayoutParams(Helper.getDeviceWidth(activity) / 3, ViewGroup.LayoutParams.WRAP_CONTENT));
         TextView txtAutoDownload = (TextView) view.findViewById(R.id.txt_auto_download);
-        txtAutoDownload.setTypeface(Helper.robotoBlackTypeface);
         dialog.setLayout(view)
                 .setGravity(EasyDialog.GRAVITY_BOTTOM)
                 .setBackgroundColor(activity.getResources().getColor(R.color.transparent_black_color))
@@ -439,8 +406,6 @@ public class SyncActivity extends Activity
                     @Override
                     public void run()
                     {
-                        //heavy job here
-                        //send message to main thread
                         try
                         {
                             JSONObject syncJson = new JSONObject(response);

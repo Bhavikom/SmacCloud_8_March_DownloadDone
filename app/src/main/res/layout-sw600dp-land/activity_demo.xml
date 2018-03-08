@@ -73,16 +73,16 @@
                 android:textSize="@dimen/title_ultra_small"/>
 
             <Button
-                android:id="@+id/btn_try_demo"
+                android:id="@+id/btn_sign_up"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/four_hundred"
                 android:layout_marginStart="@dimen/four_hundred"
                 android:layout_marginTop="@dimen/forty_five_dp"
-                android:background="@drawable/orange_border_background"
-                android:text="@string/tra_demo"
+                android:background="@drawable/border"
+                android:text="@string/sign_up"
                 android:textAllCaps="false"
-                android:textColor="@color/white"
+                android:textColor="@color/orange"
                 android:textSize="@dimen/title_ultra_small"/>
 
 
@@ -90,14 +90,14 @@
 
 
         <TextView
-            android:id="@+id/txt_Configure_Server"
+            android:id="@+id/txt_smac_link"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
             android:layout_marginBottom="@dimen/padding_extra_large"
             android:gravity="bottom|center_horizontal"
-            android:text="@string/configure_url"
-            android:textColor="@color/button_orange_color"
+            android:text="@string/smac_link"
+            android:textColor="@color/blue"
             android:textSize="@dimen/title_ultra_small"/>
 
 
